@@ -95,8 +95,9 @@ export async function subscribeAction(plan: "starter" | "premium") {
 
     console.log(`[subscribeAction] Redirecting user to: ${session.url}`);
     return { url: session.url };
-  } catch (error: any) {
-    console.error("Stripe Checkout Error:", error.message || error);
-    return { error: `Erreur Stripe : ${error.message || "inconnue"}` };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "inconnue";
+    console.error("Stripe Checkout Error:", message);
+    return { error: `Erreur Stripe : ${message}` };
   }
 }

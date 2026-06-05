@@ -92,10 +92,11 @@ export async function createVirtualCoachAction(orgId: string, name: string) {
     }
     
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Create virtual coach error:", error);
+    const message = error instanceof Error ? error.message : "Problème technique lors de la création";
     return {
-      error: `Erreur : ${error.message || 'Problème technique lors de la création'}`,
+      error: `Erreur : ${message}`,
     };
   }
 }
@@ -160,9 +161,10 @@ export async function inviteCoachAction(orgId: string, email: string, name?: str
 
     try { revalidatePath("/dashboard/coaches"); } catch (e) {}
     return { success: true }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Invite coach error:', error)
-    return { error: `Erreur : ${error.message || 'Problème technique lors de l\'invitation'}` }
+    const message = error instanceof Error ? error.message : 'Problème technique lors de l\'invitation';
+    return { error: `Erreur : ${message}` }
   }
 }
 
@@ -247,8 +249,9 @@ export async function respondToInvitationAction(invitationId: string, accept: bo
 
         try { revalidatePath('/dashboard'); } catch (e) {}
         return { success: true }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Respond invitation error:', error)
-        return { error: `Erreur : ${error.message || 'inconnue'}` }
+        const message = error instanceof Error ? error.message : 'inconnue';
+        return { error: `Erreur : ${message}` }
     }
 }

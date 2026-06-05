@@ -260,7 +260,7 @@ export function SettingsClient({
                 <div className="pb-4 border-b border-gray-100 flex justify-between items-center">
                   <div>
                     <h3 className="text-lg font-semibold">
-                      Gestion de l'Abonnement
+                      Gestion de l&apos;Abonnement
                     </h3>
                     <p className="text-sm text-gray-500 mt-1">
                       Consultez votre grade actuel et améliorez vos capacités.
@@ -415,7 +415,7 @@ export function SettingsClient({
                     Configuration du Studio
                   </h3>
                   <p className="text-sm text-gray-500 mt-1">
-                    Gérez l'identité publique de votre établissement.
+                    Gérez l&apos;identité publique de votre établissement.
                   </p>
                 </div>
                 <div className="space-y-6">

@@ -192,7 +192,7 @@ export default function LandingPage() {
               </h2>
               <p className="text-zinc-500 text-lg font-medium">
                 Un processus pensé pour être immédiat. Aucun paramétrage
-                technique complexe n'est requis.
+                technique complexe n&apos;est requis.
               </p>
             </div>
 
@@ -337,7 +337,7 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto relative z-10">
             <div className="text-center mb-20 max-w-3xl mx-auto">
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
-                L'indépendance technologique.
+                L&apos;indépendance technologique.
               </h2>
               <p className="text-zinc-400 text-xl font-medium">
                 Nous ne sommes pas une marketplace. Fitflow est votre outil,

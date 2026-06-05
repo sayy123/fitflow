@@ -42,7 +42,7 @@ export default function PricingPage() {
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-20">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-100 text-zinc-800 text-xs font-semibold mb-6 ring-1 ring-zinc-200/80 shadow-sm cursor-default">
-            <span className="text-zinc-500">Starter : 14 jours d'essai gratuit. Sans carte bancaire.</span>
+            <span className="text-zinc-500">Starter : 14 jours d&apos;essai gratuit. Sans carte bancaire.</span>
           </div>
           <h1 className="text-5xl md:text-6xl font-bold tracking-tighter text-zinc-900 mb-6 leading-[1.1]">
             Des tarifs simples.<br />
@@ -69,7 +69,7 @@ export default function PricingPage() {
 
             <Link href="/register?role=manager&plan=starter" className="mb-10 w-full">
               <Button variant="outline" className="w-full rounded-full h-14 text-base font-semibold border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition-colors shadow-sm">
-                Commencer l'essai gratuit
+                Commencer l&apos;essai gratuit
               </Button>
             </Link>
 
@@ -116,7 +116,7 @@ export default function PricingPage() {
 
             <div className="mb-8 relative z-10">
               <h3 className="text-2xl font-bold text-white mb-2">Premium</h3>
-              <p className="text-zinc-400 text-sm font-medium">L'outil complet pour les studios établis en pleine croissance.</p>
+              <p className="text-zinc-400 text-sm font-medium">L&apos;outil complet pour les studios établis en pleine croissance.</p>
             </div>
             
             <div className="mb-8 flex items-baseline gap-2 relative z-10">
@@ -126,7 +126,7 @@ export default function PricingPage() {
 
             <Link href="/register?role=manager&plan=premium" className="mb-10 w-full relative z-10">
               <Button className="w-full bg-white text-zinc-900 rounded-full h-14 text-base font-bold hover:bg-zinc-100 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl ring-1 ring-inset ring-white/10">
-                S'abonner maintenant
+                S&apos;abonner maintenant
               </Button>
             </Link>
 
@@ -153,10 +153,10 @@ export default function PricingPage() {
         {/* FAQ Section */}
         <section className="mt-32 max-w-3xl mx-auto text-center border-t border-zinc-200/60 pt-20">
           <h2 className="text-3xl font-bold tracking-tight text-zinc-900 mb-6">
-            Besoin de plus d'informations ?
+            Besoin de plus d&apos;informations ?
           </h2>
           <p className="text-zinc-500 text-lg mb-10 font-medium">
-            Contactez notre équipe de vente pour discuter d'une solution sur-mesure si vous gérez une franchise ou plus de 3 studios.
+            Contactez notre équipe de vente pour discuter d&apos;une solution sur-mesure si vous gérez une franchise ou plus de 3 studios.
           </p>
           <Button variant="outline" className="rounded-full px-8 h-12 text-sm font-semibold border-zinc-200 text-zinc-700 hover:bg-zinc-50">
             Nous contacter
@@ -174,7 +174,7 @@ export default function PricingPage() {
               </div>
               Fitflow
             </div>
-            <p className="text-zinc-500 text-sm font-medium">L'outil de gestion ultime pour les studios de fitness.</p>
+            <p className="text-zinc-500 text-sm font-medium">L&apos;outil de gestion ultime pour les studios de fitness.</p>
           </div>
           <div className="flex gap-8 text-sm font-semibold text-zinc-500">
             <Link href="/" className="hover:text-zinc-900 transition-colors">Accueil</Link>

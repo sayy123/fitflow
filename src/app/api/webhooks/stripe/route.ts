@@ -18,9 +18,10 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SECRET!
     );
     console.log(`[Stripe Webhook] Event verified: ${event.type}`);
-  } catch (error: any) {
-    console.error(`[Stripe Webhook] Verification failed: ${error.message}`);
-    return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`[Stripe Webhook] Verification failed: ${message}`);
+    return new NextResponse(`Webhook Error: ${message}`, { status: 400 });
   }
 
   const session = event.data.object as Stripe.Checkout.Session;
@@ -55,8 +56,9 @@ export async function POST(req: Request) {
         },
       });
       console.log(`[Stripe Webhook] Successfully updated user ${userId} to ${plan}`);
-    } catch (dbError: any) {
-      console.error(`[Stripe Webhook] Database update failed: ${dbError.message}`);
+    } catch (dbError: unknown) {
+      const message = dbError instanceof Error ? dbError.message : 'Unknown DB error';
+      console.error(`[Stripe Webhook] Database update failed: ${message}`);
     }
   }
 

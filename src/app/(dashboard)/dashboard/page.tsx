@@ -451,7 +451,7 @@ export default async function DashboardPage(props: {
                     Aucune réservation pour le moment.
                   </p>
                   <p className="text-sm mt-1">
-                    Vos futures séances s'afficheront ici.
+                    Vos futures séances s&apos;afficheront ici.
                   </p>
                 </CardContent>
               </Card>

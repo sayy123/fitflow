@@ -84,7 +84,7 @@ export function CoachesClient({
         toast.success("Coach virtuel créé");
         setVirtualName("");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Client side error:", err);
       toast.error("Erreur de connexion au serveur");
     } finally {
@@ -105,7 +105,7 @@ export function CoachesClient({
         toast.success("Invitation envoyée");
         setInviteEmail("");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Client side error:", err);
       toast.error("Erreur de connexion au serveur");
     } finally {
@@ -171,8 +171,8 @@ export function CoachesClient({
 
                 <TabsContent value="virtual" className="space-y-4">
                   <p className="text-xs text-gray-500">
-                    Un coach virtuel n'a pas de compte utilisateur. Il sert
-                    uniquement à l'attribution des séances dans le planning.
+                    Un coach virtuel n&apos;a pas de compte utilisateur. Il sert
+                    uniquement à l&apos;attribution des séances dans le planning.
                   </p>
                   <form onSubmit={handleCreateVirtual} className="space-y-4">
                     <div className="space-y-1.5">
@@ -363,7 +363,7 @@ export function CoachesClient({
                                 {inv.email}
                               </p>
                               <p className="text-xs text-gray-500 mt-0.5">
-                                En attente d'acceptation
+                                En attente d&apos;acceptation
                               </p>
                             </div>
                           </div>
