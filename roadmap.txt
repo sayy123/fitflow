@@ -1,0 +1,115 @@
+🔍 Phase 1 — Validation complète : SaaS de réservation pour studios fitness boutique
+1. Le problème est-il réel et douloureux ?
+Oui — et les preuves sont partout. Le marché européen des boutique fitness studios est passé de 10,6 Mds$ en 2024 et croît à 9,6% par an jusqu'en 2035. La douleur des gérants est documentée et répétitive :
+
+Mindbody est haï pour ses prix cachés et ses bugs : "Hidden charges with no consent, bugs, freezing — would not recommend Mindbody"
+
+Glofox est critiqué pour sa complexité : interface lente, notifications excessives, impossible de voir sa position en liste d'attente, annulations tardives impossibles
+
+La plainte #1 des petits studios : "Too many features slow everything down — endless menus make even the simplest tasks feel frustrating"
+
+Glofox commence à 110$/mois pour le plan de base, 199$/mois avec app brandée + 2,5–2,9% de frais par transaction
+
+La conclusion : les petits studios paient 100–700€/mois pour des outils surdimensionnés dont ils utilisent 10–15% des features. Il y a un vide évident entre "Excel + WhatsApp" et "Mindbody à 300€/mois".
+
+2. ICP — Ideal Customer Profilepo
+Profil primaire : Le gérant de studio solo
+Dimension	Détail
+Qui	Propriétaire-gérant d'un studio yoga / CrossFit / pilates / Barre / HIIT
+Taille	1–4 coachs, 30–200 membres actifs
+Pain quotidien	Gestion des réservations par WhatsApp/Instagram, oubli de paiements, liste d'attente manuelle
+Outil actuel	Mindbody (trop cher), Glofox (trop complexe), ou pire : rien (Google Sheets)
+Trigger d'achat	Ouverture du studio, perte d'un client à cause d'un bug de résa, fin de contrat Mindbody
+Budget accepté	20–50€/mois — si ça remplace leur Excel et leur WhatsApp
+Ce qu'il valorise	Setup rapide (< 30 min), interface simple, paiements automatiques, app mobile pour ses membres
+Ce qu'il ne veut pas	Formations obligatoires, contrats longue durée, frais par transaction
+Profil secondaire : Le coach freelance qui loue des créneaux
+Yoga teacher indépendant qui loue une salle 3x/semaine et gère ses 20–40 élèves. Paie 0€ pour l'instant (Calendly gratuit + virement manuel). Pourrait payer 9–19€/mois pour automatiser les paiements.
+
+3. Analyse concurrentielle
+Carte des concurrents
+Concurrent	Prix	Forces	Faiblesses identifiées
+Mindbody	139–699$/mois	Marketplace intégrée, marque connue	Trop cher, bugs, interface 2010, support horrible 
+Glofox (ABC)	110–199$/mois + 2,9%	App brandée propre, dashboard moderne	Lent, notifications spam, waitlist opaque, prix opaque 
+Zen Planner	~99$/mois	Bon pour CrossFit, tracking workout	Complexe, pas fait pour yoga/pilates 
+Recess	Gratuit / low cost	Simplicité, billing auto	Pas d'app mobile dédiée, peu connu 
+Jane App	~74$/mois	Très bon support, simple	Orienté santé/thérapie, pas fitness de groupe
+Excel + WhatsApp	0€	Gratuit	Aucune automatisation, pertes de réservations, non pro
+Ta UVP (Unique Value Proposition)
+"La seule appli de réservation pour studios fitness qui se configure en 30 minutes, ne prend aucune commission, et coûte moins qu'un abonnement mensuel de ton studio."
+
+Angle d'attaque concret
+Les concurrents s'attaquent à tout le marché fitness (chaînes, franchises, multi-sites). Toi tu vises exclusivement les studios indépendants < 5 coachs. C'est un segment que Mindbody méprise (trop petit) et que Glofox sous-sert (trop complexe pour eux).
+
+4. Valider AVANT de coder
+Script d'entretien (méthode Mom Test)
+Trouve 10–15 gérants de studios via Instagram (cherche #yogastudiobrussels, #crossfitbelgique, #studiopilates + DM) ou via Google Maps. Propose 20 min de visio.
+
+Questions à poser :
+
+"Comment tu gères les réservations de cours aujourd'hui ?"
+
+"Raconte-moi la dernière fois qu'une réservation ou un paiement a mal tourné."
+
+"Tu utilises un logiciel en ce moment ? Qu'est-ce qui t'énerve dedans ?"
+
+"Combien de temps par semaine tu passes sur l'admin (résa, paiements, relances) ?"
+
+"Si tu pouvais ne garder qu'une seule fonctionnalité, ce serait laquelle ?"
+
+"Tu paies combien par mois pour tes outils de gestion actuellement ?"
+
+Signal positif à surveiller : s'ils te décrivent spontanément leur douleur sans que tu la suggères, et s'ils demandent "ça existe déjà ce truc ?" ou "quand c'est dispo ?"
+
+Landing page — structure recommandée
+À créer en 48h sur Carrd.co ou directement Next.js sur Vercel :
+
+text
+Titre : "Gérez votre studio fitness sans vous prendre la tête"
+Sous-titre : "Planning, réservations, paiements et liste d'attente — 
+              tout en un, pour 29€/mois. Sans commission, sans contrat."
+
+[Formulaire email — "Rejoindre la liste d'attente gratuite"]
+
+3 bullets :
+✅ Setup en 30 minutes, pas de formation requise
+✅ Vos membres réservent depuis leur téléphone
+✅ Paiements automatiques — fini les relances WhatsApp
+
+Preuve sociale : "Déjà X studios en liste d'attente"
+Partage ça dans : groupes Facebook de gérants de studios fitness en Belgique/France, forums yoga, Instagram via DMs ciblés.
+
+Seuil de validation : 30 emails en organique en 2 semaines = signal fort pour builder.
+
+5. Taille du marché (TAM / SAM / SOM)
+Niveau	Calcul	Estimation
+TAM	Marché mondial boutique fitness studios	45 Mds$ (2026) 
+SAM	Studios indépendants < 5 coachs en Europe francophone (B/F/CH) — ~80 000 studios × 12% qui cherchent activement un outil	~9 600 studios adressables
+SOM	1–3% capturés en 2 ans	96–288 studios
+MRR réaliste	200 studios × 39€/mois	7 800€ MRR
+MRR cible	350 studios × 39€/mois	13 650€ MRR
+Le marché européen boutique fitness passe de 10,6 à 19,8 Mds$ d'ici 2030 — c'est une marée montante qui porte même les petits outils.
+
+✅ Checklist Phase 1 — À cocher avant de passer à la Phase 2
+Tu as réalisé 10 entretiens avec des gérants de studios (pas des sportifs — des gérants)
+
+Au moins 3 d'entre eux t'ont dit spontanément combien leur coûte leur solution actuelle
+
+Au moins 3 d'entre eux t'ont dit qu'ils paieraient pour quelque chose de plus simple
+
+Tu as une landing page en ligne avec formulaire d'email
+
+Tu as collecté 30+ emails en organique (sans pub)
+
+Tu as confirmé que Mindbody ou Glofox est leur douleur actuelle (pas juste Excel)
+
+Tu as défini ta UVP en 1 phrase que tu peux énoncer en 10 secondes
+
+Tu sais que tu vises uniquement les studios < 5 coachs, indépendants
+
+🚨 Les 3 erreurs fatales à éviter sur cette idée
+Builder une app mobile dès le départ — une PWA (Progressive Web App) suffit pour valider. L'app native coûte 3 mois de dev et personne ne la cherchera sur l'App Store avant que tu aies 50 clients.
+
+Vouloir concurrencer Mindbody sur les features — ta force est ta simplicité. Dès que tu ajoutes "reporting avancé", "multi-sites", "marketplace"… tu deviens Mindbody avec une dette technique énorme.
+
+Cibler les grandes chaînes fitness — elles ont des équipes IT et des contrats signés. Tes 10 premiers clients doivent être des studios indépendants que tu peux joindre sur Instagram en 2 minutes.

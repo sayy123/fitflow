@@ -1,0 +1,7 @@
+node_modules/
+src/generated/
+prisma/generated/
+.next/
+dist/
+build/
+*.min.js

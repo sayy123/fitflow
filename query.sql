@@ -1,0 +1,1 @@
+SELECT u.id, u.email, om.organization_id, o.name as org_name, om.role FROM auth.users u LEFT JOIN public.org_members om ON u.id = om.user_id LEFT JOIN public.organizations o ON om.organization_id = o.id WHERE u.email IN ('7k.say1234@gmail.com', 'martin.stocq@gmail.com');
