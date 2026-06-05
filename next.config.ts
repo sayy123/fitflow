@@ -2,8 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ['prettier'],
-  serverActions: {
-    bodySizeLimit: '4mb',
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '4mb',
+    },
   },
 };
 
