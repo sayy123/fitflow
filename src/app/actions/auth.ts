@@ -231,8 +231,10 @@ export async function loginAction(prevState: unknown, formData: FormData) {
 export async function signInWithGoogleAction() {
   const supabase = await createClient();
   const host = (await headers()).get("host");
-  const protocol = host?.includes("localhost") ? "http" : "https";
-  const redirectUrl = `${protocol}://${host}/api/auth/callback`;
+  
+  // Utiliser NEXT_PUBLIC_APP_URL s'il est défini, sinon utiliser l'hôte actuel
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
+  const redirectUrl = `${siteUrl.replace(/\/$/, "")}/api/auth/callback`;
 
   console.log(`[signInWithGoogleAction] Redirecting via: ${redirectUrl}`);
 
@@ -240,6 +242,10 @@ export async function signInWithGoogleAction() {
     provider: "google",
     options: {
       redirectTo: redirectUrl,
+      queryParams: {
+        access_type: "offline",
+        prompt: "consent",
+      },
     },
   });
 

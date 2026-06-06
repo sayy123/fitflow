@@ -3,9 +3,10 @@ import { PrismaPg } from '@prisma/adapter-pg'
 import pg from 'pg'
 
 const prismaClientSingleton = () => {
-  const dbUrl = process.env.DATABASE_URL
+  // On utilise une variable spécifique qui ne sera pas écrasée par l'intégration Vercel/Supabase
+  const dbUrl = process.env.DATABASE_URL_POOLER || process.env.DATABASE_URL
   if (!dbUrl) {
-    throw new Error('DATABASE_URL is not set in environment variables')
+    throw new Error('DATABASE_URL_POOLER or DATABASE_URL is not set')
   }
   
   console.log('Initializing Prisma with URL:', dbUrl.replace(/:[^:@]+@/, ':***@'))
