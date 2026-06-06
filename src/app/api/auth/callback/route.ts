@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { type EmailOtpType } from '@supabase/supabase-js'
 import prisma from '@/lib/prisma'
+import { revalidatePath } from 'next/cache'
 
 async function handleAuth(request: Request) {
   const { searchParams, origin } = new URL(request.url)
@@ -60,7 +61,13 @@ async function handleAuth(request: Request) {
           })
         }
       }
-      return NextResponse.redirect(`${origin}${next}`)
+      revalidatePath('/', 'layout');
+      const redirectUrl = new URL(next, request.url)
+      // Force https if we are not on localhost to avoid browser redirect issues
+      if (!redirectUrl.hostname.includes('localhost')) {
+        redirectUrl.protocol = 'https:'
+      }
+      return NextResponse.redirect(redirectUrl.toString())
     }
     console.error('Auth code exchange error:', error)
   } else if (token_hash && type) {
@@ -101,12 +108,22 @@ async function handleAuth(request: Request) {
           })
         }
       }
-      return NextResponse.redirect(`${origin}${next}`)
+      revalidatePath('/', 'layout');
+      const redirectUrl = new URL(next, request.url)
+      if (!redirectUrl.hostname.includes('localhost')) {
+        redirectUrl.protocol = 'https:'
+      }
+      return NextResponse.redirect(redirectUrl.toString())
     }
     console.error('Auth OTP verification error:', error)
   }
 
-  return NextResponse.redirect(`${origin}/login?error=auth-code-error`)
+  const loginUrl = new URL('/login', request.url)
+  loginUrl.searchParams.set('error', 'auth-code-error')
+  if (!loginUrl.hostname.includes('localhost')) {
+    loginUrl.protocol = 'https:'
+  }
+  return NextResponse.redirect(loginUrl.toString())
 }
 
 export async function GET(request: Request) {
