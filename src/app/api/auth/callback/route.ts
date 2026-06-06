@@ -5,20 +5,37 @@ import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
 async function handleAuth(request: Request) {
-  const { searchParams, origin } = new URL(request.url)
-  const code = searchParams.get('code')
-  const token_hash = searchParams.get('token_hash')
-  const type = searchParams.get('type') as EmailOtpType | null
-  const next = searchParams.get('next') ?? '/dashboard'
+  const requestUrl = new URL(request.url)
+  const code = requestUrl.searchParams.get('code')
+  const token_hash = requestUrl.searchParams.get('token_hash')
+  const type = requestUrl.searchParams.get('type') as EmailOtpType | null
+  const next = requestUrl.searchParams.get('next') ?? '/dashboard'
+
+  console.log(`[Auth Callback] Processing request. Code: ${!!code}, TokenHash: ${!!token_hash}, Next: ${next}`);
+  console.log(`[Auth Callback] Full URL: ${request.url}`);
 
   const supabase = await createClient()
 
-  if (code) {
-    const { data, error } = await supabase.auth.exchangeCodeForSession(code)
-    if (!error && data.user) {
-      const user = data.user
+  try {
+    if (code) {
+      console.log(`[Auth Callback] Exchanging code for session...`);
+      const { data, error } = await supabase.auth.exchangeCodeForSession(code)
       
-      // 1. S'assurer que l'utilisateur a un profil (pour la facturation/plan)
+      if (error) {
+        console.error('[Auth Callback] Code exchange error:', error);
+        throw error;
+      }
+      
+      if (!data.user) {
+        console.error('[Auth Callback] No user in data');
+        throw new Error('No user found after code exchange');
+      }
+
+      const user = data.user
+      console.log(`[Auth Callback] Session established for user: ${user.id} (${user.email})`);
+      
+      // 1. S'assurer que l'utilisateur a un profil
+      console.log(`[Auth Callback] Ensuring user profile in DB...`);
       await prisma.user_profiles.upsert({
         where: { user_id: user.id },
         update: {},
@@ -30,8 +47,9 @@ async function handleAuth(request: Request) {
         }
       });
 
-      // 2. Lazy link to organizations based on email
+      // 2. Lazy link to organizations
       if (user.email) {
+        console.log(`[Auth Callback] Checking for studio memberships for ${user.email}...`);
         const studioMemberships = await prisma.studio_members.findMany({
           where: { 
             email: {
@@ -40,6 +58,8 @@ async function handleAuth(request: Request) {
             }
           }
         })
+        
+        console.log(`[Auth Callback] Found ${studioMemberships.length} studio memberships`);
 
         for (const membership of studioMemberships) {
           await prisma.org_members.upsert({
@@ -61,22 +81,35 @@ async function handleAuth(request: Request) {
           })
         }
       }
+      
+      console.log(`[Auth Callback] Finalizing. Revalidating path and redirecting to ${next}`);
       revalidatePath('/', 'layout');
+      
       const redirectUrl = new URL(next, request.url)
-      // Force https if we are not on localhost to avoid browser redirect issues
       if (!redirectUrl.hostname.includes('localhost')) {
         redirectUrl.protocol = 'https:'
       }
+      
+      console.log(`[Auth Callback] Redirecting to: ${redirectUrl.toString()}`);
       return NextResponse.redirect(redirectUrl.toString())
-    }
-    console.error('Auth code exchange error:', error)
-  } else if (token_hash && type) {
-    const { data, error } = await supabase.auth.verifyOtp({
-      type,
-      token_hash,
-    })
+    } 
+    
+    if (token_hash && type) {
+      console.log(`[Auth Callback] Verifying OTP...`);
+      const { data, error } = await supabase.auth.verifyOtp({
+        type,
+        token_hash,
+      })
 
-    if (!error && data.user) {
+      if (error) {
+        console.error('[Auth Callback] OTP error:', error);
+        throw error;
+      }
+      
+      if (!data.user) {
+        throw new Error('No user found after OTP verification');
+      }
+
       const user = data.user
       if (user.email) {
         const studioMemberships = await prisma.studio_members.findMany({
@@ -108,22 +141,30 @@ async function handleAuth(request: Request) {
           })
         }
       }
+      
       revalidatePath('/', 'layout');
       const redirectUrl = new URL(next, request.url)
       if (!redirectUrl.hostname.includes('localhost')) {
         redirectUrl.protocol = 'https:'
       }
+      console.log(`[Auth Callback] OTP Success. Redirecting to: ${redirectUrl.toString()}`);
       return NextResponse.redirect(redirectUrl.toString())
     }
-    console.error('Auth OTP verification error:', error)
-  }
 
-  const loginUrl = new URL('/login', request.url)
-  loginUrl.searchParams.set('error', 'auth-code-error')
-  if (!loginUrl.hostname.includes('localhost')) {
-    loginUrl.protocol = 'https:'
+    console.warn('[Auth Callback] No code or token_hash found in URL');
+    throw new Error('No authentication parameters provided');
+
+  } catch (err: any) {
+    console.error('[Auth Callback] Fatal error during auth callback:', err);
+    
+    const loginUrl = new URL('/login', request.url)
+    loginUrl.searchParams.set('error', 'auth-callback-error')
+    loginUrl.searchParams.set('message', err.message || 'Unknown error')
+    if (!loginUrl.hostname.includes('localhost')) {
+      loginUrl.protocol = 'https:'
+    }
+    return NextResponse.redirect(loginUrl.toString())
   }
-  return NextResponse.redirect(loginUrl.toString())
 }
 
 export async function GET(request: Request) {
