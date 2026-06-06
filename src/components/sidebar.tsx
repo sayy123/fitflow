@@ -198,8 +198,8 @@ export function Sidebar({
           </div>
         )}
 
-        {/* Only show Join Studio for regular members or empty state */}
-        {(role === "member" || !organizationName) && (
+        {/* Show Join Studio for everyone except the owner */}
+        {(role !== "owner" || !organizationName) && (
           <div className="pt-8 px-3 space-y-3">
             <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">
               Rejoindre un studio
