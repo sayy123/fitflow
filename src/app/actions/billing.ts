@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { stripe } from "@/lib/stripe";
+import { headers } from "next/headers";
 
 export async function subscribeAction(plan: "starter" | "premium") {
   const supabase = await createClient();
@@ -64,6 +65,11 @@ export async function subscribeAction(plan: "starter" | "premium") {
       });
     }
 
+    // Détecter l'URL de base dynamiquement
+    const host = (await headers()).get("host");
+    const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
+    const baseUrl = siteUrl.replace(/\/$/, "");
+
     // Créer la session de checkout
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
@@ -74,8 +80,8 @@ export async function subscribeAction(plan: "starter" | "premium") {
         },
       ],
       mode: "subscription",
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/billing`,
+      success_url: `${baseUrl}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/dashboard/billing`,
       metadata: {
         userId: user.id,
         plan: plan,
