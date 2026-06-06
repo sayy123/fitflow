@@ -15,6 +15,7 @@ import {
   Activity,
   Building2,
   PlusCircle,
+  HelpCircle,
 } from "lucide-react";
 import { signOutAction } from "@/app/actions/auth";
 
@@ -61,6 +62,7 @@ export function Sidebar({
   const navItems = [
     { name: "Vue d'ensemble", href: "/dashboard", icon: LayoutDashboard },
     { name: "Planning", href: "/dashboard/classes", icon: Calendar },
+    { name: "Nous contacter", href: "/contact", icon: HelpCircle },
   ];
 
   const staffItems = [

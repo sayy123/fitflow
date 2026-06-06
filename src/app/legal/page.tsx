@@ -27,7 +27,7 @@ export default function LegalPage() {
             <h2 className="text-xl font-bold text-zinc-900 mb-4">2. Contact</h2>
             <p>
               Pour toute question, vous pouvez nous contacter à l'adresse suivante : <br />
-              <strong>Email :</strong> fitflow@gmail.com
+              <strong>Email :</strong> fitflow887@gmail.com
             </p>
           </section>
 
