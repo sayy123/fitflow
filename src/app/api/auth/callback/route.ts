@@ -15,8 +15,21 @@ async function handleAuth(request: Request) {
   if (code) {
     const { data, error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error && data.user) {
-      // Lazy link to organizations based on email
       const user = data.user
+      
+      // 1. S'assurer que l'utilisateur a un profil (pour la facturation/plan)
+      await prisma.user_profiles.upsert({
+        where: { user_id: user.id },
+        update: {},
+        create: {
+          user_id: user.id,
+          plan: 'starter',
+          subscription_status: 'trialing',
+          trial_ends_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)
+        }
+      });
+
+      // 2. Lazy link to organizations based on email
       if (user.email) {
         const studioMemberships = await prisma.studio_members.findMany({
           where: { 

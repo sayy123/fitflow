@@ -230,10 +230,16 @@ export async function loginAction(prevState: unknown, formData: FormData) {
 
 export async function signInWithGoogleAction() {
   const supabase = await createClient();
+  const host = (await headers()).get("host");
+  const protocol = host?.includes("localhost") ? "http" : "https";
+  const redirectUrl = `${protocol}://${host}/api/auth/callback`;
+
+  console.log(`[signInWithGoogleAction] Redirecting via: ${redirectUrl}`);
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback`,
+      redirectTo: redirectUrl,
     },
   });
 
