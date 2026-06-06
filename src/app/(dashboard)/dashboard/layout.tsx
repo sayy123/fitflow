@@ -57,10 +57,9 @@ export default async function DashboardLayout({
   const cookieStore = await cookies();
   let activeOrgId = cookieStore.get('active_org_id')?.value;
 
-  // Si pas de cookie, on en définit un par défaut pour fixer l'isolation
+  // Si pas de cookie, on en utilise un par défaut pour l'affichage
   if (!activeOrgId && staffMemberships.length > 0) {
     activeOrgId = staffMemberships[0].organization_id;
-    cookieStore.set('active_org_id', activeOrgId, { path: '/' });
   }
 
   let member = staffMemberships[0];

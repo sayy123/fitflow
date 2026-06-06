@@ -41,8 +41,9 @@ export async function updateSession(request: NextRequest) {
   const isDashboard = pathname.startsWith("/dashboard");
   const isAuthPage = pathname === "/login" || pathname === "/register";
   const isOnboarding = pathname.startsWith("/onboarding");
+  const isHomePage = pathname === "/";
 
-  if (isDashboard || isAuthPage || isOnboarding) {
+  if (isDashboard || isAuthPage || isOnboarding || isHomePage) {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -53,7 +54,7 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    if (user && isAuthPage) {
+    if (user && (isAuthPage || isHomePage)) {
       const url = request.nextUrl.clone();
       url.pathname = "/dashboard";
       return NextResponse.redirect(url);
