@@ -117,7 +117,7 @@ export default function LoginPage() {
             className="w-full h-11 rounded-xl font-semibold text-sm bg-zinc-900 text-white hover:bg-zinc-800 transition-colors mt-2"
             disabled={isPending}
           >
-            {isPending ? "Connexion en cours.." : "Se connecter"}
+            {isPending ? "Connexion en cours..." : "Se connecter"}
           </Button>
         </form>
 
