@@ -143,9 +143,9 @@ export default function LandingPage() {
             </h1>
 
             <p className="text-lg md:text-xl text-zinc-500 mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
-              Fitflow est l&apos;écosystème élégant conçu pour les studios de fitness
+              Fitflow est l'écosystème élégant conçu pour les studios de fitness
               boutique. Centralisez vos plannings, vos coachs et vos membres
-              dans une interface d&apos;une clarté absolue.
+              dans une interface d'une clarté absolue.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -188,11 +188,11 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-16 max-w-3xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-zinc-900 mb-4">
-                De l&apos;inscription à la première séance en 3 étapes.
+                De l'inscription à la première séance en 3 étapes.
               </h2>
               <p className="text-zinc-500 text-lg font-medium">
                 Un processus pensé pour être immédiat. Aucun paramétrage
-                technique complexe n&apos;est requis.
+                technique complexe n'est requis.
               </p>
             </div>
 
@@ -247,7 +247,7 @@ export default function LandingPage() {
               </h2>
               <p className="text-zinc-500 text-xl font-medium leading-relaxed">
                 Découvrez comment Fitflow simplifie chaque aspect de la gestion
-                de votre studio, de la réservation à l&apos;encaissement.
+                de votre studio, de la réservation à l'encaissement.
               </p>
             </div>
 
@@ -337,7 +337,7 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto relative z-10">
             <div className="text-center mb-20 max-w-3xl mx-auto">
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
-                L&apos;indépendance technologique.
+                L'indépendance technologique.
               </h2>
               <p className="text-zinc-400 text-xl font-medium">
                 Nous ne sommes pas une marketplace. Fitflow est votre outil,
@@ -482,7 +482,7 @@ export default function LandingPage() {
               Fitflow
             </div>
             <p className="text-zinc-500 text-sm font-medium">
-              L&apos;outil de gestion ultime pour les studios de fitness.
+              L'outil de gestion ultime pour les studios de fitness.
             </p>
           </div>
           <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 text-sm font-semibold text-zinc-500">

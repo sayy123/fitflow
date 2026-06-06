@@ -59,7 +59,7 @@ export default async function BillingPage() {
     <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20 text-zinc-900">
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 text-zinc-800 text-[10px] font-bold uppercase tracking-widest mb-4 ring-1 ring-zinc-200">
-          Gestion de l&apos;abonnement
+          Gestion de l'abonnement
         </div>
         <h1 className="text-4xl font-bold tracking-tight">
           {isTrialExpired
@@ -126,7 +126,7 @@ export default async function BillingPage() {
 
             {plan === "premium" && (
               <p className="text-[10px] text-zinc-400 text-center font-medium">
-                Le passage au plan Starter n&apos;est pas disponible pour les membres Premium.
+                Le passage au plan Starter n'est pas disponible pour les membres Premium.
               </p>
             )}
           </CardContent>
@@ -200,7 +200,7 @@ export default async function BillingPage() {
             href="/dashboard"
             className="text-zinc-400 hover:text-zinc-900 text-sm font-medium transition-colors flex items-center justify-center gap-1 group"
           >
-            Continuer l&apos;essai gratuit pour le moment{" "}
+            Continuer l'essai gratuit pour le moment{" "}
             <ArrowRight className="size-3 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>

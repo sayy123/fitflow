@@ -69,49 +69,33 @@ export async function inviteCoachToOrgAction(orgId: string, email: string, name:
     })
     if (existing) return { error: "Cet utilisateur est déjà membre de votre studio" }
 
-    // 1. Vérifier si l'utilisateur existe déjà dans Supabase
+    const targetEmail = email.toLowerCase().trim();
+
+    // Toujours créer une invitation, même si l'utilisateur existe déjà.
+    await prisma.org_invitations.create({
+      data: {
+        organization_id: orgId,
+        email: targetEmail,
+        role: "coach"
+      }
+    });
+
+    // 1. Vérifier si l'utilisateur existe déjà dans Supabase pour envoyer le bon mail
     const { createAdminClient } = await import("@/lib/supabase/admin");
     const adminSupabase = createAdminClient();
     const { data: { users } } = await adminSupabase.auth.admin.listUsers();
-    const existingAuthUser = users.find(u => u.email?.toLowerCase() === email.toLowerCase().trim());
-
-    if (existingAuthUser) {
-      await prisma.org_members.upsert({
-        where: {
-          organization_id_user_id: {
-            organization_id: orgId,
-            user_id: existingAuthUser.id,
-          }
-        },
-        update: { role: "coach", display_name: name },
-        create: {
-          organization_id: orgId,
-          user_id: existingAuthUser.id,
-          role: "coach",
-          display_name: name,
-        }
-      });
-    } else {
-      // 2. Créer une invitation en attente
-      await prisma.org_invitations.create({
-        data: {
-          organization_id: orgId,
-          email: email.toLowerCase().trim(),
-          role: "coach"
-        }
-      });
-    }
+    const existingAuthUser = users.find(u => u.email?.toLowerCase() === targetEmail);
 
     // 3. Envoyer un email d'invitation simple
     const { sendWelcomeEmail } = await import("@/lib/emails/send");
     const studio = await prisma.organizations.findUnique({ where: { id: orgId } });
-    await sendWelcomeEmail(name, studio?.name || "votre studio", email);
+    await sendWelcomeEmail(name, studio?.name || "votre studio", targetEmail);
 
     revalidatePath("/dashboard/coaches");
     return { success: true }
   } catch (error) {
     console.error("Invite coach error:", error)
-    return { error: "Erreur lors de l&apos;invitation" }
+    return { error: "Erreur lors de l'invitation" }
   }
-}
+  }
 

@@ -171,13 +171,13 @@ export function CoachesClient({
 
                 <TabsContent value="virtual" className="space-y-4">
                   <p className="text-xs text-gray-500">
-                    Un coach virtuel n&apos;a pas de compte utilisateur. Il sert
-                    uniquement à l&apos;attribution des séances dans le planning.
+                    Un coach virtuel n'a pas de compte utilisateur. Il sert
+                    uniquement à l'attribution des séances dans le planning.
                   </p>
                   <form onSubmit={handleCreateVirtual} className="space-y-4">
                     <div className="space-y-1.5">
                       <Label className="text-xs font-semibold text-gray-700">
-                        Nom d&apos;affichage
+                        Nom d'affichage
                       </Label>
                       <Input
                         value={virtualName}
@@ -199,7 +199,7 @@ export function CoachesClient({
 
                 <TabsContent value="invite" className="space-y-4">
                   <p className="text-xs text-gray-500">
-                    L&apos;invité recevra une notification dans son dashboard pour
+                    L'invité recevra une notification dans son dashboard pour
                     rejoindre votre studio.
                   </p>
                   <form onSubmit={handleInvite} className="space-y-4">
@@ -221,7 +221,7 @@ export function CoachesClient({
                       disabled={loading}
                       className="w-full h-10 rounded-lg font-medium text-sm shadow-sm"
                     >
-                      {loading ? "Envoi..." : "Envoyer l&apos;invitation"}
+                      {loading ? "Envoi..." : "Envoyer l'invitation"}
                     </Button>
                   </form>
                 </TabsContent>
@@ -363,7 +363,7 @@ export function CoachesClient({
                                 {inv.email}
                               </p>
                               <p className="text-xs text-gray-500 mt-0.5">
-                                En attente d&apos;acceptation
+                                En attente d'acceptation
                               </p>
                             </div>
                           </div>

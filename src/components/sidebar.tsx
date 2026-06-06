@@ -127,7 +127,7 @@ export function Sidebar({
             </p>
             <Link href="/dashboard/billing">
               <button className="w-full h-7 rounded-lg bg-white text-zinc-900 text-[10px] font-bold hover:bg-zinc-100 transition-colors">
-                S&apos;abonner
+                S'abonner
               </button>
             </Link>
           </div>
@@ -205,7 +205,7 @@ export function Sidebar({
             <div className="space-y-2">
               <input
                 type="text"
-                placeholder="Lien d&apos;invitation..."
+                placeholder="Lien d'invitation..."
                 value={inviteLink}
                 onChange={(e) => setInviteLink(e.target.value)}
                 className="w-full h-8 px-3 rounded-lg border border-zinc-200 bg-white text-[11px] font-medium focus:ring-1 focus:ring-zinc-900 outline-none transition-all"

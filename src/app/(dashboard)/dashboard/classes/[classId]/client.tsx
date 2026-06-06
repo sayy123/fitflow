@@ -243,7 +243,7 @@ export default function ClassDetailClient({
                 <MapPin className="size-3" /> Voir sur Google Maps <ExternalLink className="size-2.5" />
               </a>
             ) : (
-              <p className="text-[10px] font-bold text-gray-400 mt-1">Pas d&apos;adresse spécifiée</p>
+              <p className="text-[10px] font-bold text-gray-400 mt-1">Pas d'adresse spécifiée</p>
             )}
           </CardContent>
         </Card>

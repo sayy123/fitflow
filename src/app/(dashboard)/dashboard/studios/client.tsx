@@ -68,9 +68,9 @@ export default function StudiosClient({
               <Building2 className="size-5 text-amber-600" />
             </div>
             <div>
-              <h3 className="text-amber-900 font-bold">Vous avez besoin d&apos;une autre salle ?</h3>
+              <h3 className="text-amber-900 font-bold">Vous avez besoin d'une autre salle ?</h3>
               <p className="text-amber-700/80 font-medium text-sm mt-1 max-w-md">
-                Le plan Starter vous limite à 1 seule salle. Passez au plan Premium pour gérer jusqu&apos;à 3 salles indépendantes avec des plannings et coachs distincts.
+                Le plan Starter vous limite à 1 seule salle. Passez au plan Premium pour gérer jusqu'à 3 salles indépendantes avec des plannings et coachs distincts.
               </p>
             </div>
           </div>

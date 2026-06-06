@@ -38,7 +38,7 @@ export default function OnboardingClient({ organizationId }: { organizationId: s
               <p className="text-sm text-gray-500">Ajoutez votre premier client (à venir).</p>
               <form action={completeOnboardingAction}>
                 <input type="hidden" name="orgId" value={organizationId} />
-                <Button type="submit">Terminer l&apos;onboarding</Button>
+                <Button type="submit">Terminer l'onboarding</Button>
               </form>
             </div>
           )}

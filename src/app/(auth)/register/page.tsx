@@ -169,7 +169,7 @@ function RegisterContent() {
             <span className="w-full border-t border-zinc-100" />
           </div>
           <div className="relative flex justify-center text-xs font-medium text-zinc-400">
-            <span className="bg-white px-4">Ou s&apos;inscrire avec</span>
+            <span className="bg-white px-4">Ou s'inscrire avec</span>
           </div>
         </div>
 

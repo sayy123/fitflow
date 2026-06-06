@@ -46,7 +46,7 @@ export default async function MemberDashboardPage({
           <CardContent>
             {member?.bookings.length === 0 ? (
               <div className="text-center py-6 text-gray-500">
-                Vous n&apos;avez pas encore de réservation.
+                Vous n'avez pas encore de réservation.
               </div>
             ) : (
               <div className="space-y-4">
@@ -75,7 +75,7 @@ export default async function MemberDashboardPage({
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="p-4 bg-gray-50 rounded-lg border border-dashed border-gray-300 text-center">
-              <p className="text-gray-600 mb-4">Vous n&apos;avez pas encore d&apos;abonnement actif dans ce studio.</p>
+              <p className="text-gray-600 mb-4">Vous n'avez pas encore d'abonnement actif dans ce studio.</p>
               <Button variant="outline" className="w-full">
                 <CreditCard className="mr-2 h-4 w-4" /> Voir les tarifs
               </Button>

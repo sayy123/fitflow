@@ -17,7 +17,7 @@ export default function InviteButton({ inviteLink }: { inviteLink: string }) {
       className="bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100 flex items-center gap-2"
     >
       <Copy className="h-4 w-4" />
-      Copier le lien d&apos;invitation
+      Copier le lien d'invitation
     </Button>
   )
 }

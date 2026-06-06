@@ -83,7 +83,7 @@ export function TrialBlockedWrapper({
                 Votre studio prend <br />son envol.
               </h2>
               <p className="text-zinc-500 font-medium text-lg max-w-sm mx-auto leading-relaxed">
-                Votre période d&apos;essai de 14 jours s&apos;est achevée. Pour continuer à faire grandir votre communauté, activez votre accès complet.
+                Votre période d'essai de 14 jours s'est achevée. Pour continuer à faire grandir votre communauté, activez votre accès complet.
               </p>
             </div>
 
@@ -111,10 +111,10 @@ export function TrialBlockedWrapper({
               
               <div className="flex flex-col items-center gap-1">
                 <p className="text-xs text-zinc-400 font-medium italic">
-                  Besoin d&apos;un délai supplémentaire ?
+                  Besoin d'un délai supplémentaire ?
                 </p>
                 <a href="mailto:fitflow@gmail.com" className="text-xs font-bold text-zinc-900 hover:underline">
-                  Contactez l&apos;équipe Fitflow
+                  Contactez l'équipe Fitflow
                 </a>
               </div>
             </div>

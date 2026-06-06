@@ -127,36 +127,25 @@ export async function inviteCoachAction(orgId: string, email: string, name?: str
     const { data: { users } } = await adminSupabase.auth.admin.listUsers();
     const existingAuthUser = users.find(u => u.email?.toLowerCase() === targetEmail);
 
+    // Toujours créer une invitation, même si l'utilisateur existe déjà.
+    // L'utilisateur verra l'invitation dans son dashboard et devra l'accepter.
+    await prisma.org_invitations.create({
+      data: {
+        organization_id: orgId,
+        email: targetEmail,
+        role: "coach"
+      }
+    });
+
+    // Optionnel: Envoyer un mail de notification si l'utilisateur existe déjà
     if (existingAuthUser) {
-      // S'il existe déjà, on l'ajoute directement
-      await prisma.org_members.upsert({
-        where: {
-          organization_id_user_id: {
-            organization_id: orgId,
-            user_id: existingAuthUser.id,
-          }
-        },
-        update: { role: "coach", display_name: name || targetEmail.split("@")[0] },
-        create: {
-          organization_id: orgId,
-          user_id: existingAuthUser.id,
-          role: "coach",
-          display_name: name || targetEmail.split("@")[0],
-        }
-      });
-      const { sendWelcomeEmail } = await import("@/lib/emails/send");
-      const studio = await prisma.organizations.findUnique({ where: { id: orgId } });
-      await sendWelcomeEmail(name || targetEmail.split("@")[0], studio?.name || "votre studio", targetEmail);
-    } else {
-      // S'il n'existe pas, on crée une invitation en attente
-      await prisma.org_invitations.create({
-        data: {
-          organization_id: orgId,
-          email: targetEmail,
-          role: "coach"
-        }
-      });
-      // Optionnel: Envoyer un mail disant "Vous avez été invité, créez votre compte ici"
+      try {
+        const { sendWelcomeEmail } = await import("@/lib/emails/send");
+        const studio = await prisma.organizations.findUnique({ where: { id: orgId } });
+        await sendWelcomeEmail(name || targetEmail.split("@")[0], `votre invitation chez ${studio?.name || "votre studio"}`, targetEmail);
+      } catch (e) {
+        console.warn("Could not send invitation email to existing user");
+      }
     }
 
     try { revalidatePath("/dashboard/coaches"); } catch (e) {}

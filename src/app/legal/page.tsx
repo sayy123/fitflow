@@ -9,7 +9,7 @@ export default function LegalPage() {
         <Link href="/">
           <Button variant="ghost" className="mb-8 -ml-4 text-zinc-500 hover:text-zinc-900">
             <ArrowLeft className="size-4 mr-2" />
-            Retour à l&apos;accueil
+            Retour à l'accueil
           </Button>
         </Link>
         
@@ -26,7 +26,7 @@ export default function LegalPage() {
           <section>
             <h2 className="text-xl font-bold text-zinc-900 mb-4">2. Contact</h2>
             <p>
-              Pour toute question, vous pouvez nous contacter à l&apos;adresse suivante : <br />
+              Pour toute question, vous pouvez nous contacter à l'adresse suivante : <br />
               <strong>Email :</strong> fitflow@gmail.com
             </p>
           </section>

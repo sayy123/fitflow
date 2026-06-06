@@ -162,7 +162,7 @@ export default function LoginPage() {
             href="/register"
             className="text-zinc-900 font-semibold hover:underline"
           >
-            S&apos;inscrire
+            S'inscrire
           </Link>
         </div>
       </CardContent>

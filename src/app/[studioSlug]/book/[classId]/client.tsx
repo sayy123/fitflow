@@ -216,7 +216,7 @@ export default function BookingClient({ org, cls, currentUser }: BookingClientPr
         {isFull && (
           <div className="mb-6 p-4 bg-yellow-50 border border-yellow-100 rounded-xl text-[10px] font-bold text-yellow-800 flex items-center gap-3">
             <span className="text-lg">⏳</span>
-            Ce cours est complet. Rejoignez la liste d&apos;attente.
+            Ce cours est complet. Rejoignez la liste d'attente.
           </div>
         )}
 
@@ -245,7 +245,7 @@ export default function BookingClient({ org, cls, currentUser }: BookingClientPr
                   fill="#EA4335"
                 />
               </svg>
-              S&apos;enregistrer avec Google
+              S'enregistrer avec Google
             </Button>
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">

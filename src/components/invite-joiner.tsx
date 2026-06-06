@@ -14,7 +14,7 @@ export function InviteJoiner() {
   return (
     <div className="w-full space-y-2">
       <label htmlFor="invite-link" className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">
-        Lien d&apos;invitation
+        Lien d'invitation
       </label>
       <div className="flex flex-col sm:flex-row gap-2">
         <input

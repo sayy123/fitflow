@@ -141,7 +141,7 @@ export default async function DashboardPage(props: {
                 Rejoindre un studio
               </CardTitle>
               <p className="text-sm text-zinc-500 font-medium mt-2">
-                J&apos;ai reçu un lien d&apos;invitation d&apos;un gérant.
+                J'ai reçu un lien d'invitation d'un gérant.
               </p>
             </CardHeader>
             <CardContent className="flex-1 flex flex-col justify-end p-8 pt-4">
@@ -451,7 +451,7 @@ export default async function DashboardPage(props: {
                     Aucune réservation pour le moment.
                   </p>
                   <p className="text-sm mt-1">
-                    Vos futures séances s&apos;afficheront ici.
+                    Vos futures séances s'afficheront ici.
                   </p>
                 </CardContent>
               </Card>

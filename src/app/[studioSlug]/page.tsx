@@ -42,7 +42,7 @@ export default async function PublicStudioPage({ params }: { params: { studioSlu
           {classes.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center text-gray-500">
-                Aucun cours n&apos;est prévu pour le moment.
+                Aucun cours n'est prévu pour le moment.
               </CardContent>
             </Card>
           ) : (
