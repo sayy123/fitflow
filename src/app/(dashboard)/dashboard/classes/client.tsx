@@ -221,6 +221,7 @@ export default function ClassesClient({
           }
         }}
       />
+      </div>
     </div>
   )
 }
