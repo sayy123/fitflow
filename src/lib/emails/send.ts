@@ -14,7 +14,7 @@ async function sendEmailDevOrProd(to: string, subject: string, html: string) {
   const smtpUser = process.env.SMTP_USER
   const smtpPassword = process.env.SMTP_PASSWORD
   const fromEmail = process.env.RESEND_FROM_EMAIL || smtpUser || 'onboarding@resend.dev'
-  const sender = `Fitloww <${fromEmail}>`
+  const sender = `fitflow887 <${fromEmail}>`
 
   // Si on a les identifiants SMTP (ex: Gmail App Password), on utilise ça en priorité
   if (smtpUser && smtpPassword) {
@@ -98,8 +98,8 @@ async function sendEmailDevOrProd(to: string, subject: string, html: string) {
 
 export async function sendWelcomeEmail(name: string, studioName: string, email: string, baseUrl?: string) {
   const siteUrl = (baseUrl || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(/\/$/, "");
-  const html = `<p>Bonjour ${name}, bienvenue sur Fitloww !</p><p>Votre studio <strong>${studioName}</strong> est prêt à être configuré.</p><p><a href="${siteUrl}/login">Connectez-vous ici</a></p>`
-  await sendEmailDevOrProd(email, `Bienvenue sur Fitloww, ${name} !`, html)
+  const html = `<p>Bonjour ${name}, bienvenue sur fitflow887 !</p><p>Votre studio <strong>${studioName}</strong> est prêt à être configuré.</p><p><a href="${siteUrl}/login">Connectez-vous ici</a></p>`
+  await sendEmailDevOrProd(email, `Bienvenue sur fitflow887, ${name} !`, html)
 }
 
 export async function sendBookingConfirmationEmail({
@@ -231,6 +231,7 @@ export async function sendRegistrationValidationEmail({
         <p style="font-size: 12px; color: #9ca3af; text-align: center;">Ce lien est valable pendant 24 heures.</p>
         
         <p style="margin-top: 40px; font-size: 14px; color: #9ca3af;">L'équipe fitflow887</p>
+
       </div>
     </div>
   `

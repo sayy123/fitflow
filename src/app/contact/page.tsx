@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 export default function ContactPage() {
   const [copied, setCopied] = useState(false);
-  const email = "fitloww887@gmail.com";
+  const email = "fitflow887@gmail.com";
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(email);
