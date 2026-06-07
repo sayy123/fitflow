@@ -11,6 +11,7 @@ interface TrialBlockedWrapperProps {
   isOwner: boolean;
   isTrialExpired: boolean;
   isTrialing: boolean;
+  isSubscriptionInactive: boolean;
   trialEndsAt: Date | string | null;
 }
 
@@ -19,6 +20,7 @@ export function TrialBlockedWrapper({
   isOwner,
   isTrialExpired: initialIsTrialExpired,
   isTrialing,
+  isSubscriptionInactive,
   trialEndsAt,
 }: TrialBlockedWrapperProps) {
   const pathname = usePathname();
@@ -63,8 +65,12 @@ export function TrialBlockedWrapper({
 
   const isBillingPage = pathname === "/dashboard/billing";
 
-  // Block access if trial expired, except for the billing page
-  const showBlockedScreen = isOwner && isExpired && isTrialing && !isBillingPage;
+  // Block access if trial expired OR subscription is inactive (canceled, past_due, etc.)
+  // Except for the billing page so they can resubscribe
+  const isBlockedByTrial = isTrialing && isExpired;
+  const isBlockedBySubscription = !isTrialing && isSubscriptionInactive;
+  
+  const showBlockedScreen = isOwner && (isBlockedByTrial || isBlockedBySubscription) && !isBillingPage;
 
   if (showBlockedScreen) {
     return (
@@ -80,10 +86,12 @@ export function TrialBlockedWrapper({
             
             <div className="space-y-3">
               <h2 className="text-4xl font-bold tracking-tight text-zinc-900">
-                Votre studio prend <br />son envol.
+                {isBlockedByTrial ? "Votre période d'essai est terminée." : "Votre abonnement a expiré."}
               </h2>
               <p className="text-zinc-500 font-medium text-lg max-w-sm mx-auto leading-relaxed">
-                Votre période d'essai de 14 jours s'est achevée. Pour continuer à faire grandir votre communauté, activez votre accès complet.
+                {isBlockedByTrial 
+                  ? "Votre période d'essai de 14 jours s'est achevée. Pour continuer à faire grandir votre communauté, activez votre accès complet."
+                  : "Votre abonnement n'est plus actif. Pour continuer à gérer votre studio et accéder à vos données, veuillez régulariser votre situation."}
               </p>
             </div>
 
@@ -105,13 +113,13 @@ export function TrialBlockedWrapper({
                 className="w-full bg-zinc-900 text-white rounded-full h-16 text-lg font-bold hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-zinc-900/10"
               >
                 <Link href="/dashboard/billing">
-                  Choisir mon forfait
+                  {isBlockedByTrial ? "Choisir mon forfait" : "Réactiver mon abonnement"}
                 </Link>
               </Button>
               
               <div className="flex flex-col items-center gap-1">
                 <p className="text-xs text-zinc-400 font-medium italic">
-                  Besoin d'un délai supplémentaire ?
+                  Besoin d'aide ou d'un délai ?
                 </p>
                 <Link href="/contact" className="text-xs font-bold text-zinc-900 hover:underline">
                   Contactez l'équipe Fitflow

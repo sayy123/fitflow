@@ -53,7 +53,15 @@ export default async function BillingPage() {
   const subscription_status = userProfile?.subscription_status || "trialing";
 
   const isTrialExpired =
-    userProfile?.trial_ends_at && new Date() > new Date(userProfile.trial_ends_at);
+    userProfile?.subscription_status === "trialing" && 
+    userProfile?.trial_ends_at && 
+    new Date() > new Date(userProfile.trial_ends_at);
+  
+  const isSubscriptionInactive = 
+    userProfile?.subscription_status !== "active" && 
+    userProfile?.subscription_status !== "trialing";
+
+  const isBlocked = isTrialExpired || isSubscriptionInactive;
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20 text-zinc-900">
@@ -64,12 +72,16 @@ export default async function BillingPage() {
         <h1 className="text-4xl font-bold tracking-tight">
           {isTrialExpired
             ? "Votre essai gratuit a expiré"
-            : "Propulsez votre studio"}
+            : isSubscriptionInactive
+              ? "Votre abonnement a expiré"
+              : "Propulsez votre studio"}
         </h1>
         <p className="text-zinc-500 text-lg max-w-2xl mx-auto">
           {isTrialExpired
             ? "Votre période d'essai de 14 jours est terminée. Choisissez un forfait pour continuer."
-            : "Vous êtes actuellement en période d'essai gratuit. Profitez-en pour configurer votre studio."}
+            : isSubscriptionInactive
+              ? "Votre abonnement n'est plus actif. Réactivez-le pour continuer à gérer votre studio."
+              : "Vous êtes actuellement en période d'essai gratuit. Profitez-en pour configurer votre studio."}
         </p>
       </div>
 
@@ -192,7 +204,7 @@ export default async function BillingPage() {
         </p>
       </div>
 
-      {!isTrialExpired && (
+      {!isBlocked && (
         <div className="text-center pt-4">
           <Link
             href="/dashboard"

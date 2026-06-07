@@ -80,6 +80,7 @@ export default async function DashboardLayout({
   const trialEnd = userProfile?.trial_ends_at ? new Date(userProfile.trial_ends_at) : null;
   const isTrialExpired = trialEnd ? now > trialEnd : false;
   const isTrialing = userProfile?.subscription_status === "trialing";
+  const isSubscriptionInactive = !isTrialing && userProfile?.subscription_status !== "active";
 
   return (
     <div className="flex min-h-screen bg-zinc-50/30 text-zinc-900 font-sans selection:bg-zinc-200">
@@ -98,6 +99,7 @@ export default async function DashboardLayout({
             isOwner={isOwner}
             isTrialExpired={isTrialExpired}
             isTrialing={isTrialing}
+            isSubscriptionInactive={isSubscriptionInactive}
             trialEndsAt={userProfile?.trial_ends_at || null}
           >
             {children}

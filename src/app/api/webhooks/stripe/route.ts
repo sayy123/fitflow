@@ -87,13 +87,14 @@ export async function POST(req: Request) {
       revalidatePath("/", "layout");
     }
 
-    // 2. SUBSCRIPTION UPDATED / PAID
-    if (event.type === "invoice.payment_succeeded") {
-      const invoice = event.data.object as Stripe.Invoice;
-      if (invoice.subscription) {
-        const subscription = await stripe.subscriptions.retrieve(
-          invoice.subscription as string
-        );
+    // 2. SUBSCRIPTION UPDATED / PAID / PAST DUE
+    if (event.type === "invoice.payment_succeeded" || event.type === "customer.subscription.updated") {
+      const subscriptionId = event.type === "invoice.payment_succeeded" 
+        ? (event.data.object as Stripe.Invoice).subscription as string
+        : (event.data.object as Stripe.Subscription).id;
+
+      if (subscriptionId) {
+        const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 
         console.log(`[Stripe Webhook] Syncing subscription status: ${subscription.status}`);
 
