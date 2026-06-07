@@ -82,6 +82,7 @@ export async function subscribeAction(plan: "starter" | "premium") {
       mode: "subscription",
       success_url: `${baseUrl}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/dashboard/billing`,
+      allow_promotion_codes: true,
       metadata: {
         userId: user.id,
         plan: plan,
