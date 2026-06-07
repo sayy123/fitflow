@@ -199,6 +199,8 @@ export default async function MembersPage() {
               )}
             </TableBody>
           </Table>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
