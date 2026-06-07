@@ -50,9 +50,31 @@ export async function subscribeAction(plan: "starter" | "premium") {
     // Créer ou récupérer le client Stripe
     let customerId = userProfile.stripe_customer_id;
     
+    // Si on a un customerId, on vérifie s'il existe toujours chez Stripe
+    if (customerId) {
+      try {
+        const existingCustomer = await stripe.customers.retrieve(customerId);
+        if ('deleted' in existingCustomer && existingCustomer.deleted) {
+          customerId = null;
+        }
+      } catch (e: any) {
+        // Si Stripe renvoie une erreur "No such customer", on reset le customerId
+        if (e.code === 'resource_missing') {
+          customerId = null;
+          // On nettoie la DB pour ne plus avoir cet ID invalide
+          await prisma.user_profiles.update({
+            where: { user_id: user.id },
+            data: { stripe_customer_id: null },
+          });
+        } else {
+          throw e; // Autre erreur Stripe
+        }
+      }
+    }
+    
     if (!customerId) {
       const customer = await stripe.customers.create({
-        email: user.email,
+        email: user.email || undefined,
         metadata: {
           userId: user.id,
         },

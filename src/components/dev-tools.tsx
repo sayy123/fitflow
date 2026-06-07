@@ -51,7 +51,7 @@ export function DevTools() {
     }
   }
 
-  if (!mounted || process.env.NODE_ENV !== 'development') return null
+  if (!mounted) return null
 
   return (
     <div className="bg-white/90 backdrop-blur-md border border-zinc-200 rounded-xl shadow-2xl p-2 w-48 space-y-3">
