@@ -105,9 +105,7 @@ export default async function DashboardLayout({
             {children}
           </TrialBlockedWrapper>
         </main>
-        <div className="fixed bottom-4 left-4 z-50">
-          <DevTools />
-        </div>
+
       </div>
     </div>
   );
