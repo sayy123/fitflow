@@ -498,9 +498,9 @@ export default function LandingPage() {
             <Link href="/pricing" className="hover:text-zinc-900 transition-colors">
               Tarifs
             </Link>
-            <a href="mailto:fitflow887@gmail.com" className="hover:text-zinc-900 transition-colors">
+            <Link href="/contact" className="hover:text-zinc-900 transition-colors">
               Contact
-            </a>
+            </Link>
             <Link href="/legal" className="hover:text-zinc-900 transition-colors">
               Légal
             </Link>

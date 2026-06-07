@@ -113,9 +113,9 @@ export function TrialBlockedWrapper({
                 <p className="text-xs text-zinc-400 font-medium italic">
                   Besoin d'un délai supplémentaire ?
                 </p>
-                <a href="mailto:fitflow887@gmail.com" className="text-xs font-bold text-zinc-900 hover:underline">
+                <Link href="/contact" className="text-xs font-bold text-zinc-900 hover:underline">
                   Contactez l'équipe Fitflow
-                </a>
+                </Link>
               </div>
             </div>
           </div>
