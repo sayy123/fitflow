@@ -70,3 +70,35 @@ export async function impersonateUser(authUserId: string) {
 
   redirect('/dashboard')
 }
+
+export async function updateTestSubscriptionStatus(status: string) {
+  if (process.env.NODE_ENV !== 'development') {
+    return { error: 'Only allowed in development' }
+  }
+
+  const { createClient: createServerClient } = await import('@/lib/supabase/server')
+  const supabase = await createServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) return { error: 'Not authenticated' }
+
+  const prisma = (await import('@/lib/prisma')).default
+
+  await prisma.user_profiles.update({
+    where: { user_id: user.id },
+    data: { subscription_status: status }
+  })
+
+  const membership = await prisma.org_members.findFirst({
+    where: { user_id: user.id, role: 'owner' }
+  })
+
+  if (membership) {
+    await prisma.organizations.update({
+      where: { id: membership.organization_id },
+      data: { subscription_status: status }
+    })
+  }
+
+  return { success: true }
+}
