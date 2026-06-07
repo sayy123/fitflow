@@ -108,9 +108,16 @@ export default async function MembersPage() {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="pt-0 overflow-x-auto">
-          <div className="min-w-[800px] md:min-w-0">
-            <Table>
+        <CardContent className="pt-0">
+          <div className="relative">
+            {/* Mobile Scroll Hint */}
+            <div className="md:hidden flex items-center justify-center gap-2 mb-4 py-2 bg-zinc-50 rounded-xl border border-zinc-100 animate-pulse">
+              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Faites glisser pour voir plus →</span>
+            </div>
+            
+            <div className="overflow-x-auto touch-pan-x pb-4 scrollbar-hide">
+              <div className="min-w-[800px] md:min-w-0">
+                <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent border-gray-100">
                 <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">

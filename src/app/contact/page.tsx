@@ -19,10 +19,10 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50/50 flex flex-col items-center justify-center p-6 selection:bg-zinc-200">
+    <div className="min-h-screen bg-zinc-50/50 flex flex-col items-center justify-center p-6 pt-24 md:pt-6 selection:bg-zinc-200 relative">
       <Link 
         href="/" 
-        className="fixed top-8 left-8 flex items-center gap-2 text-sm font-semibold text-zinc-500 hover:text-zinc-900 transition-colors group"
+        className="absolute top-8 left-8 flex items-center gap-2 text-sm font-semibold text-zinc-500 hover:text-zinc-900 transition-colors group"
       >
         <ArrowLeft className="size-4 group-hover:-translate-x-1 transition-transform" />
         Retour
@@ -31,11 +31,11 @@ export default function ContactPage() {
       <div className="w-full max-w-4xl grid md:grid-cols-2 gap-12 items-center">
         <div className="space-y-8">
           <div className="space-y-4">
-            <h1 className="text-5xl font-black tracking-tight text-zinc-900">
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-zinc-900 leading-[1.1]">
               Parlons de votre <br />
               <span className="text-zinc-400">studio.</span>
             </h1>
-            <p className="text-lg font-medium text-zinc-500 leading-relaxed max-w-md">
+            <p className="text-base md:text-lg font-medium text-zinc-500 leading-relaxed max-w-md">
               Besoin d&apos;aide, d&apos;une démonstration ou simplement envie de discuter ? Notre équipe est là.
             </p>
           </div>
