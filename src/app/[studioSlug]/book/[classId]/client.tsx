@@ -86,13 +86,13 @@ export default function BookingClient({ org, cls, currentUser }: BookingClientPr
   const handleAutoJoin = async () => {
     setIsAutoJoining(true)
     const { joinStudioAutomaticallyAction } = await import('@/app/actions/members')
-    const res = await joinStudioAutomaticallyAction(org.id)
+    const res = await joinStudioAutomaticallyAction(org.id, cls.id)
     setIsAutoJoining(false)
     
     if (res.error) {
       toast.error(res.error)
     } else {
-      toast.success('Bienvenue dans le studio !')
+      toast.success(res.bookingCreated ? 'Bienvenue ! Vous êtes maintenant inscrit à ce cours.' : 'Bienvenue dans le studio !')
       router.push('/dashboard')
     }
   }

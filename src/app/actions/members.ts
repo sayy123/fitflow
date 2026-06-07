@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 
-export async function joinStudioAutomaticallyAction(organizationId: string) {
+export async function joinStudioAutomaticallyAction(organizationId: string, classId?: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -13,13 +13,14 @@ export async function joinStudioAutomaticallyAction(organizationId: string) {
   }
 
   try {
-    // 1. Vérifier la limite de membres pour le plan Starter (40 max)
+    // 1. Récupérer le studio
     const org = await prisma.organizations.findUnique({
       where: { id: organizationId }
     })
 
     if (!org) return { error: 'Studio introuvable' }
 
+    // 2. Vérifier la limite de membres pour le plan Starter (40 max)
     if (org.plan === 'starter') {
       const currentCount = await prisma.studio_members.count({
         where: { organization_id: organizationId }
@@ -33,8 +34,8 @@ export async function joinStudioAutomaticallyAction(organizationId: string) {
       }
     }
 
-    // 2. Créer l'entrée dans studio_members pour le suivi interne (si n'existe pas)
-    await prisma.studio_members.upsert({
+    // 3. Créer/Récupérer l'entrée dans studio_members
+    const member = await prisma.studio_members.upsert({
       where: {
         organization_id_email: {
           organization_id: organizationId,
@@ -49,7 +50,7 @@ export async function joinStudioAutomaticallyAction(organizationId: string) {
       }
     })
 
-    // 3. S'assurer que l'utilisateur est aussi dans org_members pour voir le dashboard
+    // 4. S'assurer que l'utilisateur est aussi dans org_members pour voir le dashboard
     await prisma.org_members.upsert({
       where: {
         organization_id_user_id: {
@@ -66,8 +67,57 @@ export async function joinStudioAutomaticallyAction(organizationId: string) {
       }
     })
 
+    // 5. SI un classId est fourni, on inscrit l'utilisateur au cours
+    let bookingCreated = false;
+    if (classId) {
+      // Vérifier si déjà réservé
+      const existing = await prisma.bookings.findUnique({
+        where: {
+          class_id_studio_member_id: {
+            class_id: classId,
+            studio_member_id: member.id
+          }
+        }
+      })
+
+      if (!existing) {
+        // Créer la réservation
+        await prisma.bookings.create({
+          data: {
+            class_id: classId,
+            studio_member_id: member.id,
+            organization_id: organizationId,
+            status: 'confirmed',
+          }
+        })
+        bookingCreated = true;
+
+        // Envoyer email de confirmation
+        const { sendBookingConfirmationEmail } = await import('@/lib/emails/send');
+        const cls = await prisma.classes.findUnique({
+          where: { id: classId }
+        });
+        
+        if (cls) {
+          const { headers } = await import('next/headers');
+          const host = (await headers()).get('host');
+          const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
+
+          await sendBookingConfirmationEmail({
+            email: user.email,
+            fullName: user.user_metadata?.full_name || user.email.split('@')[0],
+            className: cls.title,
+            startsAt: cls.starts_at,
+            studioName: org.name,
+            isNewUser: false,
+            baseUrl: siteUrl
+          });
+        }
+      }
+    }
+
     revalidatePath('/dashboard')
-    return { success: true }
+    return { success: true, bookingCreated }
   } catch (error: any) {
     console.error('Auto-join error:', error)
     return { error: 'Erreur lors de l\'adhésion au studio' }
