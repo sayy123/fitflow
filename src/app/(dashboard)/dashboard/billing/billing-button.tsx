@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { subscribeAction } from "@/app/actions/billing";
+import { subscribeAction, createCustomerPortalAction } from "@/app/actions/billing";
 import { toast } from "sonner";
 
 interface BillingButtonProps {
@@ -11,6 +11,7 @@ interface BillingButtonProps {
   children: React.ReactNode;
   className?: string;
   variant?: "default" | "outline" | "secondary" | "ghost" | "link" | "destructive";
+  isCurrentPlan?: boolean;
 }
 
 export function BillingButton({ 
@@ -18,12 +19,31 @@ export function BillingButton({
   disabled, 
   children, 
   className,
-  variant = "default" 
+  variant = "default",
+  isCurrentPlan = false
 }: BillingButtonProps) {
   const [loading, setLoading] = useState(false);
 
-  const handleSubscribe = async () => {
+  const handleAction = async () => {
     setLoading(true);
+
+    if (isCurrentPlan) {
+      const toastId = toast.loading("Ouverture de votre espace client...");
+      try {
+        const result = await createCustomerPortalAction();
+        if (result?.error) {
+          toast.error(result.error, { id: toastId });
+        } else if (result?.url) {
+          window.location.href = result.url;
+        }
+      } catch (error) {
+        toast.error("Erreur lors de l'accès au portail Stripe.", { id: toastId });
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
     const toastId = toast.loading("Préparation du paiement...");
     
     try {
@@ -47,7 +67,7 @@ export function BillingButton({
       type="button"
       className={className}
       disabled={disabled || loading}
-      onClick={handleSubscribe}
+      onClick={handleAction}
       variant={variant}
     >
       {loading ? "Chargement..." : children}

@@ -108,3 +108,34 @@ export async function subscribeAction(plan: "starter" | "premium") {
     return { error: `Erreur Stripe : ${message}` };
   }
 }
+
+export async function createCustomerPortalAction() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Non authentifié" };
+
+  const userProfile = await prisma.user_profiles.findUnique({
+    where: { user_id: user.id },
+  });
+
+  if (!userProfile?.stripe_customer_id) {
+    return { error: "Aucun historique de paiement trouvé." };
+  }
+
+  try {
+    const host = (await headers()).get("host");
+    const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
+    const returnUrl = `${siteUrl.replace(/\/$/, "")}/dashboard/billing`;
+
+    const session = await stripe.billingPortal.sessions.create({
+      customer: userProfile.stripe_customer_id,
+      return_url: returnUrl,
+    });
+
+    return { url: session.url };
+  } catch (error: unknown) {
+    console.error("Stripe Portal Error:", error);
+    return { error: "Erreur lors de l'ouverture du portail de gestion." };
+  }
+}
+

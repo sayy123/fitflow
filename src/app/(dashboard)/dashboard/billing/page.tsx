@@ -112,13 +112,11 @@ export default async function BillingPage() {
             <BillingButton
               plan="starter"
               className="w-full h-12 rounded-xl font-semibold bg-zinc-900 text-white hover:bg-zinc-800"
-              disabled={
-                (plan === "starter" && subscription_status === "active") ||
-                plan === "premium"
-              }
+              isCurrentPlan={plan === "starter" && subscription_status === "active"}
+              disabled={plan === "premium"}
             >
               {plan === "starter" && subscription_status === "active"
-                ? "Plan actuel"
+                ? "Gérer mon abonnement"
                 : plan === "premium" 
                   ? "Indisponible en Premium"
                   : "Activer Starter"}
@@ -177,10 +175,10 @@ export default async function BillingPage() {
             <BillingButton
               plan="premium"
               className="w-full h-12 rounded-xl font-bold bg-white text-zinc-900 hover:bg-zinc-100"
-              disabled={plan === "premium" && subscription_status === "active"}
+              isCurrentPlan={plan === "premium" && subscription_status === "active"}
             >
               {plan === "premium" && subscription_status === "active"
-                ? "Plan actuel"
+                ? "Gérer mon abonnement"
                 : "Activer Premium"}
             </BillingButton>
           </CardContent>
