@@ -127,6 +127,16 @@ export async function inviteCoachAction(orgId: string, email: string, name?: str
     const { data: { users } } = await adminSupabase.auth.admin.listUsers();
     const existingAuthUser = users.find(u => u.email?.toLowerCase() === targetEmail);
 
+    // 2. Vérifier si l'utilisateur est déjà propriétaire d'un studio
+    if (existingAuthUser) {
+      const isOwner = await prisma.org_members.findFirst({
+        where: { user_id: existingAuthUser.id, role: "owner" }
+      });
+      if (isOwner) {
+        return { error: "Cet utilisateur possède déjà un studio et ne peut pas être invité comme coach." };
+      }
+    }
+
     // Toujours créer une invitation, même si l'utilisateur existe déjà.
     // L'utilisateur verra l'invitation dans son dashboard et devra l'accepter.
     await prisma.org_invitations.create({

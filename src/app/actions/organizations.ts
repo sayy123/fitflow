@@ -72,6 +72,22 @@ export async function inviteCoachToOrgAction(orgId: string, email: string, name:
 
     const targetEmail = email.toLowerCase().trim();
 
+    // 1. Vérifier si l'utilisateur existe déjà dans Supabase pour envoyer le bon mail
+    const { createAdminClient } = await import("@/lib/supabase/admin");
+    const adminSupabase = createAdminClient();
+    const { data: { users } } = await adminSupabase.auth.admin.listUsers();
+    const existingAuthUser = users.find(u => u.email?.toLowerCase() === targetEmail);
+
+    // 2. Vérifier si l'utilisateur est déjà propriétaire d'un studio
+    if (existingAuthUser) {
+      const isOwner = await prisma.org_members.findFirst({
+        where: { user_id: existingAuthUser.id, role: "owner" }
+      });
+      if (isOwner) {
+        return { error: "Cet utilisateur possède déjà un studio et ne peut pas être invité comme coach." };
+      }
+    }
+
     // Toujours créer une invitation, même si l'utilisateur existe déjà.
     await prisma.org_invitations.create({
       data: {
@@ -80,12 +96,6 @@ export async function inviteCoachToOrgAction(orgId: string, email: string, name:
         role: "coach"
       }
     });
-
-    // 1. Vérifier si l'utilisateur existe déjà dans Supabase pour envoyer le bon mail
-    const { createAdminClient } = await import("@/lib/supabase/admin");
-    const adminSupabase = createAdminClient();
-    const { data: { users } } = await adminSupabase.auth.admin.listUsers();
-    const existingAuthUser = users.find(u => u.email?.toLowerCase() === targetEmail);
 
     // 3. Envoyer un email d'invitation simple
     const { sendWelcomeEmail } = await import("@/lib/emails/send");
