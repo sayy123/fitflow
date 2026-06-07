@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
+import { headers } from 'next/headers'
 
 export async function updateOrganizationAction(orgId: string, data: { name?: string, address?: string, phone?: string }) {
   const supabase = await createClient()
@@ -89,7 +90,9 @@ export async function inviteCoachToOrgAction(orgId: string, email: string, name:
     // 3. Envoyer un email d'invitation simple
     const { sendWelcomeEmail } = await import("@/lib/emails/send");
     const studio = await prisma.organizations.findUnique({ where: { id: orgId } });
-    await sendWelcomeEmail(name, studio?.name || "votre studio", targetEmail);
+    const host = (await headers()).get("host");
+    const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
+    await sendWelcomeEmail(name, studio?.name || "votre studio", targetEmail, siteUrl);
 
     revalidatePath("/dashboard/coaches");
     return { success: true }

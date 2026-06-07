@@ -96,8 +96,9 @@ async function sendEmailDevOrProd(to: string, subject: string, html: string) {
   }
 }
 
-export async function sendWelcomeEmail(name: string, studioName: string, email: string) {
-  const html = `<p>Bonjour ${name}, bienvenue sur Fitflow !</p><p>Votre studio <strong>${studioName}</strong> est prêt à être configuré.</p><p><a href="${process.env.NEXT_PUBLIC_APP_URL}/login">Connectez-vous ici</a></p>`
+export async function sendWelcomeEmail(name: string, studioName: string, email: string, baseUrl?: string) {
+  const siteUrl = (baseUrl || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(/\/$/, "");
+  const html = `<p>Bonjour ${name}, bienvenue sur Fitflow !</p><p>Votre studio <strong>${studioName}</strong> est prêt à être configuré.</p><p><a href="${siteUrl}/login">Connectez-vous ici</a></p>`
   await sendEmailDevOrProd(email, `Bienvenue sur Fitflow, ${name} !`, html)
 }
 
@@ -108,7 +109,8 @@ export async function sendBookingConfirmationEmail({
   startsAt,
   studioName,
   token,
-  isNewUser
+  isNewUser,
+  baseUrl
 }: {
   email: string,
   fullName: string,
@@ -116,9 +118,11 @@ export async function sendBookingConfirmationEmail({
   startsAt: Date,
   studioName: string,
   token?: string,
-  isNewUser: boolean
+  isNewUser: boolean,
+  baseUrl?: string
 }) {
-  const validationLink = token ? `${process.env.NEXT_PUBLIC_APP_URL}/api/bookings/verify?token=${token}` : ''
+  const siteUrl = (baseUrl || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(/\/$/, "");
+  const validationLink = token ? `${siteUrl}/api/bookings/verify?token=${token}` : ''
   const dateStr = startsAt.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
   const timeStr = startsAt.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
 
@@ -163,7 +167,7 @@ export async function sendBookingConfirmationEmail({
     `
   } else {
     subject = `Confirmation : Votre séance de ${className}`
-    const loginLink = `${process.env.NEXT_PUBLIC_APP_URL}/login`
+    const loginLink = `${siteUrl}/login`
     html = `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #f0f0f0; border-radius: 16px; overflow: hidden;">
         <div style="background-color: #6366f1; padding: 40px 20px; text-align: center; color: white;">
@@ -198,12 +202,15 @@ export async function sendRegistrationValidationEmail({
   email,
   fullName,
   token,
+  baseUrl
 }: {
   email: string,
   fullName: string,
   token: string,
+  baseUrl?: string
 }) {
-  const validationLink = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/verify-registration?token=${token}`
+  const siteUrl = (baseUrl || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(/\/$/, "");
+  const validationLink = `${siteUrl}/api/auth/verify-registration?token=${token}`
   
   const subject = `Vérifiez votre adresse email pour Fitflow`
   const html = `

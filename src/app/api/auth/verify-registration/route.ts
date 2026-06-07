@@ -78,7 +78,9 @@ export async function GET(request: NextRequest) {
           })
         })
         
-        await sendWelcomeEmail(pending.full_name, pending.studio_name, pending.email)
+        const host = request.headers.get('host')
+        const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
+        await sendWelcomeEmail(pending.full_name, pending.studio_name, pending.email, siteUrl)
       } catch (error) {
         console.error('Organization creation error:', error)
       }

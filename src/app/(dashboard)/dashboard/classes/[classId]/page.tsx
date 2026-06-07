@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound, redirect } from 'next/navigation'
 import prisma from '@/lib/prisma'
 import ClassDetailClient from './client'
+import { headers } from 'next/headers'
 
 export default async function ClassDetailPage(props: { params: Promise<{ classId: string }> }) {
   const params = await props.params
@@ -49,7 +50,9 @@ export default async function ClassDetailPage(props: { params: Promise<{ classId
     }
   })
 
-  const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/${cls.organizations.slug}/book/${cls.id}?invite=true`
+  const host = (await headers()).get('host')
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : 'http://localhost:3000')
+  const inviteLink = `${siteUrl.replace(/\/$/, '')}/${cls.organizations.slug}/book/${cls.id}?invite=true`
 
   return (
     <ClassDetailClient 

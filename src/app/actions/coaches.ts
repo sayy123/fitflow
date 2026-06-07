@@ -142,7 +142,10 @@ export async function inviteCoachAction(orgId: string, email: string, name?: str
       try {
         const { sendWelcomeEmail } = await import("@/lib/emails/send");
         const studio = await prisma.organizations.findUnique({ where: { id: orgId } });
-        await sendWelcomeEmail(name || targetEmail.split("@")[0], `votre invitation chez ${studio?.name || "votre studio"}`, targetEmail);
+        const host = (await headers()).get("host");
+        const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
+        
+        await sendWelcomeEmail(name || targetEmail.split("@")[0], `votre invitation chez ${studio?.name || "votre studio"}`, targetEmail, siteUrl);
       } catch (e) {
         console.warn("Could not send invitation email to existing user");
       }

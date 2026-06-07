@@ -267,11 +267,15 @@ export async function signOutAction() {
 
 export async function resendVerificationAction(email: string) {
   const supabase = await createClient();
+  const host = (await headers()).get("host");
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
+  const redirectUrl = `${siteUrl.replace(/\/$/, "")}/api/auth/callback`;
+
   const { error } = await supabase.auth.resend({
     type: "signup",
     email,
     options: {
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback`,
+      emailRedirectTo: redirectUrl,
     },
   });
 

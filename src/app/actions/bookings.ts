@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import { sendBookingConfirmationEmail } from '@/lib/emails/send'
+import { headers } from 'next/headers'
 
 const bookingSchema = z.object({
   classId: z.preprocess((val) => val ?? undefined, z.string().uuid()),
@@ -123,13 +124,17 @@ export async function createBookingAction(formData: FormData) {
       })
 
       // Envoyer email de confirmation
+      const host = (await headers()).get('host')
+      const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
+      
       await sendBookingConfirmationEmail({
         email: currentUser.email,
         fullName: currentUser.user_metadata?.full_name || fullName,
         className: cls.title,
         startsAt: cls.starts_at,
         studioName: cls.organizations.name,
-        isNewUser: false
+        isNewUser: false,
+        baseUrl: siteUrl
       })
 
       revalidatePath(`/${cls.organizations.slug}/book/${classId}`, 'page')
@@ -246,13 +251,17 @@ export async function createBookingAction(formData: FormData) {
     })
 
     // 4. Envoyer email de confirmation immédiat
+    const host = (await headers()).get('host')
+    const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
+
     await sendBookingConfirmationEmail({
       email: email.toLowerCase().trim(),
       fullName: fullName,
       className: cls.title,
       startsAt: cls.starts_at,
       studioName: cls.organizations.name,
-      isNewUser: true // On lui indique qu'il pourra se connecter plus tard
+      isNewUser: true, // On lui indique qu'il pourra se connecter plus tard
+      baseUrl: siteUrl
     })
 
     revalidatePath(`/${cls.organizations.slug}/book/${classId}`, 'page')
