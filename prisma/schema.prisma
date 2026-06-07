@@ -484,6 +484,7 @@ model classes {
   starts_at        DateTime           @db.Timestamptz(6)
   duration_min     Int                @default(60)
   capacity         Int                @default(15)
+  price            Float?
   location         String?
   color            String?            @default("#4f46e5")
   is_recurring     Boolean?           @default(false)
@@ -547,6 +548,8 @@ model organizations {
   stripe_price_id        String?
   subscription_status    String?                 @default("trialing")
   trial_ends_at          DateTime?               @default(dbgenerated("(now() + '14 days'::interval)")) @db.Timestamptz(6)
+  stripe_account_id      String?                 @unique
+  stripe_charges_enabled Boolean?                @default(false)
   logo_url               String?
   color_primary          String?                 @default("#4f46e5")
   timezone               String?                 @default("Europe/Brussels")

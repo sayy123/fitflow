@@ -43,6 +43,8 @@ interface SettingsClientProps {
     address?: string | null;
     phone?: string | null;
     plan?: string | null;
+    stripe_account_id?: string | null;
+    stripe_charges_enabled?: boolean | null;
   };
   user: {
     email: string;
@@ -63,6 +65,33 @@ export function SettingsClient({
   const [activeTab, setActiveTab] = useState<
     "profile" | "studio" | "security" | "billing"
   >("profile");
+
+  const [stripeLoading, setStripeLoading] = useState(false);
+
+  const handleConnectStripe = async () => {
+    setStripeLoading(true);
+    const { createStripeConnectAccountAction } = await import('@/app/actions/billing');
+    const result = await createStripeConnectAccountAction(organization.id);
+    if (result.error) {
+      toast.error(result.error);
+      setStripeLoading(false);
+    } else if (result.url) {
+      window.location.href = result.url;
+    }
+  };
+
+  const handleOpenStripeDashboard = async () => {
+    setStripeLoading(true);
+    const { createStripeConnectLoginLinkAction } = await import('@/app/actions/billing');
+    const result = await createStripeConnectLoginLinkAction(organization.id);
+    if (result.error) {
+      toast.error(result.error);
+      setStripeLoading(false);
+    } else if (result.url) {
+      window.open(result.url, '_blank');
+      setStripeLoading(false);
+    }
+  };
 
   // Avatar State
   const [avatarUrl, setAvatarUrl] = useState(
