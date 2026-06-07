@@ -118,8 +118,15 @@ export default function ClassDetailClient({
     : null
 
   // Format the date for the datetime-local input (YYYY-MM-DDTHH:mm) in local time
-  const dateObj = new Date(cls.starts_at)
-  const defaultStartsAt = new Date(dateObj.getTime() - (dateObj.getTimezoneOffset() * 60000)).toISOString().slice(0, 16)
+  let defaultStartsAt = ''
+  try {
+    const dateObj = new Date(cls.starts_at)
+    if (!isNaN(dateObj.getTime())) {
+      defaultStartsAt = new Date(dateObj.getTime() - (dateObj.getTimezoneOffset() * 60000)).toISOString().slice(0, 16)
+    }
+  } catch (e) {
+    // Silently fallback if date is invalid
+  }
 
   return (
     <div className="space-y-6">
@@ -277,11 +284,11 @@ export default function ClassDetailClient({
                   <TableCell className="px-8 py-4">
                     <div className="flex items-center gap-3">
                       <div className="size-9 rounded-xl bg-gray-50 border border-gray-100 overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-black text-[10px] text-primary uppercase">
-                        {booking.studio_members.full_name.charAt(0)}
+                        {booking.studio_members?.full_name?.charAt(0) || '?'}
                       </div>
                       <div className="flex flex-col">
-                        <span className="font-bold text-sm text-gray-900">{booking.studio_members.full_name}</span>
-                        <span className="text-[11px] text-gray-400 font-medium">{booking.studio_members.email}</span>
+                        <span className="font-bold text-sm text-gray-900">{booking.studio_members?.full_name || 'Inconnu'}</span>
+                        <span className="text-[11px] text-gray-400 font-medium">{booking.studio_members?.email || 'N/A'}</span>
                       </div>
                     </div>
                   </TableCell>
