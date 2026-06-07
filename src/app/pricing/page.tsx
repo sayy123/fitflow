@@ -13,7 +13,7 @@ export default function PricingPage() {
               <div className="size-7 bg-gradient-to-tr from-zinc-900 to-zinc-800 rounded-lg flex items-center justify-center shadow-sm shadow-zinc-900/20 ring-1 ring-zinc-900/5">
                 <Activity className="size-4 text-white" />
               </div>
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-zinc-900 to-zinc-600">Fitflow</span>
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-zinc-900 to-zinc-600">Fitloww</span>
             </div>
           </Link>
           <div className="flex items-center gap-6">
@@ -172,7 +172,7 @@ export default function PricingPage() {
               <div className="size-6 bg-zinc-900 rounded-md flex items-center justify-center">
                   <Activity className="size-3 text-white" />
               </div>
-              Fitflow
+              Fitloww
             </div>
             <p className="text-zinc-500 text-sm font-medium">L'outil de gestion ultime pour les studios de fitness.</p>
           </div>
@@ -182,7 +182,7 @@ export default function PricingPage() {
             <Link href="#" className="hover:text-zinc-900 transition-colors">Contact</Link>
           </div>
           <p className="text-sm font-medium text-zinc-400">
-            © 2026 Fitflow. Tous droits réservés.
+            © 2026 Fitloww. Tous droits réservés.
           </p>
         </div>
       </footer>

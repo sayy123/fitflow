@@ -122,7 +122,7 @@ export function TrialBlockedWrapper({
                   Besoin d'aide ou d'un délai ?
                 </p>
                 <Link href="/contact" className="text-xs font-bold text-zinc-900 hover:underline">
-                  Contactez l'équipe Fitflow
+                  Contactez l'équipe Fitloww
                 </Link>
               </div>
             </div>

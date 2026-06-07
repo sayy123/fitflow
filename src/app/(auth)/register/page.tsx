@@ -40,7 +40,7 @@ function RegisterContent() {
           <UserPlus className="size-5" />
         </div>
         <CardTitle className="text-2xl font-bold tracking-tight text-zinc-900">
-          Rejoignez Fitflow
+          Rejoignez Fitloww
         </CardTitle>
         <CardDescription className="text-zinc-500 font-medium mt-1">
           {role === "manager"

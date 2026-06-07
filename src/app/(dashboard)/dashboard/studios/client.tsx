@@ -95,7 +95,7 @@ export default function StudiosClient({
                 <Input
                   id="name"
                   name="name"
-                  placeholder="Ex: Fitflow Paris 15"
+                  placeholder="Ex: Fitloww Paris 15"
                   required
                   className="bg-white"
                 />

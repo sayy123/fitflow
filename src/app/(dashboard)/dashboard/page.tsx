@@ -95,7 +95,7 @@ export default async function DashboardPage(props: {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-12">
         <div className="text-center space-y-3">
-          <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Bienvenue sur Fitflow</h2>
+          <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Bienvenue sur Fitloww</h2>
           <p className="text-gray-500 text-base max-w-sm mx-auto font-medium">
             Comment souhaitez-vous utiliser la plateforme ?
           </p>

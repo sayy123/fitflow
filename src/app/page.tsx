@@ -63,19 +63,19 @@ export default function LandingPage() {
 
   const faqs = [
     {
-      q: "Combien de temps faut-il pour configurer Fitflow ?",
+      q: "Combien de temps faut-il pour configurer Fitloww ?",
       a: "Moins de 5 minutes. Notre assistant d'intégration vous guide pas à pas. Vous pouvez créer votre studio, ajouter vos coachs et publier votre premier cours immédiatement.",
     },
     {
       q: "Mes clients doivent-ils télécharger une application ?",
-      a: "Non, Fitflow est une Web App progressive (PWA). Vos membres y accèdent via un simple lien, avec une interface parfaitement optimisée pour mobile.",
+      a: "Non, Fitloww est une Web App progressive (PWA). Vos membres y accèdent via un simple lien, avec une interface parfaitement optimisée pour mobile.",
     },
     {
       q: "Puis-je gérer plusieurs studios avec un seul compte ?",
       a: "Absolument. Vous pouvez basculer d'un studio à l'autre en un clic depuis votre espace administrateur.",
     },
     {
-      q: "Fitflow prend-il une commission sur les réservations ?",
+      q: "Fitloww prend-il une commission sur les réservations ?",
       a: "Non, nous ne prenons aucune commission sur vos ventes. Vous gardez 100% de vos revenus (hors frais standards de votre processeur de paiement comme Stripe).",
     },
   ];
@@ -97,7 +97,7 @@ export default function LandingPage() {
               <Activity className="size-4 text-white" />
             </div>
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-zinc-900 to-zinc-600">
-              Fitflow
+              Fitloww
             </span>
           </div>
           <div className="flex items-center gap-6">
@@ -149,7 +149,7 @@ export default function LandingPage() {
             </h1>
 
             <p className="text-lg md:text-xl text-zinc-500 mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
-              Fitflow est l'écosystème élégant conçu pour les studios de fitness
+              Fitloww est l'écosystème élégant conçu pour les studios de fitness
               boutique. Centralisez vos plannings, vos coachs et vos membres
               dans une interface d'une clarté absolue.
             </p>
@@ -252,7 +252,7 @@ export default function LandingPage() {
                 Une élégance visible.
               </h2>
               <p className="text-zinc-500 text-xl font-medium leading-relaxed">
-                Découvrez comment Fitflow simplifie chaque aspect de la gestion
+                Découvrez comment Fitloww simplifie chaque aspect de la gestion
                 de votre studio, de la réservation à l'encaissement.
               </p>
             </div>
@@ -346,7 +346,7 @@ export default function LandingPage() {
                 L'indépendance technologique.
               </h2>
               <p className="text-zinc-400 text-xl font-medium">
-                Nous ne sommes pas une marketplace. Fitflow est votre outil,
+                Nous ne sommes pas une marketplace. Fitloww est votre outil,
                 conçu pour mettre en valeur votre marque, pas la nôtre.
               </p>
             </div>
@@ -485,7 +485,7 @@ export default function LandingPage() {
               <div className="size-6 bg-zinc-900 rounded-md flex items-center justify-center">
                 <Activity className="size-3 text-white" />
               </div>
-              Fitflow
+              Fitloww
             </div>
             <p className="text-zinc-500 text-sm font-medium">
               L'outil de gestion ultime pour les studios de fitness.
@@ -506,7 +506,7 @@ export default function LandingPage() {
             </Link>
           </div>
           <p className="text-sm font-medium text-zinc-400">
-            © 2026 Fitflow. Tous droits réservés.
+            © 2026 Fitloww. Tous droits réservés.
           </p>
         </div>
       </footer>

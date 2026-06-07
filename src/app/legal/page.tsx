@@ -19,7 +19,7 @@ export default function LegalPage() {
           <section>
             <h2 className="text-xl font-bold text-zinc-900 mb-4">1. Présentation du site</h2>
             <p>
-              Le site <strong>Fitflow</strong> est une plateforme de gestion pour studios de fitness.
+              Le site <strong>Fitloww</strong> est une plateforme de gestion pour studios de fitness.
             </p>
           </section>
 
@@ -27,7 +27,7 @@ export default function LegalPage() {
             <h2 className="text-xl font-bold text-zinc-900 mb-4">2. Contact</h2>
             <p>
               Pour toute question, vous pouvez nous contacter à l'adresse suivante : <br />
-              <strong>Email :</strong> fitflow887@gmail.com
+              <strong>Email :</strong> fitloww887@gmail.com
             </p>
           </section>
 
@@ -41,7 +41,7 @@ export default function LegalPage() {
           <section>
             <h2 className="text-xl font-bold text-zinc-900 mb-4">4. Propriété intellectuelle</h2>
             <p>
-              Tous les contenus présents sur le site (textes, images, graphismes, logo, icônes) sont la propriété exclusive de Fitflow ou de leurs auteurs respectifs.
+              Tous les contenus présents sur le site (textes, images, graphismes, logo, icônes) sont la propriété exclusive de Fitloww ou de leurs auteurs respectifs.
             </p>
           </section>
         </div>

@@ -110,7 +110,7 @@ export function Sidebar({
           </div>
         )}
         <p className="text-[11px] font-medium text-zinc-500 mt-1.5 uppercase tracking-wider">
-          Fitflow
+          Fitloww
         </p>
       </div>
 
@@ -125,7 +125,7 @@ export function Sidebar({
             <p className="text-[11px] text-zinc-400 leading-tight mb-2">
               Il vous reste <span className="text-white font-bold">
                 {daysLeft > 0 ? `${daysLeft} jours` : `${hoursLeft} heures`}
-              </span> pour tester Fitflow.
+              </span> pour tester Fitloww.
             </p>
             <Link href="/dashboard/billing">
               <button className="w-full h-7 rounded-lg bg-white text-zinc-900 text-[10px] font-bold hover:bg-zinc-100 transition-colors">

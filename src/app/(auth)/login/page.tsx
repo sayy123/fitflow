@@ -50,7 +50,7 @@ export default function LoginPage() {
           Content de vous revoir
         </CardTitle>
         <CardDescription className="text-zinc-500 font-medium mt-1">
-          Accédez à votre espace personnel Fitflow.
+          Accédez à votre espace personnel Fitloww.
         </CardDescription>
       </CardHeader>
       <CardContent className="px-10 pb-10">

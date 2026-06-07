@@ -201,7 +201,7 @@ export function SettingsClient({
           Paramètres
         </h2>
         <p className="text-sm font-medium text-gray-500">
-          Gérez votre expérience sur Fitflow
+          Gérez votre expérience sur Fitloww
         </p>
       </div>
 
