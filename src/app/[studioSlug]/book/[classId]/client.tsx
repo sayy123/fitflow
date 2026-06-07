@@ -81,6 +81,22 @@ export default function BookingClient({ org, cls, currentUser }: BookingClientPr
     }
   }
 
+  const [isAutoJoining, setIsAutoJoining] = useState(false)
+  
+  const handleAutoJoin = async () => {
+    setIsAutoJoining(true)
+    const { joinStudioAutomaticallyAction } = await import('@/app/actions/members')
+    const res = await joinStudioAutomaticallyAction(org.id)
+    setIsAutoJoining(false)
+    
+    if (res.error) {
+      toast.error(res.error)
+    } else {
+      toast.success('Bienvenue dans le studio !')
+      router.push('/dashboard')
+    }
+  }
+
   const isFull = cls.bookings.length >= cls.capacity
 
   if (isUserBooked && userBooking) {
@@ -207,13 +223,33 @@ export default function BookingClient({ org, cls, currentUser }: BookingClientPr
         )}
 
         {currentUser && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-100 rounded-xl text-[10px] font-bold text-green-800 flex items-center gap-3">
-            <span className="text-lg">👤</span>
-            Connecté en tant que {currentUser.email}
+          <div className="mb-8 p-6 bg-zinc-900 rounded-[2rem] text-white space-y-4 shadow-xl shadow-zinc-900/20 animate-in zoom-in duration-500">
+            <div className="flex items-center gap-4">
+              <div className="size-10 rounded-full bg-white/10 flex items-center justify-center border border-white/20">
+                <span className="text-lg">✨</span>
+              </div>
+              <div className="flex-1">
+                <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Connecté</p>
+                <p className="text-sm font-black truncate">{currentUser.email}</p>
+              </div>
+            </div>
+
+            <div className="space-y-3 pt-2">
+              <p className="text-xs font-medium text-zinc-300 leading-relaxed">
+                Vous pouvez rejoindre ce studio en un clic pour suivre vos cours et gérer vos réservations.
+              </p>
+              <Button 
+                onClick={handleAutoJoin}
+                disabled={isAutoJoining}
+                className="w-full h-12 rounded-xl bg-white text-zinc-900 font-black uppercase tracking-widest text-[10px] hover:bg-zinc-100 transition-all"
+              >
+                {isAutoJoining ? "Adhésion..." : "Rejoindre le studio directement"}
+              </Button>
+            </div>
           </div>
         )}
 
-        {isFull && (
+        {isInvite && !currentUser && (
           <div className="mb-6 p-4 bg-yellow-50 border border-yellow-100 rounded-xl text-[10px] font-bold text-yellow-800 flex items-center gap-3">
             <span className="text-lg">⏳</span>
             Ce cours est complet. Rejoignez la liste d'attente.
