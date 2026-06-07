@@ -5,6 +5,8 @@ import prisma from "@/lib/prisma";
 import Stripe from "stripe";
 import { revalidatePath } from "next/cache";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
   console.log("[Stripe Webhook] 🔔 New Webhook received");
   const body = await req.text();
@@ -90,7 +92,7 @@ export async function POST(req: Request) {
     // 2. SUBSCRIPTION UPDATED / PAID / PAST DUE
     if (event.type === "invoice.payment_succeeded" || event.type === "customer.subscription.updated") {
       const subscriptionId = event.type === "invoice.payment_succeeded" 
-        ? (event.data.object as Stripe.Invoice).subscription as string
+        ? (event.data.object as any).subscription as string
         : (event.data.object as Stripe.Subscription).id;
 
       if (subscriptionId) {

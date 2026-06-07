@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
+import { headers } from 'next/headers'
 
 const PLAN_LIMITS: Record<string, number> = {
   starter: 3,

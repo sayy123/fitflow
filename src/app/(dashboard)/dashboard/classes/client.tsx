@@ -73,6 +73,7 @@ export default function ClassesClient({
       starts_at: new Date(formData.get('starts_at') as string).toISOString(),
       duration_min: parseInt(formData.get('duration_min') as string),
       capacity: parseInt(formData.get('capacity') as string),
+      price: formData.get('price') ? parseFloat(formData.get('price') as string) : null,
       color: formData.get('color') as string || '#4f46e5',
       location: formData.get('location') as string || '',
       coach_id: formData.get('coach_id') === "" ? null : (formData.get('coach_id') as string),
@@ -214,6 +215,18 @@ export default function ClassesClient({
         }}
         eventClick={(info) => {
           const slug = info.event.extendedProps.studioSlug || studioSlug
+          if (isStaff) {
+            window.location.href = `/dashboard/classes/${info.event.id}`
+          } else {
+            window.location.href = `/${slug}/book/${info.event.id}`
+          }
+        }}
+      />
+      </div>
+    </div>
+  )
+}
+      const slug = info.event.extendedProps.studioSlug || studioSlug
           if (isStaff) {
             window.location.href = `/dashboard/classes/${info.event.id}`
           } else {

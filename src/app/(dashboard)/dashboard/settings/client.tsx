@@ -288,6 +288,28 @@ export function SettingsClient({
                     </Button>
                   </Link>
                 </div>
+
+                <div className="bg-zinc-50 border border-zinc-100 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                  <div className="space-y-1">
+                    <p className="text-sm font-semibold">
+                      Paiements des membres
+                    </p>
+                    <p className="text-xs text-zinc-500 font-medium leading-relaxed max-w-md">
+                      Connectez votre compte Stripe pour accepter les paiements de vos membres directement lors de leurs réservations. Vous gardez 100% du montant.
+                    </p>
+                  </div>
+                  <div>
+                    {organization.stripe_charges_enabled ? (
+                      <Button onClick={handleOpenStripeDashboard} disabled={stripeLoading} variant="outline" className="h-10 px-5 rounded-lg font-semibold shrink-0 border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100">
+                        {stripeLoading ? "Chargement..." : "Tableau de bord Stripe"}
+                      </Button>
+                    ) : (
+                      <Button onClick={handleConnectStripe} disabled={stripeLoading} className="h-10 px-5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 text-sm font-semibold shrink-0">
+                        {stripeLoading ? "Connexion..." : (organization.stripe_account_id ? "Finaliser Stripe" : "Connecter Stripe")}
+                      </Button>
+                    )}
+                  </div>
+                </div>
               </div>
             )}
 

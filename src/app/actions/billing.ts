@@ -161,3 +161,78 @@ export async function createCustomerPortalAction() {
   }
 }
 
+export async function createStripeConnectAccountAction(orgId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Non authentifié" };
+
+  const member = await prisma.org_members.findFirst({
+    where: { user_id: user.id, organization_id: orgId, role: "owner" },
+    include: { organizations: true }
+  });
+
+  if (!member) return { error: "Permission refusée" };
+
+  try {
+    let accountId = member.organizations.stripe_account_id;
+
+    if (!accountId) {
+      const account = await stripe.accounts.create({
+        type: 'express',
+        email: user.email || undefined,
+        capabilities: {
+          transfers: { requested: true },
+          card_payments: { requested: true },
+        },
+        metadata: {
+          orgId: orgId
+        }
+      });
+      accountId = account.id;
+
+      await prisma.organizations.update({
+        where: { id: orgId },
+        data: { stripe_account_id: accountId }
+      });
+    }
+
+    const host = (await headers()).get("host");
+    const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
+    const refreshUrl = `${siteUrl.replace(/\/$/, "")}/dashboard/settings`;
+    const returnUrl = `${siteUrl.replace(/\/$/, "")}/dashboard/settings?stripe_connect_success=true`;
+
+    const accountLink = await stripe.accountLinks.create({
+      account: accountId,
+      refresh_url: refreshUrl,
+      return_url: returnUrl,
+      type: 'account_onboarding',
+    });
+
+    return { url: accountLink.url };
+  } catch (error: any) {
+    console.error("Stripe Connect Error:", error);
+    return { error: "Erreur lors de la connexion à Stripe." };
+  }
+}
+
+export async function createStripeConnectLoginLinkAction(orgId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Non authentifié" };
+
+  const member = await prisma.org_members.findFirst({
+    where: { user_id: user.id, organization_id: orgId, role: "owner" },
+    include: { organizations: true }
+  });
+
+  if (!member || !member.organizations.stripe_account_id) return { error: "Compte Stripe introuvable" };
+
+  try {
+    const loginLink = await stripe.accounts.createLoginLink(member.organizations.stripe_account_id);
+    return { url: loginLink.url };
+  } catch (error: any) {
+    console.error("Stripe Connect Login Error:", error);
+    return { error: "Erreur lors de l'accès au tableau de bord Stripe." };
+  }
+}
+

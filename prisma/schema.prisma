@@ -458,6 +458,8 @@ model bookings {
   studio_member_id  String         @db.Uuid
   organization_id   String         @db.Uuid
   status            String         @default("confirmed")
+  payment_status    String         @default("free")
+  stripe_session_id String?        @unique
   waitlist_position Int?
   cancelled_at      DateTime?      @db.Timestamptz(6)
   cancel_reason     String?

@@ -17,6 +17,7 @@ const classSchema = z.object({
   color: z.string().default('#4f46e5'),
   coach_id: z.string().uuid().optional().nullable(),
   organization_id: z.string().uuid().optional().nullable(),
+  price: z.number().optional().nullable(),
 })
 
 export async function createClassAction(data: z.infer<typeof classSchema>) {
@@ -118,9 +119,14 @@ export async function updateClassAction(id: string, data: Partial<z.infer<typeof
     throw new Error('Forbidden: Insufficient permissions')
   }
 
+  const { organization_id, coach_id, ...updateData } = data;
+
   await prisma.classes.update({
     where: { id },
-    data
+    data: {
+      ...updateData,
+      coach_id: coach_id === undefined ? undefined : coach_id,
+    } as any
   })
 
   revalidatePath('/dashboard/classes')

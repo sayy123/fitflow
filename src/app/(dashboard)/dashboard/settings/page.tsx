@@ -34,7 +34,15 @@ export default async function SettingsPage() {
   }
 
   return <SettingsClient 
-    organization={currentMember.organizations} 
+    organization={{
+      id: currentMember.organizations.id,
+      name: currentMember.organizations.name,
+      address: currentMember.organizations.address,
+      phone: currentMember.organizations.phone,
+      plan: currentMember.organizations.plan,
+      stripe_account_id: currentMember.organizations.stripe_account_id,
+      stripe_charges_enabled: currentMember.organizations.stripe_charges_enabled,
+    }} 
     user={{
       email: user.email || '',
       user_metadata: user.user_metadata
