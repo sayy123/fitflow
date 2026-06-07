@@ -226,15 +226,3 @@ export default function ClassesClient({
     </div>
   )
 }
-      const slug = info.event.extendedProps.studioSlug || studioSlug
-          if (isStaff) {
-            window.location.href = `/dashboard/classes/${info.event.id}`
-          } else {
-            window.location.href = `/${slug}/book/${info.event.id}`
-          }
-        }}
-      />
-      </div>
-    </div>
-  )
-}
