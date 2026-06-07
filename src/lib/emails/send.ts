@@ -212,7 +212,7 @@ export async function sendRegistrationValidationEmail({
   const siteUrl = (baseUrl || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(/\/$/, "");
   const validationLink = `${siteUrl}/api/auth/verify-registration?token=${token}`
   
-  const subject = `Vérifiez votre adresse email pour Fitloww`
+  const subject = `Vérifiez votre adresse email pour fitflow887`
   const html = `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #f0f0f0; border-radius: 16px; overflow: hidden;">
       <div style="background-color: #6366f1; padding: 40px 20px; text-align: center; color: white;">
@@ -220,7 +220,7 @@ export async function sendRegistrationValidationEmail({
       </div>
       <div style="padding: 40px 30px; color: #1f2937;">
         <p style="font-size: 16px; line-height: 1.5;">Bonjour <strong>${fullName}</strong>,</p>
-        <p style="font-size: 16px; line-height: 1.5;">Merci de vous être inscrit sur Fitloww. Pour finaliser la création de votre compte, veuillez vérifier votre adresse email en cliquant sur le bouton ci-dessous :</p>
+        <p style="font-size: 16px; line-height: 1.5;">Merci de vous être inscrit sur fitflow887. Pour finaliser la création de votre compte, veuillez vérifier votre adresse email en cliquant sur le bouton ci-dessous :</p>
         
         <div style="text-align: center; margin: 35px 0;">
           <a href="${validationLink}" style="display: inline-block; background-color: #6366f1; color: white; padding: 16px 32px; text-decoration: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.4);">
@@ -230,7 +230,7 @@ export async function sendRegistrationValidationEmail({
 
         <p style="font-size: 12px; color: #9ca3af; text-align: center;">Ce lien est valable pendant 24 heures.</p>
         
-        <p style="margin-top: 40px; font-size: 14px; color: #9ca3af;">L'équipe Fitloww</p>
+        <p style="margin-top: 40px; font-size: 14px; color: #9ca3af;">L'équipe fitflow887</p>
       </div>
     </div>
   `
