@@ -71,18 +71,18 @@ export default async function MembersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4">
           <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">
             Membres
           </h1>
         </div>
         {isLimitReached && !isPremium && (
-          <div className="bg-orange-50 border border-orange-100 rounded-lg px-4 py-2 flex items-center gap-3 animate-in fade-in slide-in-from-top-1 shadow-sm">
+          <div className="bg-orange-50 border border-orange-100 rounded-lg px-4 py-2 flex items-center gap-3 animate-in fade-in slide-in-from-top-1 shadow-sm w-full sm:w-auto">
             <span className="text-sm font-semibold text-orange-700">
-              Limite de 40 membres atteinte
+              Limite atteinte
             </span>
-            <Link href="/dashboard/billing">
+            <Link href="/dashboard/billing" className="ml-auto sm:ml-0">
               <Button
                 size="sm"
                 className="h-7 bg-orange-600 hover:bg-orange-700 text-white text-[10px] font-bold uppercase tracking-wider"
@@ -96,11 +96,11 @@ export default async function MembersPage() {
 
       <Card className="border border-gray-200 bg-white rounded-2xl shadow-sm overflow-hidden">
         <CardHeader className="pb-4">
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <CardTitle className="text-lg font-semibold text-gray-900 tracking-tight">
               Liste des clients ({studioMembers.length})
             </CardTitle>
-            <div className="w-64">
+            <div className="w-full md:w-64">
               <Input
                 placeholder="Rechercher..."
                 className="rounded-lg border-gray-200 h-10 text-sm"
@@ -108,8 +108,9 @@ export default async function MembersPage() {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="pt-0">
-          <Table>
+        <CardContent className="pt-0 overflow-x-auto">
+          <div className="min-w-[800px] md:min-w-0">
+            <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent border-gray-100">
                 <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">

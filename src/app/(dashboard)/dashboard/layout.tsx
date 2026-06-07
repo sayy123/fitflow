@@ -94,7 +94,7 @@ export default async function DashboardLayout({
         plan={userProfile?.plan}
       />
       <div className="flex-1 flex flex-col min-w-0">
-        <main className="flex-1 p-8 md:p-12 max-w-5xl mx-auto w-full relative">
+        <main className="flex-1 p-8 md:p-12 pt-20 lg:pt-12 max-w-5xl mx-auto w-full relative">
           <TrialBlockedWrapper
             isOwner={isOwner}
             isTrialExpired={isTrialExpired}

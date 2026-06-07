@@ -94,24 +94,24 @@ export default function ClassesClient({
   }
 
   return (
-    <div className="bg-white p-8 rounded-[2rem] card-shadow border-none overflow-hidden">
+    <div className="bg-white p-4 md:p-8 rounded-2xl md:rounded-[2rem] card-shadow border-none overflow-hidden">
       {isStaff && (
-        <div className="mb-4 flex justify-end">
+        <div className="mb-6 flex justify-end">
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-            <DialogTrigger render={<Button>+ Nouveau cours</Button>} />
-            <DialogContent className="rounded-3xl max-w-md">
+            <DialogTrigger render={<Button className="w-full sm:w-auto h-11 sm:h-10 rounded-xl"> Nouveau cours</Button>} />
+            <DialogContent className="rounded-3xl max-w-md w-[95vw] sm:w-full">
               <DialogHeader>
-                <DialogTitle className="text-xl font-black uppercase tracking-tight">Créer un cours</DialogTitle>
+                <DialogTitle className="text-xl font-black uppercase tracking-tight text-zinc-900">Créer un cours</DialogTitle>
               </DialogHeader>
               <form action={handleCreateClass} className="space-y-4 pt-4">
                 {(organizations?.length ?? 0) > 1 && (
-                  <div className="space-y-2">
+                  <div className="space-y-2 text-zinc-900">
                     <Label htmlFor="organization_id" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Studio</Label>
                     <Select name="organization_id" defaultValue={organizations![0].id} required>
-                      <SelectTrigger className="rounded-xl border-zinc-100 h-11">
+                      <SelectTrigger className="rounded-xl border-zinc-100 h-11 bg-white">
                         <SelectValue placeholder="Choisir un studio" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-white text-zinc-900">
                         {organizations!.map(org => (
                           <SelectItem key={org.id} value={org.id}>{org.name}</SelectItem>
                         ))}
@@ -123,18 +123,18 @@ export default function ClassesClient({
                   <input type="hidden" name="organization_id" value={organizations![0].id} />
                 )}
 
-                <div className="space-y-2">
+                <div className="space-y-2 text-zinc-900">
                   <Label htmlFor="title" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Titre</Label>
-                  <Input id="title" name="title" required placeholder="ex: Yoga" className="h-11 rounded-xl border-zinc-100" />
+                  <Input id="title" name="title" required placeholder="ex: Yoga" className="h-11 rounded-xl border-zinc-100 bg-white" />
                 </div>
                 
-                <div className="space-y-2">
+                <div className="space-y-2 text-zinc-900">
                   <Label htmlFor="coach_id" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Coach</Label>
                   <Select name="coach_id" defaultValue={currentMemberId}>
-                    <SelectTrigger className="rounded-xl border-zinc-100 h-11">
+                    <SelectTrigger className="rounded-xl border-zinc-100 h-11 bg-white">
                       <SelectValue placeholder="Choisir un coach" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white text-zinc-900">
                       <SelectItem value="">Aucun coach</SelectItem>
                       {coaches.map(c => (
                         <SelectItem key={c.id} value={c.id}>{c.display_name}</SelectItem>
@@ -143,24 +143,24 @@ export default function ClassesClient({
                   </Select>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="starts_at" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Date et heure</Label>
-                    <Input id="starts_at" name="starts_at" type="datetime-local" required className="h-11 rounded-xl border-zinc-100" />
+                    <Input id="starts_at" name="starts_at" type="datetime-local" required className="h-11 rounded-xl border-zinc-100 bg-white text-zinc-900" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="duration_min" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Durée (min)</Label>
-                    <Input id="duration_min" name="duration_min" type="number" defaultValue="60" required className="h-11 rounded-xl border-zinc-100" />
+                    <Input id="duration_min" name="duration_min" type="number" defaultValue="60" required className="h-11 rounded-xl border-zinc-100 bg-white text-zinc-900" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="capacity" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Capacité</Label>
-                    <Input id="capacity" name="capacity" type="number" defaultValue="15" required className="h-11 rounded-xl border-zinc-100" />
+                    <Input id="capacity" name="capacity" type="number" defaultValue="15" required className="h-11 rounded-xl border-zinc-100 bg-white text-zinc-900" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="color" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Couleur</Label>
-                    <Input id="color" name="color" type="color" defaultValue="#4f46e5" className="h-11 p-1 rounded-xl border-zinc-100" />
+                    <Input id="color" name="color" type="color" defaultValue="#4f46e5" className="h-11 p-1 rounded-xl border-zinc-100 bg-white" />
                   </div>
                 </div>
                 <Button type="submit" className="w-full h-12 rounded-xl bg-zinc-900 text-white font-black uppercase tracking-widest text-[10px] mt-2 shadow-lg shadow-zinc-900/10">Enregistrer</Button>
@@ -170,15 +170,16 @@ export default function ClassesClient({
         </div>
       )}
 
-      <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView="timeGridWeek"
-        locale={frLocale}
-        headerToolbar={{
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        }}
+      <div className="calendar-container overflow-hidden">
+        <FullCalendar
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          initialView={window?.innerWidth < 768 ? 'timeGridDay' : 'timeGridWeek'}
+          locale={frLocale}
+          headerToolbar={{
+            left: window?.innerWidth < 768 ? 'prev,next' : 'prev,next today',
+            center: 'title',
+            right: window?.innerWidth < 768 ? 'timeGridDay,timeGridWeek' : 'dayGridMonth,timeGridWeek,timeGridDay'
+          }}
         events={events}
         allDaySlot={false}
         slotMinTime="00:00:00"

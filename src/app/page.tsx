@@ -100,7 +100,7 @@ export default function LandingPage() {
               Fitloww
             </span>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-6">
             <Link
               href="/pricing"
               className="text-sm font-semibold text-zinc-500 hover:text-zinc-900 transition-colors"
@@ -122,6 +122,18 @@ export default function LandingPage() {
             <Link href="/register">
               <Button className="bg-zinc-900 text-white rounded-full px-5 h-9 text-sm font-semibold hover:bg-zinc-800 transition-all shadow-md shadow-zinc-900/10 ring-1 ring-inset ring-zinc-900/10 hover:ring-zinc-900/20 hover:scale-105">
                 Commencer
+              </Button>
+            </Link>
+          </div>
+          
+          {/* Mobile Nav Button */}
+          <div className="md:hidden flex items-center gap-3">
+             <Link href="/login" className="text-xs font-bold text-zinc-900 px-3 py-2">
+                Connexion
+             </Link>
+             <Link href="/register">
+              <Button className="bg-zinc-900 text-white rounded-full px-4 h-8 text-[10px] font-bold hover:bg-zinc-800 transition-all">
+                S'inscrire
               </Button>
             </Link>
           </div>
