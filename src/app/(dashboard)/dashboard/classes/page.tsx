@@ -75,9 +75,15 @@ export default async function ClassesPage(props: {
     const classes = await prisma.classes.findMany({
       where: {
         organization_id: currentMember.organization_id,
-        coach_id: effectiveCoachId,
+        OR: [
+          { is_cancelled: false },
+          { is_cancelled: null }
+        ]
       },
-      include: { org_members: true },
+      include: { 
+        org_members: true,
+        organizations: true
+      },
       orderBy: { starts_at: "asc" },
     });
 
@@ -94,6 +100,7 @@ export default async function ClassesPage(props: {
         <ClassesClient
           initialClasses={classes}
           coaches={coaches}
+          organizations={memberships.map(m => m.organizations)}
           userRole={currentMember.role}
           studioSlug={currentMember.organizations.slug}
           currentMemberId={currentMember.id}

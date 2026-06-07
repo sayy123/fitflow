@@ -16,6 +16,7 @@ const classSchema = z.object({
   location: z.string().optional(),
   color: z.string().default('#4f46e5'),
   coach_id: z.string().uuid().optional().nullable(),
+  organization_id: z.string().uuid().optional().nullable(),
 })
 
 export async function createClassAction(data: z.infer<typeof classSchema>) {
@@ -24,11 +25,9 @@ export async function createClassAction(data: z.infer<typeof classSchema>) {
   if (!user) return { error: 'Non authentifié' }
 
   const cookieStore = await cookies()
-  const activeOrgId = cookieStore.get('active_org_id')?.value
+  const activeOrgId = data.organization_id || cookieStore.get('active_org_id')?.value
 
-  console.log(`[createClassAction] User: ${user.email}, ActiveOrgId: ${activeOrgId}`);
-
-  // Récupérer le membre pour l'organisation active
+  // Récupérer le membre pour l'organisation cible
   let member = await prisma.org_members.findFirst({
     where: { 
       user_id: user.id,

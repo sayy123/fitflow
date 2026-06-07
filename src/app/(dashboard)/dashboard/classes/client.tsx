@@ -30,25 +30,31 @@ type Class = {
   org_members?: Coach | null;
 }
 
+type Organization = {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 export default function ClassesClient({ 
   initialClasses, 
   coaches, 
+  organizations,
   userRole,
   studioSlug,
   currentMemberId 
 }: { 
   initialClasses: Class[], 
   coaches: Coach[], 
+  organizations: Organization[],
   userRole: string,
   studioSlug: string,
   currentMemberId: string 
 }) {
-  const [classes, setClasses] = useState(initialClasses)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  
   const isStaff = ['owner', 'admin', 'coach'].includes(userRole)
 
-  const events = classes.map(c => ({
+  const events = initialClasses.map(c => ({
     id: c.id,
     title: c.title,
     start: c.starts_at,
@@ -56,7 +62,8 @@ export default function ClassesClient({
     backgroundColor: (c.is_cancelled ? '#9ca3af' : c.color) ?? undefined,
     borderColor: (c.is_cancelled ? '#9ca3af' : c.color) ?? undefined,
     extendedProps: {
-      coach: c.org_members
+      coach: c.org_members,
+      studioSlug: (c as any).organizations?.slug
     }
   }))
 
@@ -69,6 +76,7 @@ export default function ClassesClient({
       color: formData.get('color') as string || '#4f46e5',
       location: formData.get('location') as string || '',
       coach_id: formData.get('coach_id') === "" ? null : (formData.get('coach_id') as string),
+      organization_id: formData.get('organization_id') as string,
     }
 
     try {
@@ -91,20 +99,39 @@ export default function ClassesClient({
         <div className="mb-4 flex justify-end">
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger render={<Button>+ Nouveau cours</Button>} />
-            <DialogContent>
+            <DialogContent className="rounded-3xl max-w-md">
               <DialogHeader>
-                <DialogTitle>Créer un nouveau cours</DialogTitle>
+                <DialogTitle className="text-xl font-black uppercase tracking-tight">Créer un cours</DialogTitle>
               </DialogHeader>
-              <form action={handleCreateClass} className="space-y-4">
+              <form action={handleCreateClass} className="space-y-4 pt-4">
+                {(organizations?.length ?? 0) > 1 && (
+                  <div className="space-y-2">
+                    <Label htmlFor="organization_id" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Studio</Label>
+                    <Select name="organization_id" defaultValue={organizations![0].id} required>
+                      <SelectTrigger className="rounded-xl border-zinc-100 h-11">
+                        <SelectValue placeholder="Choisir un studio" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {organizations!.map(org => (
+                          <SelectItem key={org.id} value={org.id}>{org.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                {(organizations?.length ?? 0) === 1 && (
+                  <input type="hidden" name="organization_id" value={organizations![0].id} />
+                )}
+
                 <div className="space-y-2">
-                  <Label htmlFor="title">Titre</Label>
-                  <Input id="title" name="title" required placeholder="ex: Yoga Vinyasa" />
+                  <Label htmlFor="title" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Titre</Label>
+                  <Input id="title" name="title" required placeholder="ex: Yoga" className="h-11 rounded-xl border-zinc-100" />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="coach_id">Coach assigné</Label>
+                  <Label htmlFor="coach_id" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Coach</Label>
                   <Select name="coach_id" defaultValue={currentMemberId}>
-                    <SelectTrigger className="rounded-xl border-gray-100">
+                    <SelectTrigger className="rounded-xl border-zinc-100 h-11">
                       <SelectValue placeholder="Choisir un coach" />
                     </SelectTrigger>
                     <SelectContent>
@@ -118,29 +145,25 @@ export default function ClassesClient({
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="starts_at">Date et heure</Label>
-                    <Input id="starts_at" name="starts_at" type="datetime-local" required />
+                    <Label htmlFor="starts_at" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Date et heure</Label>
+                    <Input id="starts_at" name="starts_at" type="datetime-local" required className="h-11 rounded-xl border-zinc-100" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="duration_min">Durée (min)</Label>
-                    <Input id="duration_min" name="duration_min" type="number" defaultValue="60" required />
+                    <Label htmlFor="duration_min" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Durée (min)</Label>
+                    <Input id="duration_min" name="duration_min" type="number" defaultValue="60" required className="h-11 rounded-xl border-zinc-100" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="capacity">Capacité</Label>
-                    <Input id="capacity" name="capacity" type="number" defaultValue="15" required />
+                    <Label htmlFor="capacity" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Capacité</Label>
+                    <Input id="capacity" name="capacity" type="number" defaultValue="15" required className="h-11 rounded-xl border-zinc-100" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="color">Couleur</Label>
-                    <Input id="color" name="color" type="color" defaultValue="#4f46e5" />
+                    <Label htmlFor="color" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Couleur</Label>
+                    <Input id="color" name="color" type="color" defaultValue="#4f46e5" className="h-11 p-1 rounded-xl border-zinc-100" />
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="location">Lieu / Adresse</Label>
-                  <Input id="location" name="location" placeholder="ex: 12 rue du sport, Paris (Optionnel)" />
-                </div>
-                <Button type="submit" className="w-full">Enregistrer</Button>
+                <Button type="submit" className="w-full h-12 rounded-xl bg-zinc-900 text-white font-black uppercase tracking-widest text-[10px] mt-2 shadow-lg shadow-zinc-900/10">Enregistrer</Button>
               </form>
             </DialogContent>
           </Dialog>
@@ -158,26 +181,29 @@ export default function ClassesClient({
         }}
         events={events}
         allDaySlot={false}
-        slotMinTime="06:00:00"
-        slotMaxTime="25:00:00"
-        height="auto"
+        slotMinTime="00:00:00"
+        slotMaxTime="24:00:00"
+        slotDuration="01:00:00"
+        height="1200px"
+        expandRows={true}
+        handleWindowResize={true}
         eventContent={(eventInfo) => {
           const coach = eventInfo.event.extendedProps.coach
           return (
-            <div className="p-1 h-full flex flex-col justify-between overflow-hidden">
-              <div className="font-black text-[10px] uppercase tracking-tight leading-tight truncate">
+            <div className="p-2 h-full flex flex-col justify-between overflow-hidden">
+              <div className="font-extrabold text-xs md:text-sm uppercase tracking-tight leading-snug">
                 {eventInfo.event.title}
               </div>
               {coach && (
-                <div className="flex items-center gap-1.5 mt-1">
-                  <div className="size-5 rounded-md bg-white/20 overflow-hidden flex items-center justify-center shrink-0 border border-white/10">
+                <div className="flex items-center gap-2 mt-1">
+                  <div className="size-6 rounded-md bg-white/20 overflow-hidden flex items-center justify-center shrink-0 border border-white/20">
                     {coach.avatar_url ? (
                       <img src={coach.avatar_url} alt="" className="size-full object-cover" />
                     ) : (
-                      <span className="text-[8px] font-black text-white uppercase">{coach.display_name?.charAt(0)}</span>
+                      <span className="text-[10px] font-black text-white uppercase">{coach.display_name?.charAt(0)}</span>
                     )}
                   </div>
-                  <span className="text-[9px] font-bold text-white/90 truncate uppercase tracking-tighter">
+                  <span className="text-[11px] font-bold text-white/90 truncate uppercase tracking-tight">
                     {coach.display_name}
                   </span>
                 </div>
@@ -186,10 +212,11 @@ export default function ClassesClient({
           )
         }}
         eventClick={(info) => {
+          const slug = info.event.extendedProps.studioSlug || studioSlug
           if (isStaff) {
             window.location.href = `/dashboard/classes/${info.event.id}`
           } else {
-            window.location.href = `/${studioSlug}/book/${info.event.id}`
+            window.location.href = `/${slug}/book/${info.event.id}`
           }
         }}
       />
