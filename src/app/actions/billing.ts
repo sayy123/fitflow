@@ -222,14 +222,11 @@ export async function createStripeConnectAccountAction(orgId: string) {
     const refreshUrl = `${siteUrl.replace(/\/$/, "")}/dashboard/settings`;
     const returnUrl = `${siteUrl.replace(/\/$/, "")}/dashboard/settings?stripe_connect_success=true`;
 
-    const account = await stripe.accounts.retrieve(accountId);
-    const linkType = account.details_submitted ? 'account_update' : 'account_onboarding';
-
     const accountLink = await stripe.accountLinks.create({
       account: accountId,
       refresh_url: refreshUrl,
       return_url: returnUrl,
-      type: linkType,
+      type: 'account_onboarding',
     });
 
     return { url: accountLink.url };
