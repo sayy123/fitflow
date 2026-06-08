@@ -326,20 +326,3 @@ export default function ClassDetailClient({
     </div>
   )
 }
-g(booking.id)}
-                          disabled={isDeleting === booking.id}
-                        >
-                          <Trash2 className="size-4" />
-                        </Button>
-                      </TableCell>
-                    )}
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
