@@ -176,6 +176,27 @@ export async function createStripeConnectAccountAction(orgId: string) {
   try {
     let accountId = member.organizations.stripe_account_id;
 
+    // Verify the account still exists in Stripe if we have an ID
+    if (accountId) {
+      try {
+        const existingAccount = await stripe.accounts.retrieve(accountId);
+        if (existingAccount.deleted) {
+          accountId = null;
+        }
+      } catch (e: any) {
+        if (e.code === 'resource_missing' || e.code === 'account_invalid') {
+          accountId = null;
+          // Clear invalid ID from DB
+          await prisma.organizations.update({
+            where: { id: orgId },
+            data: { stripe_account_id: null, stripe_charges_enabled: false }
+          });
+        } else {
+          throw e;
+        }
+      }
+    }
+
     if (!accountId) {
       const account = await stripe.accounts.create({
         type: 'express',
@@ -201,11 +222,7 @@ export async function createStripeConnectAccountAction(orgId: string) {
     const refreshUrl = `${siteUrl.replace(/\/$/, "")}/dashboard/settings`;
     const returnUrl = `${siteUrl.replace(/\/$/, "")}/dashboard/settings?stripe_connect_success=true`;
 
-    // Fetch the account to check if details are already submitted
     const account = await stripe.accounts.retrieve(accountId);
-
-    // If they already submitted everything but it's pending review or missing small info, 
-    // send them to 'account_update' to fix it, otherwise 'account_onboarding'
     const linkType = account.details_submitted ? 'account_update' : 'account_onboarding';
 
     const accountLink = await stripe.accountLinks.create({
@@ -217,8 +234,8 @@ export async function createStripeConnectAccountAction(orgId: string) {
 
     return { url: accountLink.url };
   } catch (error: any) {
-    console.error("Stripe Connect Error:", error);
-    return { error: "Erreur lors de la connexion à Stripe." };
+    console.error("Stripe Connect Error:", error.message || error);
+    return { error: `Erreur lors de la connexion à Stripe: ${error.message || 'Erreur inconnue'}` };
   }
 }
 
