@@ -159,6 +159,26 @@ export async function POST(req: Request) {
       revalidatePath("/dashboard/settings");
     }
 
+    // 5. CHECKOUT SESSION COMPLETED (DIRECT CHARGE FOR CLASS BOOKING)
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object as Stripe.Checkout.Session;
+      
+      // Verification that this is a class booking session
+      if (session.metadata?.bookingId) {
+        console.log(`[Stripe Webhook] Booking payment completed for booking ID: ${session.metadata.bookingId}`);
+        
+        await prisma.bookings.update({
+          where: { id: session.metadata.bookingId },
+          data: {
+            status: 'confirmed',
+            payment_status: 'paid',
+          }
+        });
+
+        // We could also send the confirmation email here if we moved it from the server action
+      }
+    }
+
     return new NextResponse("Webhook handled", { status: 200 });
   } catch (err: any) {
     console.error(`❌ [Stripe Webhook] Execution error: ${err.message}`);

@@ -114,19 +114,76 @@ export async function createBookingAction(formData: FormData) {
       if (!cls) return { error: 'Cours introuvable' }
 
       // Créer la réservation
-      await prisma.bookings.create({
+      const isPaid = cls.price && cls.price > 0 && cls.organizations.stripe_account_id;
+      
+      const booking = await prisma.bookings.create({
         data: {
           class_id: classId,
           studio_member_id: member.id,
           organization_id: organizationId,
-          status: 'confirmed', // On pourrait aussi gérer la liste d'attente ici
+          status: isPaid ? 'pending_payment' : 'confirmed',
+          payment_status: isPaid ? 'unpaid' : 'free',
         }
       })
 
-      // Envoyer email de confirmation
       const host = (await headers()).get('host')
       const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
-      
+
+      if (isPaid && cls.organizations.stripe_account_id) {
+        const { stripe } = await import('@/lib/stripe');
+        
+        // Ensure price is a valid number, multiply by 100 for cents
+        const amountInCents = Math.round(Number(cls.price) * 100);
+
+        try {
+          const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: [
+              {
+                price_data: {
+                  currency: 'eur',
+                  product_data: {
+                    name: `Réservation : ${cls.title}`,
+                    description: `${new Date(cls.starts_at).toLocaleDateString('fr-FR')} à ${new Date(cls.starts_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`,
+                  },
+                  unit_amount: amountInCents,
+                },
+                quantity: 1,
+              },
+            ],
+            mode: 'payment',
+            success_url: `${siteUrl.replace(/\/$/, "")}/${cls.organizations.slug}/dashboard?booking_success=true`,
+            cancel_url: `${siteUrl.replace(/\/$/, "")}/${cls.organizations.slug}/book/${cls.id}?booking_canceled=true`,
+            client_reference_id: booking.id, // Store booking ID to confirm later
+            metadata: {
+              bookingId: booking.id,
+              classId: cls.id,
+              memberId: member.id,
+            },
+          }, {
+            stripeAccount: cls.organizations.stripe_account_id, // Direct Charge to the connected account
+          });
+
+          // Save session ID for webhook correlation
+          if (session.id) {
+            await prisma.bookings.update({
+              where: { id: booking.id },
+              data: { stripe_session_id: session.id }
+            });
+          }
+
+          if (session.url) {
+            return { url: session.url };
+          }
+        } catch (e: any) {
+          console.error("Checkout Session Error:", e);
+          // Delete pending booking if session creation fails
+          await prisma.bookings.delete({ where: { id: booking.id } });
+          return { error: "Erreur lors de l'initialisation du paiement." };
+        }
+      }
+
+      // Envoyer email de confirmation uniquement si gratuit
       await sendBookingConfirmationEmail({
         email: currentUser.email,
         fullName: currentUser.user_metadata?.full_name || fullName,
@@ -241,19 +298,73 @@ export async function createBookingAction(formData: FormData) {
     if (existing) return { error: 'Vous avez déjà réservé ce cours avec cet email' }
 
     // 3. Créer la réservation
-    await prisma.bookings.create({
+    const isPaid = cls.price && cls.price > 0 && cls.organizations.stripe_account_id;
+
+    const booking = await prisma.bookings.create({
       data: {
         class_id: classId,
         studio_member_id: member.id,
         organization_id: organizationId,
-        status: 'confirmed',
+        status: isPaid ? 'pending_payment' : 'confirmed',
+        payment_status: isPaid ? 'unpaid' : 'free',
       }
     })
 
-    // 4. Envoyer email de confirmation immédiat
     const host = (await headers()).get('host')
     const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
 
+    if (isPaid && cls.organizations.stripe_account_id) {
+      const { stripe } = await import('@/lib/stripe');
+      const amountInCents = Math.round(Number(cls.price) * 100);
+
+      try {
+        const session = await stripe.checkout.sessions.create({
+          payment_method_types: ['card'],
+          line_items: [
+            {
+              price_data: {
+                currency: 'eur',
+                product_data: {
+                  name: `Réservation : ${cls.title}`,
+                  description: `${new Date(cls.starts_at).toLocaleDateString('fr-FR')} à ${new Date(cls.starts_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`,
+                },
+                unit_amount: amountInCents,
+              },
+              quantity: 1,
+            },
+          ],
+          mode: 'payment',
+          customer_email: email.toLowerCase().trim(),
+          success_url: `${siteUrl.replace(/\/$/, "")}/${cls.organizations.slug}/dashboard?booking_success=true`,
+          cancel_url: `${siteUrl.replace(/\/$/, "")}/${cls.organizations.slug}/book/${cls.id}?booking_canceled=true`,
+          client_reference_id: booking.id,
+          metadata: {
+            bookingId: booking.id,
+            classId: cls.id,
+            memberId: member.id,
+          },
+        }, {
+          stripeAccount: cls.organizations.stripe_account_id,
+        });
+
+        if (session.id) {
+          await prisma.bookings.update({
+            where: { id: booking.id },
+            data: { stripe_session_id: session.id }
+          });
+        }
+
+        if (session.url) {
+          return { url: session.url };
+        }
+      } catch (e: any) {
+        console.error("Checkout Session Error:", e);
+        await prisma.bookings.delete({ where: { id: booking.id } });
+        return { error: "Erreur lors de l'initialisation du paiement." };
+      }
+    }
+
+    // 4. Envoyer email de confirmation immédiat uniquement si gratuit
     await sendBookingConfirmationEmail({
       email: email.toLowerCase().trim(),
       fullName: fullName,

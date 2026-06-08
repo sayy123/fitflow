@@ -75,6 +75,9 @@ export default function BookingClient({ org, cls, currentUser }: BookingClientPr
 
     if (res.error) {
       toast.error(res.error)
+    } else if (res.url) {
+      // Rediriger vers Stripe Checkout
+      window.location.href = res.url;
     } else {
       toast.success(res.status === 'confirmed' ? 'Réservation confirmée !' : 'Ajouté à la liste d\'attente')
       router.push('/dashboard')
