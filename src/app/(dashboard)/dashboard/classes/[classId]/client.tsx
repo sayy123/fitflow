@@ -89,6 +89,7 @@ export default function ClassDetailClient({
       starts_at: new Date(startsAtStr).toISOString(),
       duration_min: parseInt(formData.get('duration_min') as string),
       coach_id: formData.get('coach_id') as string || null,
+      price: formData.get('price') ? parseFloat(formData.get('price') as string) : null,
     }
 
     try {
@@ -309,6 +310,23 @@ export default function ClassDetailClient({
                           size="sm" 
                           className="rounded-lg size-8 p-0 text-gray-400 hover:text-red-600 hover:bg-red-50"
                           onClick={() => handleDeleteBooking(booking.id)}
+                          disabled={isDeleting === booking.id}
+                        >
+                          <Trash2 className="size-4" />
+                        </Button>
+                      </TableCell>
+                    )}
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+g(booking.id)}
                           disabled={isDeleting === booking.id}
                         >
                           <Trash2 className="size-4" />

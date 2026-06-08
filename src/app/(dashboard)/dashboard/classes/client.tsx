@@ -160,9 +160,13 @@ export default function ClassesClient({
                     <Input id="capacity" name="capacity" type="number" defaultValue="15" required className="h-11 rounded-xl border-zinc-100 bg-white text-zinc-900" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="color" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Couleur</Label>
-                    <Input id="color" name="color" type="color" defaultValue="#4f46e5" className="h-11 p-1 rounded-xl border-zinc-100 bg-white" />
+                    <Label htmlFor="price" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Prix (€) - Optionnel</Label>
+                    <Input id="price" name="price" type="number" step="0.50" min="0" placeholder="0 = Gratuit" className="h-11 rounded-xl border-zinc-100 bg-white text-zinc-900" />
                   </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="color" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Couleur</Label>
+                  <Input id="color" name="color" type="color" defaultValue="#4f46e5" className="h-11 p-1 w-full rounded-xl border-zinc-100 bg-white" />
                 </div>
                 <Button type="submit" className="w-full h-12 rounded-xl bg-zinc-900 text-white font-black uppercase tracking-widest text-[10px] mt-2 shadow-lg shadow-zinc-900/10">Enregistrer</Button>
               </form>

@@ -144,6 +144,21 @@ export async function POST(req: Request) {
       revalidatePath("/", "layout");
     }
 
+    // 4. STRIPE CONNECT ACCOUNT UPDATED
+    if (event.type === "account.updated") {
+      const account = event.data.object as Stripe.Account;
+      console.log(`[Stripe Webhook] Connect Account updated: ${account.id}, charges_enabled: ${account.charges_enabled}`);
+
+      await prisma.organizations.updateMany({
+        where: { stripe_account_id: account.id },
+        data: {
+          stripe_charges_enabled: account.charges_enabled,
+        }
+      });
+      
+      revalidatePath("/dashboard/settings");
+    }
+
     return new NextResponse("Webhook handled", { status: 200 });
   } catch (err: any) {
     console.error(`❌ [Stripe Webhook] Execution error: ${err.message}`);
