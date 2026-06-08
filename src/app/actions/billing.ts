@@ -201,11 +201,18 @@ export async function createStripeConnectAccountAction(orgId: string) {
     const refreshUrl = `${siteUrl.replace(/\/$/, "")}/dashboard/settings`;
     const returnUrl = `${siteUrl.replace(/\/$/, "")}/dashboard/settings?stripe_connect_success=true`;
 
+    // Fetch the account to check if details are already submitted
+    const account = await stripe.accounts.retrieve(accountId);
+
+    // If they already submitted everything but it's pending review or missing small info, 
+    // send them to 'account_update' to fix it, otherwise 'account_onboarding'
+    const linkType = account.details_submitted ? 'account_update' : 'account_onboarding';
+
     const accountLink = await stripe.accountLinks.create({
       account: accountId,
       refresh_url: refreshUrl,
       return_url: returnUrl,
-      type: 'account_onboarding',
+      type: linkType,
     });
 
     return { url: accountLink.url };
