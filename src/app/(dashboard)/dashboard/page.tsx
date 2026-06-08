@@ -199,6 +199,7 @@ export default async function DashboardPage(props: {
       prisma.bookings.findMany({
         where: {
           studio_members: { email: userEmail },
+          status: { in: ['confirmed', 'pending_payment'] },
           classes: { starts_at: { gte: new Date() } },
         },
         include: {
