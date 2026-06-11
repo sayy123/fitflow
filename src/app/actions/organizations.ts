@@ -29,7 +29,8 @@ export async function updateOrganizationAction(orgId: string, data: { name?: str
       data: { 
         name: data.name,
         address: data.address,
-        phone: data.phone
+        phone: data.phone,
+        payment_link: data.payment_link
       }
     })
     

@@ -466,19 +466,20 @@ export function SettingsClient({
                   </div>
                   <div className="space-y-1.5">
                     <Label className="text-sm font-medium text-gray-700">
-                      Lien de paiement (Lydia, PayPal, SumUp...)
+                      Lien de paiement universel
                     </Label>
                     <div className="relative">
                       <CreditCard className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
                       <Input
                         value={orgPaymentLink}
                         onChange={(e) => setOrgPaymentLink(e.target.value)}
-                        placeholder="https://lydia-app.com/..."
+                        placeholder="Ex: https://revolut.me/tonnom, lydia-app.com/..., paypal.me/..."
                         className="rounded-lg border-gray-200 h-10 pl-10 text-sm"
                       />
                     </div>
-                    <p className="text-xs text-gray-500">
-                      Ce lien sera envoyé à vos membres pour qu'ils puissent régler leurs séances payantes.
+                    <p className="text-xs text-gray-500 leading-relaxed mt-1">
+                      Vos membres seront redirigés vers ce lien pour régler leurs séances payantes. <br/>
+                      <span className="font-semibold text-gray-700">Compatible avec :</span> Revolut, PayPal, Lydia, Paylib, SumUp, Stripe Payment Links, ou toute autre cagnotte.
                     </p>
                   </div>
                   <Button
