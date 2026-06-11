@@ -4,34 +4,25 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
-  Activity,
   ArrowRight,
+  Activity,
+  Calendar,
+  Users,
+  Zap,
   CheckCircle2,
+  ChevronRight,
   Play,
   Star,
-  Users,
+  ChevronDown,
+  CreditCard,
+  Smartphone,
   ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import dynamic from "next/dynamic";
-
-// Lazy load heavy interactive sections
-const FeaturesSection = dynamic(
-  () => import("./_components/features-section").then((mod) => mod.FeaturesSection),
-  { ssr: true } // Keep SSR for SEO, but delay hydration
-);
-
-const FaqSection = dynamic(
-  () => import("./_components/faq-section").then((mod) => mod.FaqSection),
-  { ssr: true }
-);
-
-const CtaSection = dynamic(
-  () => import("./_components/cta-section").then((mod) => mod.CtaSection),
-  { ssr: true }
-);
 
 export default function LandingPage() {
+  const [activeFeature, setActiveFeature] = useState(0);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [scrolled, setScrolled] = useState(false);
 
   // Handle navbar blur on scroll
@@ -39,9 +30,55 @@ export default function LandingPage() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const interactiveFeatures = [
+    {
+      id: 0,
+      title: "Planning intelligent",
+      desc: "Glissez, déposez et gérez vos séances en temps réel. Vos coachs et membres sont notifiés automatiquement.",
+      icon: Calendar,
+      image:
+        "https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=1200&auto=format&fit=crop",
+    },
+    {
+      id: 1,
+      title: "Paiements sans friction",
+      desc: "Abonnements, carnets de séances ou paiement à la carte. Encaissez vos clients directement depuis l'application.",
+      icon: CreditCard,
+      image:
+        "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=1200&auto=format&fit=crop",
+    },
+    {
+      id: 2,
+      title: "Expérience Membre Premium",
+      desc: "Offrez à vos clients une interface de réservation fluide sur mobile. Finis les appels et les messages WhatsApp.",
+      icon: Smartphone,
+      image:
+        "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=1200&auto=format&fit=crop",
+    },
+  ];
+
+  const faqs = [
+    {
+      q: "Combien de temps faut-il pour configurer Fitloww ?",
+      a: "Moins de 5 minutes. Notre assistant d'intégration vous guide pas à pas. Vous pouvez créer votre studio, ajouter vos coachs et publier votre premier cours immédiatement.",
+    },
+    {
+      q: "Mes clients doivent-ils télécharger une application ?",
+      a: "Non, Fitloww est une Web App progressive (PWA). Vos membres y accèdent via un simple lien, avec une interface parfaitement optimisée pour mobile.",
+    },
+    {
+      q: "Puis-je gérer plusieurs studios avec un seul compte ?",
+      a: "Absolument. Vous pouvez basculer d'un studio à l'autre en un clic depuis votre espace administrateur.",
+    },
+    {
+      q: "Fitloww prend-il une commission sur les réservations ?",
+      a: "Non, nous ne prenons aucune commission sur vos ventes. Vous gardez 100% de vos revenus (hors frais standards de votre processeur de paiement comme Stripe).",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] text-zinc-900 selection:bg-zinc-200 font-sans overflow-hidden">
@@ -217,6 +254,99 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* Interactive Features Showcase */}
+        <section id="features" className="py-32 px-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-20 max-w-3xl mx-auto">
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900 mb-6 leading-tight">
+                Une puissance invisible.
+                <br />
+                Une élégance visible.
+              </h2>
+              <p className="text-zinc-500 text-xl font-medium leading-relaxed">
+                Découvrez comment Fitloww simplifie chaque aspect de la gestion
+                de votre studio, de la réservation à l'encaissement.
+              </p>
+            </div>
+
+            <div className="flex flex-col lg:flex-row gap-12 items-center bg-white rounded-[3rem] p-4 md:p-8 border border-zinc-200/60 shadow-xl shadow-zinc-900/5">
+              {/* Left: Interactive List */}
+              <div className="w-full lg:w-1/3 flex flex-col gap-2">
+                {interactiveFeatures.map((feat, index) => {
+                  const isActive = activeFeature === index;
+                  const Icon = feat.icon;
+                  return (
+                    <button
+                      key={feat.id}
+                      onClick={() => setActiveFeature(index)}
+                      className={cn(
+                        "text-left p-6 rounded-2xl transition-all duration-300 relative overflow-hidden group",
+                        isActive
+                          ? "bg-zinc-50 border-zinc-200 shadow-sm"
+                          : "hover:bg-zinc-50/50 border-transparent",
+                      )}
+                    >
+                      {isActive && (
+                        <div className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-zinc-900 rounded-r-full" />
+                      )}
+                      <div
+                        className={cn(
+                          "size-12 rounded-xl flex items-center justify-center mb-4 transition-colors duration-300",
+                          isActive
+                            ? "bg-white shadow-sm text-zinc-900"
+                            : "bg-zinc-100 text-zinc-500 group-hover:bg-white group-hover:text-zinc-900",
+                        )}
+                      >
+                        <Icon className="size-5" />
+                      </div>
+                      <h3
+                        className={cn(
+                          "text-xl font-bold mb-2 transition-colors",
+                          isActive ? "text-zinc-900" : "text-zinc-600",
+                        )}
+                      >
+                        {feat.title}
+                      </h3>
+                      <p
+                        className={cn(
+                          "text-sm leading-relaxed transition-colors font-medium",
+                          isActive ? "text-zinc-600" : "text-zinc-400",
+                        )}
+                      >
+                        {feat.desc}
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Right: Dynamic Image */}
+              <div className="w-full lg:w-2/3">
+                <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden bg-zinc-100 border border-zinc-200 shadow-inner">
+                  {interactiveFeatures.map((feat, index) => (
+                    <div
+                      key={feat.id}
+                      className={cn(
+                        "absolute inset-0 transition-all duration-700 ease-in-out",
+                        activeFeature === index
+                          ? "opacity-100 scale-100"
+                          : "opacity-0 scale-105 pointer-events-none",
+                      )}
+                    >
+                      <img
+                        src={feat.image}
+                        alt={feat.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/30 to-transparent" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Real Product Value (Replaces Testimonials) */}
         <section className="py-24 bg-zinc-900 text-white px-6 relative overflow-hidden">
           <div className="absolute top-0 right-0 -mr-40 -mt-40 size-[500px] bg-white/5 rounded-full blur-[100px] pointer-events-none" />
@@ -275,9 +405,88 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <FeaturesSection />
-        <FaqSection />
-        <CtaSection />
+        {/* FAQ Section */}
+        <section className="py-32 px-6 max-w-4xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold tracking-tight text-zinc-900 mb-4">
+              Questions fréquentes
+            </h2>
+            <p className="text-zinc-500 font-medium text-lg">
+              Tout ce que vous devez savoir avant de vous lancer.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {faqs.map((faq, index) => {
+              const isOpen = openFaq === index;
+              return (
+                <div
+                  key={index}
+                  className={cn(
+                    "border border-zinc-200/60 rounded-2xl overflow-hidden transition-colors duration-300",
+                    isOpen
+                      ? "bg-white shadow-md shadow-zinc-900/5"
+                      : "bg-transparent hover:bg-white/50",
+                  )}
+                >
+                  <button
+                    onClick={() => setOpenFaq(isOpen ? null : index)}
+                    className="w-full text-left p-6 flex justify-between items-center focus:outline-none"
+                  >
+                    <span className="font-bold text-lg text-zinc-900">
+                      {faq.q}
+                    </span>
+                    <div
+                      className={cn(
+                        "size-8 rounded-full bg-zinc-100 flex items-center justify-center shrink-0 transition-transform duration-300",
+                        isOpen ? "rotate-180" : "",
+                      )}
+                    >
+                      <ChevronDown className="size-4 text-zinc-600" />
+                    </div>
+                  </button>
+                  <div
+                    className={cn(
+                      "grid transition-all duration-300 ease-in-out",
+                      isOpen
+                        ? "grid-rows-[1fr] opacity-100"
+                        : "grid-rows-[0fr] opacity-0",
+                    )}
+                  >
+                    <div className="overflow-hidden">
+                      <p className="p-6 pt-0 text-zinc-500 font-medium leading-relaxed">
+                        {faq.a}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Call to Action */}
+        <section className="pb-32 px-6 relative overflow-hidden">
+          <div className="max-w-5xl mx-auto bg-gradient-to-br from-zinc-900 to-black rounded-[3rem] p-12 md:p-20 text-center text-white overflow-hidden relative shadow-2xl shadow-zinc-900/20">
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 size-[400px] bg-white/5 rounded-full blur-[80px]" />
+            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 size-[400px] bg-white/5 rounded-full blur-[80px]" />
+
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 relative z-10 leading-tight">
+              Prêt à accélérer ?
+            </h2>
+            <p className="text-zinc-400 text-xl mb-10 max-w-2xl mx-auto relative z-10 font-medium">
+              Créez votre compte gratuitement. Configuration en 5 minutes.
+              Aucune carte de crédit requise.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
+              <Link href="/register?role=manager">
+                <Button className="w-full sm:w-auto bg-white text-zinc-900 rounded-full px-10 h-14 text-lg font-bold hover:bg-zinc-100 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl">
+                  Créer mon studio maintenant
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
       </main>
 
       {/* Footer */}
