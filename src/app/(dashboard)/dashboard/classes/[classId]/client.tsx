@@ -303,8 +303,26 @@ export default function ClassDetailClient({
                       </span>
                     </TableCell>
                     <TableCell className="text-sm text-gray-400 font-bold">{new Date(booking.created_at!).toLocaleDateString('fr-FR')}</TableCell>
-                    {isManagementAllowed && (
-                      <TableCell className="px-8 text-right">
+                    <TableCell className="px-8 text-right flex items-center justify-end gap-2">
+                      {booking.status === 'pending_payment' && isManagementAllowed && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="rounded-lg h-8 text-[10px] font-bold uppercase tracking-wider border-green-200 text-green-700 hover:bg-green-50"
+                          onClick={async () => {
+                            const { confirmBookingPaymentAction } = await import('@/app/actions/bookings');
+                            const res = await confirmBookingPaymentAction(booking.id);
+                            if (res.success) {
+                              toast.success('Paiement validé !');
+                            } else {
+                              toast.error('Erreur lors de la validation');
+                            }
+                          }}
+                        >
+                          Valider le paiement
+                        </Button>
+                      )}
+                      {isManagementAllowed && (
                         <Button 
                           variant="ghost" 
                           size="sm" 
@@ -314,8 +332,8 @@ export default function ClassDetailClient({
                         >
                           <Trash2 className="size-4" />
                         </Button>
-                      </TableCell>
-                    )}
+                      )}
+                    </TableCell>
                   </TableRow>
                 ))
               )}

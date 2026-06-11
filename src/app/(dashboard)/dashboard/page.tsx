@@ -87,7 +87,7 @@ export default async function DashboardPage(props: {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
           <Card className="border-2 border-dashed border-gray-200 hover:border-zinc-900 transition-colors group cursor-pointer overflow-hidden rounded-[2rem]">
             <CardContent className="p-8">
-              <form action={createFirstStudioAction} className="h-full flex flex-col items-center text-center space-y-4">
+              <form action={async (fd) => { "use server"; await createFirstStudioAction(fd); }} className="h-full flex flex-col items-center text-center space-y-4">
                 <div className="size-14 rounded-2xl bg-zinc-100 flex items-center justify-center group-hover:bg-zinc-900 transition-colors">
                   <Zap className="size-6 text-zinc-600 group-hover:text-white" />
                 </div>

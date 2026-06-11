@@ -550,6 +550,7 @@ model organizations {
   trial_ends_at          DateTime?               @default(dbgenerated("(now() + '14 days'::interval)")) @db.Timestamptz(6)
   stripe_account_id      String?                 @unique
   stripe_charges_enabled Boolean?                @default(false)
+  payment_link           String?
   logo_url               String?
   color_primary          String?                 @default("#4f46e5")
   timezone               String?                 @default("Europe/Brussels")

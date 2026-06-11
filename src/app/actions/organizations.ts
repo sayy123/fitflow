@@ -5,7 +5,7 @@ import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { headers } from 'next/headers'
 
-export async function updateOrganizationAction(orgId: string, data: { name?: string, address?: string, phone?: string }) {
+export async function updateOrganizationAction(orgId: string, data: { name?: string, address?: string, phone?: string, payment_link?: string }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Non authentifié' }

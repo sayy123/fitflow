@@ -45,6 +45,7 @@ interface SettingsClientProps {
     plan?: string | null;
     stripe_account_id?: string | null;
     stripe_charges_enabled?: boolean | null;
+    payment_link?: string | null;
   };
   user: {
     email: string;
@@ -66,33 +67,6 @@ export function SettingsClient({
     "profile" | "studio" | "security" | "billing"
   >("profile");
 
-  const [stripeLoading, setStripeLoading] = useState(false);
-
-  const handleConnectStripe = async () => {
-    setStripeLoading(true);
-    const { createStripeConnectAccountAction } = await import('@/app/actions/billing');
-    const result = await createStripeConnectAccountAction(organization.id);
-    if (result.error) {
-      toast.error(result.error);
-      setStripeLoading(false);
-    } else if (result.url) {
-      window.location.href = result.url;
-    }
-  };
-
-  const handleOpenStripeDashboard = async () => {
-    setStripeLoading(true);
-    const { createStripeConnectLoginLinkAction } = await import('@/app/actions/billing');
-    const result = await createStripeConnectLoginLinkAction(organization.id);
-    if (result.error) {
-      toast.error(result.error);
-      setStripeLoading(false);
-    } else if (result.url) {
-      window.open(result.url, '_blank');
-      setStripeLoading(false);
-    }
-  };
-
   // Avatar State
   const [avatarUrl, setAvatarUrl] = useState(
     user.user_metadata?.avatar_url || "",
@@ -103,6 +77,7 @@ export function SettingsClient({
   const [orgName, setOrgName] = useState(organization.name);
   const [orgAddress, setOrgAddress] = useState(organization.address || "");
   const [orgPhone, setOrgPhone] = useState(organization.phone || "");
+  const [orgPaymentLink, setOrgPaymentLink] = useState(organization.payment_link || "");
   const [orgLoading, setOrgLoading] = useState(false);
 
   // Profile State
@@ -125,6 +100,7 @@ export function SettingsClient({
       name: orgName,
       address: orgAddress,
       phone: orgPhone,
+      payment_link: orgPaymentLink,
     });
     setOrgLoading(false);
     if (result.error) toast.error(result.error);
@@ -317,28 +293,6 @@ export function SettingsClient({
                     </Button>
                   </Link>
                 </div>
-
-                <div className="bg-zinc-50 border border-zinc-100 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-                  <div className="space-y-1">
-                    <p className="text-sm font-semibold">
-                      Paiements des membres
-                    </p>
-                    <p className="text-xs text-zinc-500 font-medium leading-relaxed max-w-md">
-                      Connectez votre compte Stripe pour accepter les paiements de vos membres directement lors de leurs réservations. Vous gardez 100% du montant.
-                    </p>
-                  </div>
-                  <div>
-                    {organization.stripe_charges_enabled ? (
-                      <Button onClick={handleOpenStripeDashboard} disabled={stripeLoading} variant="outline" className="h-10 px-5 rounded-lg font-semibold shrink-0 border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100">
-                        {stripeLoading ? "Chargement..." : "Tableau de bord Stripe"}
-                      </Button>
-                    ) : (
-                      <Button onClick={handleConnectStripe} disabled={stripeLoading} className="h-10 px-5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 text-sm font-semibold shrink-0">
-                        {stripeLoading ? "Connexion..." : (organization.stripe_account_id ? "Finaliser Stripe" : "Connecter Stripe")}
-                      </Button>
-                    )}
-                  </div>
-                </div>
               </div>
             )}
 
@@ -509,6 +463,23 @@ export function SettingsClient({
                         className="rounded-lg border-gray-200 h-10 pl-10 text-sm"
                       />
                     </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-sm font-medium text-gray-700">
+                      Lien de paiement (Lydia, PayPal, SumUp...)
+                    </Label>
+                    <div className="relative">
+                      <CreditCard className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+                      <Input
+                        value={orgPaymentLink}
+                        onChange={(e) => setOrgPaymentLink(e.target.value)}
+                        placeholder="https://lydia-app.com/..."
+                        className="rounded-lg border-gray-200 h-10 pl-10 text-sm"
+                      />
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      Ce lien sera envoyé à vos membres pour qu'ils puissent régler leurs séances payantes.
+                    </p>
                   </div>
                   <Button
                     onClick={handleUpdateOrg}

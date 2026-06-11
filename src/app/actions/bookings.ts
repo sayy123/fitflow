@@ -114,9 +114,9 @@ export async function createBookingAction(formData: FormData) {
       if (!cls) return { error: 'Cours introuvable' }
 
       // Créer la réservation
-      const isPaid = cls.price && cls.price > 0 && cls.organizations.stripe_account_id;
+      const isPaid = cls.price && cls.price > 0 && cls.organizations.payment_link;
       
-      const booking = await prisma.bookings.create({
+      await prisma.bookings.create({
         data: {
           class_id: classId,
           studio_member_id: member.id,
@@ -129,58 +129,8 @@ export async function createBookingAction(formData: FormData) {
       const host = (await headers()).get('host')
       const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
 
-      if (isPaid && cls.organizations.stripe_account_id) {
-        const { stripe } = await import('@/lib/stripe');
-        
-        // Ensure price is a valid number, multiply by 100 for cents
-        const amountInCents = Math.round(Number(cls.price) * 100);
-
-        try {
-          const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: [
-              {
-                price_data: {
-                  currency: 'eur',
-                  product_data: {
-                    name: `Réservation : ${cls.title}`,
-                    description: `${new Date(cls.starts_at).toLocaleDateString('fr-FR')} à ${new Date(cls.starts_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`,
-                  },
-                  unit_amount: amountInCents,
-                },
-                quantity: 1,
-              },
-            ],
-            mode: 'payment',
-            success_url: `${siteUrl.replace(/\/$/, "")}/${cls.organizations.slug}/dashboard?booking_success=true`,
-            cancel_url: `${siteUrl.replace(/\/$/, "")}/${cls.organizations.slug}/book/${cls.id}?booking_canceled=true`,
-            client_reference_id: booking.id, // Store booking ID to confirm later
-            metadata: {
-              bookingId: booking.id,
-              classId: cls.id,
-              memberId: member.id,
-            },
-          }, {
-            stripeAccount: cls.organizations.stripe_account_id, // Direct Charge to the connected account
-          });
-
-          // Save session ID for webhook correlation
-          if (session.id) {
-            await prisma.bookings.update({
-              where: { id: booking.id },
-              data: { stripe_session_id: session.id }
-            });
-          }
-
-          if (session.url) {
-            return { url: session.url };
-          }
-        } catch (e: any) {
-          console.error("Checkout Session Error:", e);
-          // Delete pending booking if session creation fails
-          await prisma.bookings.delete({ where: { id: booking.id } });
-          return { error: "Erreur lors de l'initialisation du paiement." };
-        }
+      if (isPaid && cls.organizations.payment_link) {
+        return { url: cls.organizations.payment_link };
       }
 
       // Envoyer email de confirmation uniquement si gratuit
@@ -298,9 +248,9 @@ export async function createBookingAction(formData: FormData) {
     if (existing) return { error: 'Vous avez déjà réservé ce cours avec cet email' }
 
     // 3. Créer la réservation
-    const isPaid = cls.price && cls.price > 0 && cls.organizations.stripe_account_id;
+    const isPaid = cls.price && cls.price > 0 && cls.organizations.payment_link;
 
-    const booking = await prisma.bookings.create({
+    await prisma.bookings.create({
       data: {
         class_id: classId,
         studio_member_id: member.id,
@@ -313,55 +263,8 @@ export async function createBookingAction(formData: FormData) {
     const host = (await headers()).get('host')
     const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
 
-    if (isPaid && cls.organizations.stripe_account_id) {
-      const { stripe } = await import('@/lib/stripe');
-      const amountInCents = Math.round(Number(cls.price) * 100);
-
-      try {
-        const session = await stripe.checkout.sessions.create({
-          payment_method_types: ['card'],
-          line_items: [
-            {
-              price_data: {
-                currency: 'eur',
-                product_data: {
-                  name: `Réservation : ${cls.title}`,
-                  description: `${new Date(cls.starts_at).toLocaleDateString('fr-FR')} à ${new Date(cls.starts_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`,
-                },
-                unit_amount: amountInCents,
-              },
-              quantity: 1,
-            },
-          ],
-          mode: 'payment',
-          customer_email: email.toLowerCase().trim(),
-          success_url: `${siteUrl.replace(/\/$/, "")}/${cls.organizations.slug}/dashboard?booking_success=true`,
-          cancel_url: `${siteUrl.replace(/\/$/, "")}/${cls.organizations.slug}/book/${cls.id}?booking_canceled=true`,
-          client_reference_id: booking.id,
-          metadata: {
-            bookingId: booking.id,
-            classId: cls.id,
-            memberId: member.id,
-          },
-        }, {
-          stripeAccount: cls.organizations.stripe_account_id,
-        });
-
-        if (session.id) {
-          await prisma.bookings.update({
-            where: { id: booking.id },
-            data: { stripe_session_id: session.id }
-          });
-        }
-
-        if (session.url) {
-          return { url: session.url };
-        }
-      } catch (e: any) {
-        console.error("Checkout Session Error:", e);
-        await prisma.bookings.delete({ where: { id: booking.id } });
-        return { error: "Erreur lors de l'initialisation du paiement." };
-      }
+    if (isPaid && cls.organizations.payment_link) {
+      return { url: cls.organizations.payment_link };
     }
 
     // 4. Envoyer email de confirmation immédiat uniquement si gratuit
@@ -448,5 +351,39 @@ export async function memberSelfCancelBookingAction(bookingId: string) {
     console.error('Self cancel error:', error)
     return { error: 'Erreur lors de l\'annulation' }
   }
+}
+
+export async function confirmBookingPaymentAction(bookingId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+
+  const booking = await prisma.bookings.findUnique({
+    where: { id: bookingId },
+    include: { classes: true }
+  })
+
+  if (!booking) throw new Error('Booking not found')
+
+  const member = await prisma.org_members.findFirst({
+    where: { 
+      user_id: user.id, 
+      organization_id: booking.organization_id,
+      role: { in: ['owner', 'admin', 'coach'] }
+    }
+  })
+
+  if (!member) throw new Error('Forbidden')
+
+  await prisma.bookings.update({
+    where: { id: bookingId },
+    data: { 
+      status: 'confirmed',
+      payment_status: 'paid' 
+    }
+  })
+
+  revalidatePath(`/dashboard/classes/${booking.class_id}`)
+  return { success: true }
 }
 
