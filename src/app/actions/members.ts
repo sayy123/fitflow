@@ -81,28 +81,35 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
       })
 
       if (!existing) {
-        // Créer la réservation
-        await prisma.bookings.create({
-          data: {
-            class_id: classId,
-            studio_member_id: member.id,
-            organization_id: organizationId,
-            status: 'confirmed',
-          }
-        })
-        bookingCreated = true;
-
-        // Envoyer email de confirmation
-        const { sendBookingConfirmationEmail } = await import('@/lib/emails/send');
         const cls = await prisma.classes.findUnique({
           where: { id: classId }
         });
         
         if (cls) {
+          const isPaid = cls.price && cls.price > 0 && org.payment_link;
+
+          // Créer la réservation
+          await prisma.bookings.create({
+            data: {
+              class_id: classId,
+              studio_member_id: member.id,
+              organization_id: organizationId,
+              status: isPaid ? 'pending_payment' : 'confirmed',
+              payment_status: isPaid ? 'unpaid' : 'free',
+            }
+          })
+          bookingCreated = true;
+
           const { headers } = await import('next/headers');
           const host = (await headers()).get('host');
           const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
 
+          if (isPaid && org.payment_link) {
+            return { url: org.payment_link };
+          }
+
+          // Envoyer email de confirmation uniquement si gratuit
+          const { sendBookingConfirmationEmail } = await import('@/lib/emails/send');
           await sendBookingConfirmationEmail({
             email: user.email,
             fullName: user.user_metadata?.full_name || user.email.split('@')[0],

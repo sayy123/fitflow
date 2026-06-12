@@ -94,6 +94,8 @@ export default function BookingClient({ org, cls, currentUser }: BookingClientPr
     
     if (res.error) {
       toast.error(res.error)
+    } else if (res.url) {
+      window.location.href = res.url;
     } else {
       toast.success(res.bookingCreated ? 'Bienvenue ! Vous êtes maintenant inscrit à ce cours.' : 'Bienvenue dans le studio !')
       router.push('/dashboard')
