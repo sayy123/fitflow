@@ -13,6 +13,7 @@ import {
   respondToInvitationAction,
 } from "@/app/actions/coaches";
 import { memberSelfCancelBookingAction } from "@/app/actions/bookings";
+import { CancelBookingButton } from "@/components/cancel-booking-button";
 import {
   BellRing,
   Calendar,
@@ -89,7 +90,7 @@ export default async function DashboardPage(props: {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
           <Card className="border-2 border-dashed border-gray-200 hover:border-zinc-900 transition-colors group cursor-pointer overflow-hidden rounded-[2rem]">
             <CardContent className="p-8">
-              <form action={async (fd) => { "use server"; await createFirstStudioAction(fd); }} className="h-full flex flex-col items-center text-center space-y-4">
+              <div className="h-full flex flex-col items-center text-center space-y-4">
                 <div className="size-14 rounded-2xl bg-zinc-100 flex items-center justify-center group-hover:bg-zinc-900 transition-colors">
                   <Zap className="size-6 text-zinc-600 group-hover:text-white" />
                 </div>
@@ -97,8 +98,10 @@ export default async function DashboardPage(props: {
                   <h3 className="text-lg font-bold text-gray-900">Créer mon studio</h3>
                   <p className="text-sm text-gray-500">Gérez votre planning et vos membres en quelques minutes.</p>
                 </div>
-                <Button type="submit" className="w-full bg-zinc-900 text-white rounded-xl h-11">C&apos;est parti</Button>
-              </form>
+                <Link href="/create-studio" className="w-full">
+                  <Button className="w-full bg-zinc-900 text-white rounded-xl h-11">C&apos;est parti</Button>
+                </Link>
+              </div>
             </CardContent>
           </Card>
           <InviteJoiner />
@@ -247,18 +250,16 @@ export default async function DashboardPage(props: {
                     <div className="flex items-center gap-3"><Calendar className="size-4 text-gray-400" /> {new Date(booking.classes?.starts_at || "").toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}</div>
                     <div className="flex items-center gap-3"><Clock className="size-4 text-gray-400" /> {new Date(booking.classes?.starts_at || "").toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}</div>
                   </div>
-                  <div className="mt-5 flex gap-3">
+                  <div className="mt-5 flex flex-col sm:flex-row gap-3">
                     {booking.status === 'pending_payment' && booking.organizations.payment_link && (
-                      <a href={booking.organizations.payment_link} target="_blank" rel="noopener noreferrer" className="flex-1 h-9 flex items-center justify-center rounded-lg font-bold text-[10px] uppercase tracking-widest bg-emerald-600 text-white hover:bg-emerald-700 transition-colors">
-                        Payer {booking.classes.price ? `${booking.classes.price}€` : ''}
+                      <a href={booking.organizations.payment_link} target="_blank" rel="noopener noreferrer" className="flex-1 h-9 flex items-center justify-center rounded-lg font-bold text-[10px] uppercase tracking-widest bg-emerald-600 text-white hover:bg-emerald-700 transition-colors text-center px-2 leading-tight">
+                        Si non payé : Payer {booking.classes.price ? `${booking.classes.price}€` : ''}
                       </a>
                     )}
                     {booking.status === 'pending_payment' ? (
-                      <form action={async () => { "use server"; await memberSelfCancelBookingAction(booking.id); }} className="flex-1">
-                        <Button type="submit" variant="outline" className="w-full h-9 rounded-lg font-bold text-[10px] uppercase tracking-widest border-gray-200 text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors">
-                          Annuler
-                        </Button>
-                      </form>
+                      <div className="flex-1">
+                        <CancelBookingButton bookingId={booking.id} />
+                      </div>
                     ) : (
                       <Link href={`/${booking.organizations?.slug}/book/${booking.classes?.id}`} className="flex-1 h-9 flex items-center justify-center rounded-lg font-bold text-[10px] uppercase tracking-widest bg-gray-900 text-white hover:bg-gray-800 transition-colors">Détails</Link>
                     )}
