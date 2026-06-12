@@ -12,6 +12,7 @@ import { createFirstStudioAction } from "@/app/actions/studios";
 import {
   respondToInvitationAction,
 } from "@/app/actions/coaches";
+import { memberSelfCancelBookingAction } from "@/app/actions/bookings";
 import {
   BellRing,
   Calendar,
@@ -41,11 +42,12 @@ interface DashboardClass {
 interface DashboardBooking {
   id: string;
   status: string;
-  organizations: { name: string; slug: string; color_primary?: string | null };
+  organizations: { name: string; slug: string; color_primary?: string | null; payment_link?: string | null; };
   classes: {
     id: string;
     title: string;
     starts_at: Date | string;
+    price?: number | null;
     bookings: {
       id: string;
       studio_members: { avatar_url?: string | null; full_name: string };
@@ -245,7 +247,22 @@ export default async function DashboardPage(props: {
                     <div className="flex items-center gap-3"><Calendar className="size-4 text-gray-400" /> {new Date(booking.classes?.starts_at || "").toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}</div>
                     <div className="flex items-center gap-3"><Clock className="size-4 text-gray-400" /> {new Date(booking.classes?.starts_at || "").toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}</div>
                   </div>
-                  <Link href={`/${booking.organizations?.slug}/book/${booking.classes?.id}`} className="mt-5 w-full h-9 flex items-center justify-center rounded-lg font-medium text-sm bg-gray-900 text-white hover:bg-gray-800 transition-colors">Détails</Link>
+                  <div className="mt-5 flex gap-3">
+                    {booking.status === 'pending_payment' && booking.organizations.payment_link && (
+                      <a href={booking.organizations.payment_link} target="_blank" rel="noopener noreferrer" className="flex-1 h-9 flex items-center justify-center rounded-lg font-bold text-[10px] uppercase tracking-widest bg-emerald-600 text-white hover:bg-emerald-700 transition-colors">
+                        Payer {booking.classes.price ? `${booking.classes.price}€` : ''}
+                      </a>
+                    )}
+                    {booking.status === 'pending_payment' ? (
+                      <form action={async () => { "use server"; await memberSelfCancelBookingAction(booking.id); }} className="flex-1">
+                        <Button type="submit" variant="outline" className="w-full h-9 rounded-lg font-bold text-[10px] uppercase tracking-widest border-gray-200 text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors">
+                          Annuler
+                        </Button>
+                      </form>
+                    ) : (
+                      <Link href={`/${booking.organizations?.slug}/book/${booking.classes?.id}`} className="flex-1 h-9 flex items-center justify-center rounded-lg font-bold text-[10px] uppercase tracking-widest bg-gray-900 text-white hover:bg-gray-800 transition-colors">Détails</Link>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             ))}

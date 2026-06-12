@@ -22,6 +22,7 @@ interface BookingClientProps {
     name: string
     slug: string
     color_primary?: string | null
+    payment_link?: string | null
   }
   cls: {
     id: string
@@ -29,6 +30,7 @@ interface BookingClientProps {
     starts_at: Date | string
     duration_min: number
     capacity: number
+    price?: number | null
     location?: string | null
     org_members?: {
       display_name: string
@@ -248,7 +250,7 @@ export default function BookingClient({ org, cls, currentUser }: BookingClientPr
                 disabled={isAutoJoining}
                 className="w-full h-12 rounded-xl bg-white text-zinc-900 font-black uppercase tracking-widest text-[10px] hover:bg-zinc-100 transition-all"
               >
-                {isAutoJoining ? "Adhésion..." : "Rejoindre le studio directement"}
+                {isAutoJoining ? "Réservation..." : (cls.price && cls.price > 0 && org.payment_link ? `Réserver et payer ${cls.price}€` : "Réserver la séance directement")}
               </Button>
             </div>
           </div>
@@ -359,7 +361,7 @@ export default function BookingClient({ org, cls, currentUser }: BookingClientPr
               boxShadow: `0 8px 24px -6px ${org.color_primary}40`
             }}
           >
-            {isPending ? 'Réservation...' : (isFull ? 'Rejoindre la liste d\'attente' : 'Confirmer la réservation')}
+            {isPending ? 'Réservation...' : (isFull ? 'Rejoindre la liste d\'attente' : (cls.price && cls.price > 0 && org.payment_link ? `Réserver et payer ${cls.price}€` : 'Confirmer la réservation'))}
           </Button>
         </form>
         
