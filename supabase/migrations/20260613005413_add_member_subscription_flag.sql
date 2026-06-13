@@ -1,0 +1,1 @@
+ALTER TABLE public.studio_members ADD COLUMN IF NOT EXISTS has_active_subscription boolean DEFAULT false;

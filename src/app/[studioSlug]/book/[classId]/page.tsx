@@ -30,6 +30,19 @@ export default async function BookingPage({ params }: { params: Promise<{ studio
 
   if (!cls) notFound()
 
+  let hasSubscription = false;
+  if (user && user.email) {
+    const member = await prisma.studio_members.findUnique({
+      where: {
+        organization_id_email: {
+          organization_id: org.id,
+          email: user.email.toLowerCase().trim()
+        }
+      }
+    });
+    hasSubscription = member?.has_active_subscription || false;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <BookingClient 
@@ -45,6 +58,7 @@ export default async function BookingPage({ params }: { params: Promise<{ studio
           ...user,
           email: user.email || ''
         } : null} 
+        hasSubscription={hasSubscription}
       />
     </div>
   )

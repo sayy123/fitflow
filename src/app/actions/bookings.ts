@@ -114,7 +114,7 @@ export async function createBookingAction(formData: FormData) {
       if (!cls) return { error: 'Cours introuvable' }
 
       // Créer la réservation
-      const isPaid = cls.price && cls.price > 0 && cls.organizations.payment_link;
+      const isPaid = cls.price && cls.price > 0 && cls.organizations.payment_link && !member.has_active_subscription;
       
       await prisma.bookings.create({
         data: {
@@ -248,7 +248,7 @@ export async function createBookingAction(formData: FormData) {
     if (existing) return { error: 'Vous avez déjà réservé ce cours avec cet email' }
 
     // 3. Créer la réservation
-    const isPaid = cls.price && cls.price > 0 && cls.organizations.payment_link;
+    const isPaid = cls.price && cls.price > 0 && cls.organizations.payment_link && !member.has_active_subscription;
 
     await prisma.bookings.create({
       data: {

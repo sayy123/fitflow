@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import { MemberSubscriptionToggle } from '@/components/member-subscription-toggle'
 
 export default async function MemberDetailPage(props: { params: Promise<{ memberId: string }> }) {
   const params = await props.params
@@ -56,6 +57,7 @@ export default async function MemberDetailPage(props: { params: Promise<{ member
           </div>
         </div>
         <div className="flex items-center gap-2">
+            <MemberSubscriptionToggle memberId={member.id} hasSubscription={member.has_active_subscription || false} />
             <Button variant="outline" size="sm" className="rounded-xl h-9 px-4 font-bold text-xs uppercase tracking-widest border-gray-100 hover:bg-gray-50 transition-all">
                 Modifier le profil
             </Button>

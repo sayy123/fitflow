@@ -52,9 +52,10 @@ interface BookingClientProps {
       full_name?: string | null
     }
   } | null
+  hasSubscription?: boolean
 }
 
-export default function BookingClient({ org, cls, currentUser }: BookingClientProps) {
+export default function BookingClient({ org, cls, currentUser, hasSubscription }: BookingClientProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const pathname = usePathname()
@@ -250,8 +251,13 @@ export default function BookingClient({ org, cls, currentUser }: BookingClientPr
                 disabled={isAutoJoining}
                 className="w-full h-12 rounded-xl bg-white text-zinc-900 font-black uppercase tracking-widest text-[10px] hover:bg-zinc-100 transition-all"
               >
-                {isAutoJoining ? "Réservation..." : (cls.price && cls.price > 0 && org.payment_link ? `Réserver et payer ${cls.price}€` : "Réserver la séance directement")}
+                {isAutoJoining ? "Réservation..." : (cls.price && cls.price > 0 && org.payment_link && !hasSubscription ? `Réserver et payer ${cls.price}€` : "Réserver la séance directement")}
               </Button>
+              {cls.price && cls.price > 0 && org.payment_link && !hasSubscription && (
+                <p className="text-[10px] text-zinc-400 font-medium text-center italic mt-2">
+                  ⚠️ Pensez à indiquer votre Nom/Prénom en motif de paiement sur la page suivante.
+                </p>
+              )}
             </div>
           </div>
         )}
@@ -361,8 +367,13 @@ export default function BookingClient({ org, cls, currentUser }: BookingClientPr
               boxShadow: `0 8px 24px -6px ${org.color_primary}40`
             }}
           >
-            {isPending ? 'Réservation...' : (isFull ? 'Rejoindre la liste d\'attente' : (cls.price && cls.price > 0 && org.payment_link ? `Réserver et payer ${cls.price}€` : 'Confirmer la réservation'))}
+            {isPending ? 'Réservation...' : (isFull ? 'Rejoindre la liste d\'attente' : (cls.price && cls.price > 0 && org.payment_link && !hasSubscription ? `Réserver et payer ${cls.price}€` : 'Confirmer la réservation'))}
           </Button>
+          {cls.price && cls.price > 0 && org.payment_link && !hasSubscription && (
+            <p className="text-[10px] text-zinc-400 font-medium text-center italic mt-2">
+              ⚠️ Pensez à indiquer votre Nom/Prénom en motif de paiement sur la page suivante.
+            </p>
+          )}
         </form>
         
         <div className="mt-6 text-center">

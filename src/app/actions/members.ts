@@ -131,6 +131,36 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
   }
 }
 
+export async function toggleMemberSubscriptionAction(memberId: string, hasSubscription: boolean) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Non authentifié' }
+
+  const memberToUpdate = await prisma.studio_members.findUnique({
+    where: { id: memberId }
+  })
+
+  if (!memberToUpdate) return { error: 'Membre introuvable' }
+
+  const adminMembership = await prisma.org_members.findFirst({
+    where: { 
+      user_id: user.id, 
+      organization_id: memberToUpdate.organization_id,
+      role: { in: ['owner', 'admin'] }
+    }
+  })
+
+  if (!adminMembership) return { error: 'Action non autorisée' }
+
+  await prisma.studio_members.update({
+    where: { id: memberId },
+    data: { has_active_subscription: hasSubscription }
+  })
+
+  revalidatePath(`/dashboard/members/${memberId}`)
+  return { success: true }
+}
+
 export async function deleteStudioMemberAction(memberId: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
