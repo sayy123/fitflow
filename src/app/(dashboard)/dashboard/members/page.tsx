@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { DeleteMemberButton } from "./delete-member-button";
+import { MemberStatusBadge } from "@/components/member-status-badge";
 
 import { cookies } from "next/headers";
 
@@ -170,11 +171,11 @@ export default async function MembersPage() {
                       {m.email}
                     </TableCell>
                     <TableCell>
-                      <span
-                        className={`px-2.5 py-1 rounded-md text-xs font-semibold border ${m.is_active ? "bg-green-50 text-green-700 border-green-200" : "bg-gray-50 text-gray-600 border-gray-200"}`}
-                      >
-                        {m.is_active ? "Actif" : "Inactif"}
-                      </span>
+                      <MemberStatusBadge 
+                        memberId={m.id} 
+                        isActive={m.is_active} 
+                        initialHasSubscription={m.has_active_subscription} 
+                      />
                     </TableCell>
                     <TableCell className="font-semibold text-gray-900 text-center text-sm">
                       {m._count.bookings}
