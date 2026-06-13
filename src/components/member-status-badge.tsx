@@ -20,6 +20,13 @@ export function MemberStatusBadge({
 
   const handleToggle = () => {
     const newStatus = !hasSub;
+
+    if (newStatus) {
+      if (!window.confirm("En activant l'abonnement, ce membre pourra réserver tous vos cours gratuitement sans passer par votre lien de paiement. Confirmer ?")) {
+        return;
+      }
+    }
+
     setHasSub(newStatus); // Optimistic update
     
     startTransition(async () => {
@@ -28,7 +35,7 @@ export function MemberStatusBadge({
         toast.error(res.error)
         setHasSub(!newStatus) // Revert on error
       } else {
-        toast.success(newStatus ? "Abonnement activé pour ce membre" : "Abonnement retiré")
+        toast.success(newStatus ? "Abonnement activé : Ses séances seront gratuites." : "Abonnement retiré")
       }
     })
   }

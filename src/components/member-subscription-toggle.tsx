@@ -14,14 +14,21 @@ export function MemberSubscriptionToggle({ memberId, hasSubscription }: { member
       variant={hasSubscription ? "outline" : "default"}
       disabled={isPending}
       onClick={async () => {
-        setIsPending(true)
         const newStatus = !hasSubscription;
+
+        if (newStatus) {
+          if (!window.confirm("En activant l'abonnement, ce membre pourra réserver tous vos cours gratuitement sans passer par votre lien de paiement. Confirmer ?")) {
+            return;
+          }
+        }
+
+        setIsPending(true)
         const res = await toggleMemberSubscriptionAction(memberId, newStatus)
         if (res?.error) {
           toast.error(res.error)
           setIsPending(false)
         } else {
-          toast.success(newStatus ? "Abonnement activé" : "Abonnement retiré")
+          toast.success(newStatus ? "Abonnement activé : Ses séances seront gratuites." : "Abonnement retiré")
           setIsPending(false)
         }
       }}
