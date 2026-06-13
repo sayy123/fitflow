@@ -86,7 +86,7 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
         });
         
         if (cls) {
-          const isPaid = cls.price && cls.price > 0 && org.payment_link;
+          const isPaid = cls.price && cls.price > 0 && org.payment_link && !member.has_active_subscription;
 
           // Créer la réservation
           await prisma.bookings.create({

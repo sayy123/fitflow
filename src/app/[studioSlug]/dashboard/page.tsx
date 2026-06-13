@@ -74,12 +74,26 @@ export default async function MemberDashboardPage({
             <CardTitle>Mon abonnement</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="p-4 bg-gray-50 rounded-lg border border-dashed border-gray-300 text-center">
-              <p className="text-gray-600 mb-4">Vous n'avez pas encore d'abonnement actif dans ce studio.</p>
-              <Button variant="outline" className="w-full">
-                <CreditCard className="mr-2 h-4 w-4" /> Voir les tarifs
-              </Button>
-            </div>
+            {member?.has_active_subscription ? (
+              <div className="p-6 bg-amber-50 rounded-2xl border border-amber-100 text-center space-y-3">
+                <div className="size-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto">
+                  <span className="text-2xl">👑</span>
+                </div>
+                <div>
+                  <p className="font-black text-amber-900 uppercase tracking-widest text-xs">Abonnement Actif</p>
+                  <p className="text-sm text-amber-700 font-medium mt-1">
+                    Vous avez un accès illimité à toutes les séances de ce studio.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="p-4 bg-gray-50 rounded-lg border border-dashed border-gray-300 text-center">
+                <p className="text-gray-600 mb-4">Vous n'avez pas encore d'abonnement actif dans ce studio.</p>
+                <Button variant="outline" className="w-full">
+                  <CreditCard className="mr-2 h-4 w-4" /> Voir les tarifs
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
