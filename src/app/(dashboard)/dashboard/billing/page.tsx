@@ -125,18 +125,18 @@ export default async function BillingPage() {
               plan="starter"
               className="w-full h-12 rounded-xl font-semibold bg-zinc-900 text-white hover:bg-zinc-800"
               isCurrentPlan={plan === "starter" && subscription_status === "active"}
-              disabled={plan === "premium"}
+              disabled={plan === "premium" && subscription_status === "active"}
             >
               {plan === "starter" && subscription_status === "active"
                 ? "Gérer mon abonnement"
-                : plan === "premium" 
+                : plan === "premium" && subscription_status === "active"
                   ? "Indisponible en Premium"
                   : "Activer Starter"}
             </BillingButton>
 
-            {plan === "premium" && (
+            {plan === "premium" && subscription_status === "active" && (
               <p className="text-[10px] text-zinc-400 text-center font-medium">
-                Le passage au plan Starter n'est pas disponible pour les membres Premium.
+                Pour passer au plan Starter, annulez d'abord votre abonnement actuel depuis le bouton "Gérer mon abonnement" Premium.
               </p>
             )}
           </CardContent>
