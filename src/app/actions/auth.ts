@@ -331,3 +331,33 @@ export async function updatePasswordAction(password: string) {
 
   return { success: true };
 }
+
+export async function deleteAccountAction() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) {
+    return { error: "Non autorisé" };
+  }
+
+  try {
+    const adminSupabase = createAdminClient();
+    
+    // Deleting the user via Supabase Admin API will cascade delete their
+    // user_profile, org_memberships, etc. per the database schema.
+    const { error } = await adminSupabase.auth.admin.deleteUser(user.id);
+    
+    if (error) {
+      console.error("Delete user error:", error.message);
+      return { error: "Erreur lors de la suppression de votre compte." };
+    }
+
+    // Sign out the user locally
+    await supabase.auth.signOut();
+  } catch (error) {
+    console.error("Delete system error:", error);
+    return { error: "Une erreur interne est survenue." };
+  }
+
+  redirect("/register?message=account_deleted");
+}

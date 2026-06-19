@@ -16,6 +16,7 @@ import { updateOrganizationAction } from "@/app/actions/organizations";
 import {
   updateUserProfileAction,
   updatePasswordAction,
+  deleteAccountAction,
 } from "@/app/actions/auth";
 import { uploadAvatarAction, removeAvatarAction } from "@/app/actions/avatars";
 import {
@@ -92,6 +93,9 @@ export function SettingsClient({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordLoading, setPasswordLoading] = useState(false);
 
+  // Deletion State
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
   const isOwner = role === "owner";
 
   const handleUpdateOrg = async () => {
@@ -133,6 +137,19 @@ export function SettingsClient({
       toast.success("Mot de passe mis à jour");
       setPassword("");
       setConfirmPassword("");
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!confirm("ATTENTION : Cette action est irréversible. Toutes vos données seront supprimées définitivement. Êtes-vous sûr ?")) {
+      return;
+    }
+    setDeleteLoading(true);
+    const result = await deleteAccountAction();
+    // if successful, it redirects, otherwise it returns an error
+    if (result && result.error) {
+      toast.error(result.error);
+      setDeleteLoading(false);
     }
   };
 
@@ -547,6 +564,22 @@ export function SettingsClient({
                       : "Changer le mot de passe"}
                   </Button>
                 </form>
+
+                <div className="pt-8 mt-8 border-t border-red-100">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                      <h4 className="text-sm font-bold text-red-600">Supprimer mon compte</h4>
+                    </div>
+                    <Button
+                      onClick={handleDeleteAccount}
+                      disabled={deleteLoading}
+                      variant="destructive"
+                      className="w-full sm:w-auto h-10 px-6 rounded-lg font-medium text-sm shadow-sm"
+                    >
+                      {deleteLoading ? "Suppression..." : "Supprimer mon compte"}
+                    </Button>
+                  </div>
+                </div>
               </div>
             )}
           </div>

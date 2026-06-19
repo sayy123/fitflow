@@ -44,6 +44,22 @@ export default function LegalPage() {
               Tous les contenus présents sur le site (textes, images, graphismes, logo, icônes) sont la propriété exclusive de Fitloww ou de leurs auteurs respectifs.
             </p>
           </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-zinc-900 mb-4">5. Données personnelles et RGPD</h2>
+            <p>
+              Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez d'un droit d'accès, de rectification, de portabilité et d'effacement de vos données ("droit à l'oubli").<br/><br/>
+              Les données collectées (nom, prénom, email, téléphone) sont strictement utilisées pour la gestion de vos réservations, de vos abonnements et de votre compte sur notre plateforme. Vous pouvez supprimer définitivement votre compte à tout moment depuis les paramètres de sécurité de votre espace personnel.<br/><br/>
+              Pour toute demande relative à vos données, vous pouvez nous contacter à : <strong>fitflow887@gmail.com</strong>.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-zinc-900 mb-4">6. Cookies</h2>
+            <p>
+              Notre site utilise des cookies strictement nécessaires à son fonctionnement (maintien de votre session, authentification sécurisée). Ces cookies techniques sont exemptés de consentement préalable. Nous n'utilisons aucun cookie publicitaire intrusif.
+            </p>
+          </section>
         </div>
       </div>
     </div>

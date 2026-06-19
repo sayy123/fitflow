@@ -12,10 +12,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UserPlus } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { Checkbox } from "@/components/ui/checkbox";
+import Link from "next/link";
 
 function RegisterContent() {
   const [state, action, isPending] = useActionState(registerAction, null);
@@ -150,6 +151,20 @@ function RegisterContent() {
               ⚠️ {state.error}
             </div>
           )}
+
+          <div className="flex items-start space-x-2 pt-2">
+            <Checkbox id="terms" name="terms" required className="mt-1" />
+            <label
+              htmlFor="terms"
+              className="text-xs font-medium leading-relaxed text-zinc-600"
+            >
+              J'accepte les{" "}
+              <Link href="/legal" className="text-zinc-900 underline hover:text-zinc-700">
+                Mentions Légales
+              </Link>{" "}
+              et la politique de confidentialité.
+            </label>
+          </div>
 
           <Button
             type="submit"

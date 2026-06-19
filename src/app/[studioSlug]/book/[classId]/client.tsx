@@ -357,6 +357,13 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
               <Input id="password" name="password" type="password" required={createAccount} placeholder="••••••••" className="h-11 rounded-xl border-gray-100" />
             </div>
           )}
+
+          <div className="flex items-start space-x-2 pt-2 px-1">
+            <Checkbox id="terms" name="terms" required className="mt-0.5 border-gray-300" />
+            <label htmlFor="terms" className="text-[10px] font-medium leading-tight text-gray-500">
+              J'accepte les <Link href="/legal" target="_blank" className="text-gray-800 underline hover:text-gray-600">Mentions Légales</Link> et la politique de confidentialité.
+            </label>
+          </div>
           
           <Button 
             type="submit" 
