@@ -164,17 +164,20 @@ export default function ClassDetailClient({
                     
                     <div className="space-y-2">
                       <Label htmlFor="coach_id" className="text-[10px] font-black uppercase tracking-widest text-gray-400">Coach assigné</Label>
-                      <Select name="coach_id" defaultValue={cls.coach_id || ""}>
-                        <SelectTrigger className="rounded-xl border-gray-100 h-11">
-                          <SelectValue placeholder="Choisir un coach" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-2xl">
-                          <SelectItem value="">Aucun coach</SelectItem>
-                          {coaches.map(c => (
-                            <SelectItem key={c.id} value={c.id}>{c.display_name}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <select 
+                        name="coach_id" 
+                        defaultValue={cls.coach_id || ""}
+                        className="w-full h-11 rounded-xl border border-zinc-200 bg-white px-3 text-sm text-zinc-900 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none"
+                      >
+                        <option value="">Aucun coach</option>
+                        {coaches.map(c => (
+                          <option key={c.id} value={c.id}>{c.display_name || "Coach sans nom"}</option>
+                        ))}
+                        {/* Fallback if current coach is not in the list but assigned */}
+                        {cls.coach_id && !coaches.find(c => c.id === cls.coach_id) && cls.org_members && (
+                          <option key={cls.coach_id} value={cls.coach_id}>{cls.org_members.display_name || "Coach sans nom"}</option>
+                        )}
+                      </select>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -234,7 +237,7 @@ export default function ClassDetailClient({
                     )}
                 </div>
                 <div>
-                    <div className="text-lg font-black text-gray-900 tracking-tight leading-none truncate uppercase">{cls.org_members?.display_name || 'Non assigné'}</div>
+                    <p className="text-sm font-bold text-gray-900 truncate capitalize">{cls.org_members?.display_name || 'Non assigné'}</p>
                     <p className="text-[9px] font-bold text-gray-400 mt-1 uppercase tracking-widest">Équipe {cls.organizations.name}</p>
                 </div>
             </div>

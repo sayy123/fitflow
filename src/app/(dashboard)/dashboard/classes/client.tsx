@@ -41,14 +41,14 @@ export default function ClassesClient({
   coaches, 
   organizations,
   userRole,
-  studioSlug,
+  studioName,
   currentMemberId 
 }: { 
   initialClasses: Class[], 
   coaches: Coach[], 
   organizations: Organization[],
   userRole: string,
-  studioSlug: string,
+  studioName: string,
   currentMemberId: string 
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -63,7 +63,7 @@ export default function ClassesClient({
     borderColor: (c.is_cancelled ? '#9ca3af' : c.color) ?? undefined,
     extendedProps: {
       coach: c.org_members,
-      studioSlug: (c as any).organizations?.slug
+      studioName: (c as any).organizations?.slug
     }
   }))
 
@@ -108,16 +108,16 @@ export default function ClassesClient({
                 {(organizations?.length ?? 0) > 1 && (
                   <div className="space-y-2 text-zinc-900">
                     <Label htmlFor="organization_id" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Studio</Label>
-                    <Select name="organization_id" defaultValue={organizations![0].id} required>
-                      <SelectTrigger className="rounded-xl border-zinc-100 h-11 bg-white">
-                        <SelectValue placeholder="Choisir un studio" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white text-zinc-900">
-                        {organizations!.map(org => (
-                          <SelectItem key={org.id} value={org.id}>{org.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <select 
+                      name="organization_id" 
+                      defaultValue={organizations![0].id} 
+                      required
+                      className="w-full h-11 rounded-xl border border-zinc-200 bg-white px-3 text-sm text-zinc-900 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none"
+                    >
+                      {organizations!.map(org => (
+                        <option key={org.id} value={org.id}>{org.name}</option>
+                      ))}
+                    </select>
                   </div>
                 )}
                 {(organizations?.length ?? 0) === 1 && (
@@ -131,17 +131,16 @@ export default function ClassesClient({
                 
                 <div className="space-y-2 text-zinc-900">
                   <Label htmlFor="coach_id" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Coach</Label>
-                  <Select name="coach_id" defaultValue={currentMemberId}>
-                    <SelectTrigger className="rounded-xl border-zinc-100 h-11 bg-white">
-                      <SelectValue placeholder="Choisir un coach" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white text-zinc-900">
-                      <SelectItem value="">Aucun coach</SelectItem>
-                      {coaches.map(c => (
-                        <SelectItem key={c.id} value={c.id}>{c.display_name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <select 
+                    name="coach_id" 
+                    defaultValue={currentMemberId}
+                    className="w-full h-11 rounded-xl border border-zinc-200 bg-white px-3 text-sm text-zinc-900 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none"
+                  >
+                    <option value="">Aucun coach</option>
+                    {coaches.map(c => (
+                      <option key={c.id} value={c.id}>{c.display_name || "Coach sans nom"}</option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -178,12 +177,12 @@ export default function ClassesClient({
       <div className="calendar-container overflow-hidden">
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          initialView={window?.innerWidth < 768 ? 'timeGridDay' : 'timeGridWeek'}
+          initialView={typeof window !== 'undefined' && window.innerWidth < 768 ? 'timeGridDay' : 'timeGridWeek'}
           locale={frLocale}
           headerToolbar={{
-            left: window?.innerWidth < 768 ? 'prev,next' : 'prev,next today',
+            left: typeof window !== 'undefined' && window.innerWidth < 768 ? 'prev,next' : 'prev,next today',
             center: 'title',
-            right: window?.innerWidth < 768 ? 'timeGridDay,timeGridWeek' : 'dayGridMonth,timeGridWeek,timeGridDay'
+            right: typeof window !== 'undefined' && window.innerWidth < 768 ? 'timeGridDay,timeGridWeek' : 'dayGridMonth,timeGridWeek,timeGridDay'
           }}
         events={events}
         allDaySlot={false}
@@ -210,7 +209,7 @@ export default function ClassesClient({
                     )}
                   </div>
                   <span className="text-[11px] font-bold text-white/90 truncate uppercase tracking-tight">
-                    {coach.display_name}
+                    {coach.display_name || "Coach sans nom"}
                   </span>
                 </div>
               )}
@@ -218,7 +217,7 @@ export default function ClassesClient({
           )
         }}
         eventClick={(info) => {
-          const slug = info.event.extendedProps.studioSlug || studioSlug
+          const slug = info.event.extendedProps.studioName || studioName
           if (isStaff) {
             window.location.href = `/dashboard/classes/${info.event.id}`
           } else {

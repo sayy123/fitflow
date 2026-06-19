@@ -102,7 +102,7 @@ export default async function ClassesPage(props: {
           coaches={coaches}
           organizations={memberships.map(m => m.organizations)}
           userRole={currentMember.role}
-          studioSlug={currentMember.organizations.slug}
+          studioName={currentMember.organizations.name}
           currentMemberId={currentMember.id}
         />
       </div>

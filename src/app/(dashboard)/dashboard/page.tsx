@@ -187,6 +187,7 @@ export default async function DashboardPage(props: {
         where: { organization_id: member.organization_id, starts_at: { gte: now }, is_cancelled: false },
         include: {
           org_members: true,
+          organizations: true,
           bookings: { where: { status: "confirmed" }, include: { studio_members: true } },
         },
         orderBy: { starts_at: "asc" },
