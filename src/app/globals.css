@@ -146,3 +146,118 @@
     text-wrap: balance;
   }
 }
+
+/* FULLCALENDAR MODERN OVERRIDES */
+.calendar-container {
+  @apply bg-white rounded-3xl p-4 md:p-6 border border-gray-100;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 2px 4px rgba(0, 0, 0, 0.05), 0 12px 24px rgba(0, 0, 0, 0.05);
+}
+
+.fc {
+  --fc-border-color: #f3f4f6; /* Tailwind gray-100 */
+  --fc-button-bg-color: #ffffff;
+  --fc-button-border-color: #e5e7eb;
+  --fc-button-text-color: #1f2937;
+  --fc-button-hover-bg-color: #f9fafb;
+  --fc-button-hover-border-color: #d1d5db;
+  --fc-button-active-bg-color: #111827;
+  --fc-button-active-border-color: #111827;
+  --fc-button-active-text-color: #ffffff;
+  --fc-today-bg-color: #f8fafc; /* Very light slate for today */
+  --fc-page-bg-color: #ffffff;
+  --fc-neutral-bg-color: #ffffff;
+  --fc-list-event-hover-bg-color: #f3f4f6;
+  font-family: inherit;
+}
+
+/* Remove strict grid borders for a cleaner look */
+.fc-theme-standard td, .fc-theme-standard th {
+  border-color: var(--fc-border-color);
+}
+.fc-scrollgrid {
+  border: none !important;
+}
+.fc-scrollgrid-section > td {
+  border: none !important;
+}
+
+/* Headers */
+.fc-col-header-cell {
+  padding: 12px 0;
+  background: white;
+}
+.fc-col-header-cell-cushion {
+  color: #6b7280; /* text-gray-500 */
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  padding: 8px 12px;
+}
+.fc-day-today .fc-col-header-cell-cushion {
+  color: #4f46e5; /* Primary */
+  background: #eef2ff;
+  border-radius: 99px;
+  padding: 8px 16px;
+}
+
+/* Toolbar Buttons */
+.fc-toolbar-title {
+  font-weight: 900 !important;
+  font-size: 1.5rem !important;
+  color: #111827;
+  letter-spacing: -0.02em;
+  text-transform: capitalize;
+}
+.fc .fc-button {
+  border-radius: 99px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.05em !important;
+  padding: 8px 16px !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+  transition: all 0.2s ease !important;
+}
+.fc .fc-button-primary:not(:disabled):active,
+.fc .fc-button-primary:not(:disabled).fc-button-active {
+  background-color: #111827 !important;
+  border-color: #111827 !important;
+  color: white !important;
+}
+.fc .fc-button-primary:disabled {
+  opacity: 0.5 !important;
+}
+
+/* Events */
+.fc-v-event, .fc-h-event, .fc-daygrid-event {
+  border-radius: 12px !important;
+  border: none !important;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin: 2px !important;
+}
+.fc-event:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  z-index: 10 !important;
+}
+
+/* Current time indicator */
+.fc-timegrid-now-indicator-line {
+  border-color: #ef4444; /* Red */
+  border-width: 2px;
+}
+.fc-timegrid-now-indicator-arrow {
+  border-color: #ef4444;
+  border-width: 6px;
+  background-color: #ef4444;
+}
+
+/* Slot times */
+.fc-timegrid-slot-label-cushion {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #9ca3af;
+}

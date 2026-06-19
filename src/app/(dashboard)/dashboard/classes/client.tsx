@@ -195,20 +195,20 @@ export default function ClassesClient({
         eventContent={(eventInfo) => {
           const coach = eventInfo.event.extendedProps.coach
           return (
-            <div className="p-2 h-full flex flex-col justify-between overflow-hidden">
-              <div className="font-extrabold text-xs md:text-sm uppercase tracking-tight leading-snug">
+            <div className="p-1.5 overflow-hidden flex flex-col gap-1">
+              <div className="font-extrabold text-[10px] sm:text-xs uppercase tracking-tight leading-none truncate">
                 {eventInfo.event.title}
               </div>
               {coach && (
-                <div className="flex items-center gap-2 mt-1">
-                  <div className="size-6 rounded-md bg-white/20 overflow-hidden flex items-center justify-center shrink-0 border border-white/20">
+                <div className="flex items-center gap-1.5">
+                  <div className="size-4 rounded-full bg-white/20 overflow-hidden flex items-center justify-center shrink-0 border border-white/20">
                     {coach.avatar_url ? (
                       <img src={coach.avatar_url} alt="" className="size-full object-cover" />
                     ) : (
-                      <span className="text-[10px] font-black text-white uppercase">{coach.display_name?.charAt(0)}</span>
+                      <span className="text-[8px] font-black text-white uppercase">{coach.display_name?.charAt(0)}</span>
                     )}
                   </div>
-                  <span className="text-[11px] font-bold text-white/90 truncate uppercase tracking-tight">
+                  <span className="text-[9px] font-bold text-white/90 truncate uppercase tracking-tight leading-none">
                     {coach.display_name || "Coach sans nom"}
                   </span>
                 </div>

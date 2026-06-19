@@ -16,7 +16,7 @@ async function sendEmailDevOrProd(to: string, subject: string, html: string) {
   const fromEmail = process.env.RESEND_FROM_EMAIL || smtpUser || 'onboarding@resend.dev'
   const sender = `fitflow887 <${fromEmail}>`
 
-  // Si on a les identifiants SMTP (ex: Gmail App Password), on utilise ça en priorité
+  // Si on a les identifiants SMTP (ex: Gmail App Password), on utilise ça
   if (smtpUser && smtpPassword) {
     console.log(`📧 Envoi d'un email via SMTP vers ${to}...`)
     const smtpTransporter = nodemailer.createTransport({
@@ -46,7 +46,34 @@ async function sendEmailDevOrProd(to: string, subject: string, html: string) {
     }
   }
 
-  // En local, on force TOUJOURS l'utilisation de Mailpit, même si on a une clé Resend
+  // Priorité à Resend si la clé est présente (même en local)
+  if (apiKey) {
+    const resend = new Resend(apiKey)
+    try {
+      console.log(`📧 Envoi d'un email via Resend vers ${to}...`)
+      const { data, error } = await resend.emails.send({
+        from: sender,
+        to,
+        subject,
+        html,
+      })
+
+      if (error) {
+        console.error('❌ Erreur Resend API :', error)
+        console.log('\n=============================================')
+        console.log(`🔗 CONTENU DE L'EMAIL (Suite à l'erreur Resend) vers ${to}:`)
+        console.log(html)
+        console.log('=============================================\n')
+      } else {
+        console.log(`✅ Email envoyé via Resend avec succès à ${to} (ID: ${data?.id})`)
+        return
+      }
+    } catch (err) {
+      console.error('❌ Exception inattendue lors de l\'envoi Resend :', err)
+    }
+  }
+
+  // Fallback local sur Mailpit si aucune clé n'est configurée
   if (process.env.NODE_ENV !== 'production') {
     console.log(`📧 [DEV] Envoi d'un email intercepté via Mailpit vers ${to}...`)
     try {
@@ -64,35 +91,8 @@ async function sendEmailDevOrProd(to: string, subject: string, html: string) {
       console.log(html)
       console.log('=============================================\n')
     }
-    return
-  }
-
-  // Production via Resend
-  if (!apiKey) {
-    console.error('❌ RESEND_API_KEY manquante en production !')
-    return
-  }
-  const resend = new Resend(apiKey)
-  try {
-    const { data, error } = await resend.emails.send({
-      from: sender,
-      to,
-      subject,
-      html,
-    })
-
-    if (error) {
-      console.error('❌ Erreur Resend API :', error)
-      // Fallback: on affiche quand même le lien dans la console pour ne pas être bloqué en dev
-      console.log('\n=============================================')
-      console.log(`🔗 CONTENU DE L'EMAIL (Suite à l'erreur Resend) vers ${to}:`)
-      console.log(html)
-      console.log('=============================================\n')
-    } else {
-      console.log(`✅ Email envoyé via Resend avec succès à ${to} (ID: ${data?.id})`)
-    }
-  } catch (err) {
-    console.error('❌ Exception inattendue lors de l\'envoi Resend :', err)
+  } else {
+    console.error('❌ Aucune méthode d\'envoi configurée en production ! Ajoutez RESEND_API_KEY.')
   }
 }
 
