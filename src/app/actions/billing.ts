@@ -32,9 +32,9 @@ export async function subscribeAction(plan: "starter" | "premium") {
 
   if (!userProfile) return { error: "Profil utilisateur non trouvé" };
 
-  // Bloquer le downgrade de Premium vers Starter
-  if (userProfile.plan === "premium" && plan === "starter") {
-    return { error: "Vous ne pouvez pas repasser au plan Starter une fois en Premium. Contactez le support pour toute demande spécifique." };
+  // Bloquer le downgrade de Premium vers Starter seulement si l'abonnement est actif
+  if (userProfile.plan === "premium" && plan === "starter" && userProfile.subscription_status === "active") {
+    return { error: "Vous avez déjà un abonnement Premium actif. Pour repasser au plan Starter, veuillez d'abord annuler votre abonnement actuel depuis le portail de facturation." };
   }
 
   // Obtenir le Price ID de Stripe selon le plan
