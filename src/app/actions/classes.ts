@@ -139,7 +139,15 @@ export async function cancelClassAction(id: string, reason: string) {
   if (!user) throw new Error('Unauthorized')
 
   const cls = await prisma.classes.findUnique({
-    where: { id }
+    where: { id },
+    include: {
+      organizations: true,
+      bookings: {
+        include: {
+          studio_members: true
+        }
+      }
+    }
   })
   if (!cls) throw new Error('Class not found')
 
@@ -158,6 +166,24 @@ export async function cancelClassAction(id: string, reason: string) {
       cancel_reason: reason
     }
   })
+
+  // Send cancellation emails to participants
+  const { sendClassCancelledEmail } = await import('@/lib/emails/send')
+  for (const booking of cls.bookings) {
+    if (booking.status !== 'cancelled' && booking.studio_members.email) {
+      try {
+        await sendClassCancelledEmail({
+          email: booking.studio_members.email,
+          fullName: booking.studio_members.full_name,
+          className: cls.title,
+          startsAt: cls.starts_at,
+          studioName: cls.organizations.name,
+        })
+      } catch (err) {
+        console.error('Erreur lors de l\'envoi de l\'email d\'annulation :', err)
+      }
+    }
+  }
 
   revalidatePath('/dashboard/classes')
   return { success: true }
@@ -192,7 +218,7 @@ export async function deleteClassAction(id: string) {
   // Send cancellation emails
   const { sendClassCancelledEmail } = await import('@/lib/emails/send')
   for (const booking of cls.bookings) {
-    if (booking.studio_members.email) {
+    if (booking.status !== 'cancelled' && booking.studio_members.email) {
       try {
         await sendClassCancelledEmail({
           email: booking.studio_members.email,

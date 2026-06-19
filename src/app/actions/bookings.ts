@@ -103,7 +103,7 @@ export async function createBookingAction(formData: FormData) {
         }
       })
 
-      if (existing) return { error: 'Vous avez déjà réservé ce cours' }
+      if (existing && existing.status !== 'cancelled') return { error: 'Vous avez déjà réservé ce cours' }
 
       // Vérifier capacité
       const cls = await prisma.classes.findUnique({
@@ -112,19 +112,37 @@ export async function createBookingAction(formData: FormData) {
       })
 
       if (!cls) return { error: 'Cours introuvable' }
+      if (cls.is_cancelled) return { error: 'Ce cours est annulé' }
+      if (new Date(cls.starts_at) < new Date()) return { error: 'Ce cours est déjà terminé' }
+
+      const bookingsCount = await prisma.bookings.count({
+        where: { class_id: classId, status: { not: 'cancelled' } }
+      })
+      if (bookingsCount >= cls.capacity) return { error: 'Ce cours est complet' }
 
       // Créer la réservation
       const isPaid = cls.price && cls.price > 0 && cls.organizations.payment_link && !member.has_active_subscription;
       
-      await prisma.bookings.create({
-        data: {
-          class_id: classId,
-          studio_member_id: member.id,
-          organization_id: organizationId,
-          status: isPaid ? 'pending_payment' : 'confirmed',
-          payment_status: isPaid ? 'unpaid' : 'free',
-        }
-      })
+      if (existing && existing.status === 'cancelled') {
+        await prisma.bookings.update({
+          where: { id: existing.id },
+          data: {
+            status: isPaid ? 'pending_payment' : 'confirmed',
+            payment_status: isPaid ? 'unpaid' : 'free',
+            cancelled_at: null
+          }
+        })
+      } else {
+        await prisma.bookings.create({
+          data: {
+            class_id: classId,
+            studio_member_id: member.id,
+            organization_id: organizationId,
+            status: isPaid ? 'pending_payment' : 'confirmed',
+            payment_status: isPaid ? 'unpaid' : 'free',
+          }
+        })
+      }
 
       const host = (await headers()).get('host')
       const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
@@ -155,6 +173,13 @@ export async function createBookingAction(formData: FormData) {
     })
 
     if (!cls) return { error: 'Cours introuvable' }
+    if (cls.is_cancelled) return { error: 'Ce cours est annulé' }
+    if (new Date(cls.starts_at) < new Date()) return { error: 'Ce cours est déjà terminé' }
+
+    const bookingsCount = await prisma.bookings.count({
+      where: { class_id: classId, status: { not: 'cancelled' } }
+    })
+    if (bookingsCount >= cls.capacity) return { error: 'Ce cours est complet' }
 
     // 1. Créer le membre du studio (si n'existe pas déjà)
     let member = await prisma.studio_members.findUnique({
@@ -245,20 +270,31 @@ export async function createBookingAction(formData: FormData) {
       }
     })
 
-    if (existing) return { error: 'Vous avez déjà réservé ce cours avec cet email' }
+    if (existing && existing.status !== 'cancelled') return { error: 'Vous avez déjà réservé ce cours avec cet email' }
 
     // 3. Créer la réservation
     const isPaid = cls.price && cls.price > 0 && cls.organizations.payment_link && !member.has_active_subscription;
 
-    await prisma.bookings.create({
-      data: {
-        class_id: classId,
-        studio_member_id: member.id,
-        organization_id: organizationId,
-        status: isPaid ? 'pending_payment' : 'confirmed',
-        payment_status: isPaid ? 'unpaid' : 'free',
-      }
-    })
+    if (existing && existing.status === 'cancelled') {
+      await prisma.bookings.update({
+        where: { id: existing.id },
+        data: {
+          status: isPaid ? 'pending_payment' : 'confirmed',
+          payment_status: isPaid ? 'unpaid' : 'free',
+          cancelled_at: null
+        }
+      })
+    } else {
+      await prisma.bookings.create({
+        data: {
+          class_id: classId,
+          studio_member_id: member.id,
+          organization_id: organizationId,
+          status: isPaid ? 'pending_payment' : 'confirmed',
+          payment_status: isPaid ? 'unpaid' : 'free',
+        }
+      })
+    }
 
     const host = (await headers()).get('host')
     const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
@@ -307,8 +343,12 @@ export async function deleteBookingAction(bookingId: string) {
     throw new Error('Forbidden: Insufficient permissions')
   }
 
-  await prisma.bookings.delete({
-    where: { id: bookingId }
+  await prisma.bookings.update({
+    where: { id: bookingId },
+    data: {
+      status: 'cancelled',
+      cancelled_at: new Date()
+    }
   })
 
   revalidatePath(`/dashboard/classes/${booking.class_id}`)
@@ -341,8 +381,12 @@ export async function memberSelfCancelBookingAction(bookingId: string) {
       return { error: 'Impossible d\'annuler une séance passée' }
     }
 
-    await prisma.bookings.delete({
-      where: { id: bookingId }
+    await prisma.bookings.update({
+      where: { id: bookingId },
+      data: {
+        status: 'cancelled',
+        cancelled_at: new Date()
+      }
     })
 
     revalidatePath('/dashboard')
