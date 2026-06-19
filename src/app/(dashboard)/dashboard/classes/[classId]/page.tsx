@@ -18,6 +18,9 @@ export default async function ClassDetailPage(props: { params: Promise<{ classId
       org_members: true,
       organizations: true,
       bookings: {
+        where: {
+          status: { not: 'cancelled' }
+        },
         include: {
           studio_members: true
         },

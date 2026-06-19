@@ -254,16 +254,17 @@ export default async function DashboardPage(props: {
                   <div className="mt-5 flex flex-col sm:flex-row gap-3">
                     {booking.status === 'pending_payment' && booking.organizations.payment_link && (
                       <a href={booking.organizations.payment_link} target="_blank" rel="noopener noreferrer" className="flex-1 h-9 flex items-center justify-center rounded-lg font-bold text-[10px] uppercase tracking-widest bg-emerald-600 text-white hover:bg-emerald-700 transition-colors text-center px-2 leading-tight">
-                        Si non payé : Payer {booking.classes.price ? `${booking.classes.price}€` : ''}
+                        Payer {booking.classes.price ? `${booking.classes.price}€` : ''}
                       </a>
                     )}
-                    {booking.status === 'pending_payment' ? (
+                    <div className="flex-1 flex gap-2">
+                      <Link href={`/${booking.organizations?.slug}/book/${booking.classes?.id}`} className="flex-1 h-9 flex items-center justify-center rounded-lg font-bold text-[10px] uppercase tracking-widest bg-gray-900 text-white hover:bg-gray-800 transition-colors">
+                        Détails
+                      </Link>
                       <div className="flex-1">
                         <CancelBookingButton bookingId={booking.id} />
                       </div>
-                    ) : (
-                      <Link href={`/${booking.organizations?.slug}/book/${booking.classes?.id}`} className="flex-1 h-9 flex items-center justify-center rounded-lg font-bold text-[10px] uppercase tracking-widest bg-gray-900 text-white hover:bg-gray-800 transition-colors">Détails</Link>
-                    )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>

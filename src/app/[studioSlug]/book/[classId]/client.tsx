@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { createBookingAction } from '@/app/actions/bookings'
 import { signInWithGoogleAction } from '@/app/actions/auth'
+import { CancelBookingButton } from '@/components/cancel-booking-button'
 import { toast } from 'sonner'
 import Link from 'next/link'
 import { useSearchParams, usePathname } from 'next/navigation'
@@ -187,12 +188,15 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
             </div>
           </div>
 
-          <div className="pt-2">
+          <div className="pt-2 flex flex-col gap-2">
             <Link href="/dashboard">
               <Button variant="outline" className="w-full h-12 rounded-xl font-black uppercase tracking-widest text-[10px] border-gray-100 hover:bg-gray-50 transition-all">
                 Retour au tableau de bord
               </Button>
             </Link>
+            <div className="h-12 w-full">
+              <CancelBookingButton bookingId={userBooking.id} />
+            </div>
           </div>
         </CardContent>
       </Card>

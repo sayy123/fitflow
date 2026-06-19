@@ -42,6 +42,7 @@ export default function ClassesClient({
   organizations,
   userRole,
   studioName,
+  studioSlug,
   currentMemberId 
 }: { 
   initialClasses: Class[], 
@@ -49,6 +50,7 @@ export default function ClassesClient({
   organizations: Organization[],
   userRole: string,
   studioName: string,
+  studioSlug: string,
   currentMemberId: string 
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -63,7 +65,9 @@ export default function ClassesClient({
     borderColor: (c.is_cancelled ? '#9ca3af' : c.color) ?? undefined,
     extendedProps: {
       coach: c.org_members,
-      studioName: (c as any).organizations?.slug
+      is_cancelled: c.is_cancelled,
+      studioName: (c as any).organizations?.name || studioName,
+      studioSlug: (c as any).organizations?.slug || studioSlug,
     }
   }))
 
@@ -217,7 +221,7 @@ export default function ClassesClient({
           )
         }}
         eventClick={(info) => {
-          const slug = info.event.extendedProps.studioName || studioName
+          const slug = info.event.extendedProps.studioSlug || studioSlug
           if (isStaff) {
             window.location.href = `/dashboard/classes/${info.event.id}`
           } else {
