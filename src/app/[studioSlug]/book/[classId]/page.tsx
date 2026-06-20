@@ -21,6 +21,14 @@ export default async function BookingPage({ params }: { params: Promise<{ studio
     include: { 
       org_members: true,
       bookings: { 
+        where: {
+          status: {
+            not: 'cancelled'
+          },
+          studio_members: {
+            is_active: true
+          }
+        },
         include: {
           studio_members: true
         }

@@ -48,6 +48,10 @@ export async function createBookingAction(formData: FormData) {
         }
       })
 
+      if (member && member.is_active === false) {
+        return { error: "Vous n'êtes plus autorisé à réserver dans ce studio." }
+      }
+
       if (!member) {
         // Vérifier la limite de membres pour le plan Starter (40 max)
         const org = await prisma.organizations.findUnique({
@@ -104,6 +108,9 @@ export async function createBookingAction(formData: FormData) {
       })
 
       if (existing && existing.status !== 'cancelled') return { error: 'Vous avez déjà réservé ce cours' }
+      if (existing && existing.status === 'cancelled' && existing.cancel_reason === 'removed_by_owner') {
+        return { error: 'Vous avez été retiré de ce cours par le gérant et ne pouvez plus le rejoindre.' }
+      }
 
       // Vérifier capacité
       const cls = await prisma.classes.findUnique({
@@ -181,7 +188,6 @@ export async function createBookingAction(formData: FormData) {
     })
     if (bookingsCount >= cls.capacity) return { error: 'Ce cours est complet' }
 
-    // 1. Créer le membre du studio (si n'existe pas déjà)
     let member = await prisma.studio_members.findUnique({
       where: {
         organization_id_email: {
@@ -190,6 +196,10 @@ export async function createBookingAction(formData: FormData) {
         }
       }
     })
+
+    if (member && member.is_active === false) {
+      return { error: "Vous n'êtes plus autorisé à réserver dans ce studio." }
+    }
 
     if (!member) {
       // 0. Vérifier la limite de membres pour le plan Starter (40 max)
@@ -271,6 +281,9 @@ export async function createBookingAction(formData: FormData) {
     })
 
     if (existing && existing.status !== 'cancelled') return { error: 'Vous avez déjà réservé ce cours avec cet email' }
+    if (existing && existing.status === 'cancelled' && existing.cancel_reason === 'removed_by_owner') {
+      return { error: 'Vous avez été retiré de ce cours par le gérant et ne pouvez plus le rejoindre.' }
+    }
 
     // 3. Créer la réservation
     const isPaid = cls.price && cls.price > 0 && cls.organizations.payment_link && !member.has_active_subscription;
@@ -347,6 +360,7 @@ export async function deleteBookingAction(bookingId: string) {
     where: { id: bookingId },
     data: {
       status: 'cancelled',
+      cancel_reason: 'removed_by_owner',
       cancelled_at: new Date()
     }
   })
@@ -385,6 +399,7 @@ export async function memberSelfCancelBookingAction(bookingId: string) {
       where: { id: bookingId },
       data: {
         status: 'cancelled',
+        cancel_reason: 'cancelled_by_member',
         cancelled_at: new Date()
       }
     })

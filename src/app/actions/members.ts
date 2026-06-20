@@ -120,6 +120,32 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
             baseUrl: siteUrl
           });
         }
+      } else if (existing.status === 'cancelled') {
+        if (existing.cancel_reason === 'removed_by_owner') {
+          return { error: 'Vous avez été retiré de ce cours par le gérant et ne pouvez plus le rejoindre.' }
+        }
+        
+        const cls = await prisma.classes.findUnique({
+          where: { id: classId }
+        });
+
+        if (cls) {
+          const isPaid = cls.price && cls.price > 0 && org.payment_link && !member.has_active_subscription;
+
+          await prisma.bookings.update({
+            where: { id: existing.id },
+            data: {
+              status: isPaid ? 'pending_payment' : 'confirmed',
+              payment_status: isPaid ? 'unpaid' : 'free',
+              cancelled_at: null
+            }
+          });
+          bookingCreated = true;
+
+          if (isPaid && org.payment_link) {
+            return { url: org.payment_link };
+          }
+        }
       }
     }
 
