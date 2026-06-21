@@ -39,7 +39,7 @@ export default async function DashboardLayout({
           avatarUrl={null}
         />
         <div className="flex-1 flex flex-col min-w-0">
-          <main className="flex-1 p-8 md:p-12 max-w-5xl mx-auto w-full">
+          <main className="flex-1 p-4 md:p-12 max-w-5xl mx-auto w-full">
             {children}
           </main>
           <div className="fixed bottom-4 left-4 z-50">
@@ -94,7 +94,7 @@ export default async function DashboardLayout({
         plan={userProfile?.plan}
       />
       <div className="flex-1 flex flex-col min-w-0">
-        <main className="flex-1 p-8 md:p-12 pt-20 lg:pt-12 max-w-5xl mx-auto w-full relative">
+        <main className="flex-1 p-4 md:p-12 pt-20 lg:pt-12 max-w-5xl mx-auto w-full relative">
           <TrialBlockedWrapper
             isOwner={isOwner}
             isTrialExpired={isTrialExpired}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -54,7 +54,15 @@ export default function ClassesClient({
   currentMemberId: string 
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const isStaff = ['owner', 'admin', 'coach'].includes(userRole)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    handleResize() // Initial check
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const events = initialClasses.map(c => ({
     id: c.id,
@@ -104,11 +112,11 @@ export default function ClassesClient({
         <div className="mb-6 flex justify-end">
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger render={<Button className="w-full sm:w-auto h-11 sm:h-10 rounded-xl"> Nouveau cours</Button>} />
-            <DialogContent className="rounded-3xl max-w-md w-[95vw] sm:w-full">
+            <DialogContent className="rounded-3xl max-w-md w-[95vw] sm:w-full max-h-[85vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="text-xl font-black uppercase tracking-tight text-zinc-900">Créer un cours</DialogTitle>
               </DialogHeader>
-              <form action={handleCreateClass} className="space-y-4 pt-4">
+              <form action={handleCreateClass} className="space-y-3 pt-2">
                 {(organizations?.length ?? 0) > 1 && (
                   <div className="space-y-2 text-zinc-900">
                     <Label htmlFor="organization_id" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Studio</Label>
@@ -180,13 +188,14 @@ export default function ClassesClient({
 
       <div className="calendar-container overflow-hidden">
         <FullCalendar
+          key={isMobile ? 'mobile' : 'desktop'}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          initialView={typeof window !== 'undefined' && window.innerWidth < 768 ? 'timeGridDay' : 'timeGridWeek'}
+          initialView={isMobile ? 'timeGridDay' : 'timeGridWeek'}
           locale={frLocale}
           headerToolbar={{
-            left: typeof window !== 'undefined' && window.innerWidth < 768 ? 'prev,next' : 'prev,next today',
+            left: isMobile ? 'prev,next' : 'prev,next today',
             center: 'title',
-            right: typeof window !== 'undefined' && window.innerWidth < 768 ? 'timeGridDay,timeGridWeek' : 'dayGridMonth,timeGridWeek,timeGridDay'
+            right: isMobile ? 'timeGridDay,timeGridWeek' : 'dayGridMonth,timeGridWeek,timeGridDay'
           }}
         events={events}
         allDaySlot={false}
