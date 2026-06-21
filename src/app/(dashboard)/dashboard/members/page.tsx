@@ -111,96 +111,91 @@ export default async function MembersPage() {
         </CardHeader>
         <CardContent className="pt-0">
           <div className="relative">
-            {/* Mobile Scroll Hint */}
-            <div className="md:hidden flex items-center justify-center gap-2 mb-4 py-2 bg-background rounded-xl border border-border/50 animate-pulse">
-              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Faites glisser pour voir plus →</span>
+            {/* Desktop Table */}
+            <div className="hidden md:block overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent border-border/50">
+                    <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Nom</TableHead>
+                    <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Email</TableHead>
+                    <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Statut</TableHead>
+                    <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider text-center">Séances</TableHead>
+                    <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Inscrit le</TableHead>
+                    <TableHead className="text-right text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {studioMembers.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-center text-muted-foreground py-12 font-medium">Aucun membre.</TableCell>
+                    </TableRow>
+                  ) : (
+                    studioMembers.map((m) => (
+                      <TableRow key={m.id} className="border-border/50 hover:bg-background/50 transition-colors">
+                        <TableCell className="py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="size-9 rounded-full bg-muted border border-border overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-semibold text-xs text-foreground/80 uppercase">
+                              {m.full_name.charAt(0)}
+                            </div>
+                            <span className="font-semibold text-card-foreground text-sm">{m.full_name}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-muted-foreground font-medium text-sm">{m.email}</TableCell>
+                        <TableCell>
+                          <MemberStatusBadge memberId={m.id} isActive={m.is_active} initialHasSubscription={m.has_active_subscription} />
+                        </TableCell>
+                        <TableCell className="font-semibold text-card-foreground text-center text-sm">{m._count.bookings}</TableCell>
+                        <TableCell className="text-muted-foreground font-medium text-xs">{new Date(m.created_at!).toLocaleDateString("fr-FR")}</TableCell>
+                        <TableCell className="text-right flex items-center justify-end gap-2">
+                          <Link href={`/dashboard/members/${m.id}`}>
+                            <Button variant="ghost" size="sm" className="rounded-lg h-8 font-medium text-sm text-foreground/80 hover:bg-muted transition-colors">Détails</Button>
+                          </Link>
+                          <DeleteMemberButton memberId={m.id} />
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
             </div>
-            
-            <div className="overflow-x-auto touch-pan-x pb-4 scrollbar-hide">
-              <div className="min-w-[800px] md:min-w-0">
-                <Table>
-            <TableHeader>
-              <TableRow className="hover:bg-transparent border-border/50">
-                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Nom
-                </TableHead>
-                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Email
-                </TableHead>
-                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Statut
-                </TableHead>
-                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider text-center">
-                  Séances
-                </TableHead>
-                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Inscrit le
-                </TableHead>
-                <TableHead className="text-right text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Actions
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+
+            {/* Mobile List View */}
+            <div className="md:hidden flex flex-col divide-y divide-border/50">
               {studioMembers.length === 0 ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={6}
-                    className="text-center text-muted-foreground py-12 font-medium"
-                  >
-                    Aucun membre.
-                  </TableCell>
-                </TableRow>
+                <div className="text-center text-muted-foreground py-12 text-sm italic">Aucun membre.</div>
               ) : (
                 studioMembers.map((m) => (
-                  <TableRow
-                    key={m.id}
-                    className="border-border/50 hover:bg-background/50 transition-colors"
-                  >
-                    <TableCell className="py-4">
+                  <div key={m.id} className="p-4 space-y-4">
+                    <div className="flex justify-between items-start">
                       <div className="flex items-center gap-3">
-                        <div className="size-9 rounded-full bg-muted border border-border overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-semibold text-xs text-foreground/80 uppercase">
+                        <div className="size-10 rounded-full bg-muted border border-border overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-semibold text-sm text-foreground/80 uppercase">
                           {m.full_name.charAt(0)}
                         </div>
-                        <span className="font-semibold text-card-foreground text-sm">
-                          {m.full_name}
-                        </span>
+                        <div className="flex flex-col">
+                          <span className="font-bold text-sm text-card-foreground">{m.full_name}</span>
+                          <span className="text-xs text-muted-foreground">{m.email}</span>
+                        </div>
                       </div>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground font-medium text-sm">
-                      {m.email}
-                    </TableCell>
-                    <TableCell>
-                      <MemberStatusBadge 
-                        memberId={m.id} 
-                        isActive={m.is_active} 
-                        initialHasSubscription={m.has_active_subscription} 
-                      />
-                    </TableCell>
-                    <TableCell className="font-semibold text-card-foreground text-center text-sm">
-                      {m._count.bookings}
-                    </TableCell>
-                    <TableCell className="text-muted-foreground font-medium text-xs">
-                      {new Date(m.created_at!).toLocaleDateString("fr-FR")}
-                    </TableCell>
-                    <TableCell className="text-right flex items-center justify-end gap-2">
-                      <Link href={`/dashboard/members/${m.id}`}>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="rounded-lg h-8 font-medium text-sm text-foreground/80 hover:bg-muted transition-colors"
-                        >
-                          Détails
-                        </Button>
-                      </Link>
-                      <DeleteMemberButton memberId={m.id} />
-                    </TableCell>
-                  </TableRow>
+                      <MemberStatusBadge memberId={m.id} isActive={m.is_active} initialHasSubscription={m.has_active_subscription} />
+                    </div>
+                    
+                    <div className="flex items-center justify-between pt-1">
+                      <div className="flex flex-col gap-0.5 text-xs">
+                        <span className="text-muted-foreground font-medium">Inscrit le {new Date(m.created_at!).toLocaleDateString("fr-FR")}</span>
+                        <span className="text-muted-foreground font-medium">Séances: <span className="font-bold text-foreground">{m._count.bookings}</span></span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Link href={`/dashboard/members/${m.id}`}>
+                          <Button variant="outline" size="sm" className="h-8 px-3 font-medium text-xs text-foreground hover:bg-muted transition-colors">
+                            Détails
+                          </Button>
+                        </Link>
+                        <DeleteMemberButton memberId={m.id} />
+                      </div>
+                    </div>
+                  </div>
                 ))
               )}
-            </TableBody>
-          </Table>
-              </div>
             </div>
           </div>
         </CardContent>
