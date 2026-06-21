@@ -174,7 +174,7 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
             </div>
             <div className="grid grid-cols-2 gap-2">
               {cls.bookings.map((b) => (
-                <div key={b.id} className="flex items-center gap-2.5 p-2 rounded-xl bg-card border border-border/30 card-shadow text-xs font-bold text-gray-700">
+                <div key={b.id} className="flex items-center gap-2.5 p-2 rounded-xl bg-card border border-border/30 card-shadow text-xs font-bold text-foreground/90">
                   <div className="size-6 rounded-lg border border-border/50 overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-black text-[8px] text-primary uppercase bg-background">
                     {b.studio_members.avatar_url ? (
                         <img src={b.studio_members.avatar_url} alt="" className="size-full object-cover" />

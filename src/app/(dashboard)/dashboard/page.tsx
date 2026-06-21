@@ -203,7 +203,7 @@ export default async function DashboardPage(props: {
       {/* SECTION INVITATIONS */}
       {invitations.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-foreground/90 flex items-center gap-2">
             <BellRing className="size-4 text-primary" /> Invitations en attente ({invitations.length})
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -213,7 +213,7 @@ export default async function DashboardPage(props: {
                   <div className="space-y-1">
                     <p className="text-xs font-medium text-primary/80 uppercase tracking-wider">Nouvelle invitation</p>
                     <h4 className="text-lg font-bold text-card-foreground">{inv.organizations.name}</h4>
-                    <p className="text-sm text-muted-foreground">Vous êtes invité(e) en tant que <span className="font-semibold text-gray-700 capitalize">{inv.role}</span>.</p>
+                    <p className="text-sm text-muted-foreground">Vous êtes invité(e) en tant que <span className="font-semibold text-foreground/90 capitalize">{inv.role}</span>.</p>
                   </div>
                   <div className="flex flex-col gap-2 shrink-0">
                     <form action={async () => { "use server"; await respondToInvitationAction(inv.id, true); }}>
@@ -258,7 +258,7 @@ export default async function DashboardPage(props: {
                       </a>
                     )}
                     <div className="flex-1 flex gap-2">
-                      <Link href={`/${booking.organizations?.slug}/book/${booking.classes?.id}`} className="flex-1 h-9 flex items-center justify-center rounded-lg font-bold text-[10px] uppercase tracking-widest bg-gray-900 text-primary-foreground hover:bg-gray-800 transition-colors">
+                      <Link href={`/${booking.organizations?.slug}/book/${booking.classes?.id}`} className="flex-1 h-9 flex items-center justify-center rounded-lg font-bold text-[10px] uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
                         Détails
                       </Link>
                       <div className="flex-1">
@@ -291,7 +291,7 @@ export default async function DashboardPage(props: {
                         </div>
                         <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-100">Coach</span>
                       </div>
-                      <Link href={`/dashboard/classes/${cls.id}`} className="mt-6 w-full h-9 flex items-center justify-center rounded-lg font-medium text-sm border border-border text-gray-700 hover:bg-background transition-colors">Gérer ma séance</Link>
+                      <Link href={`/dashboard/classes/${cls.id}`} className="mt-6 w-full h-9 flex items-center justify-center rounded-lg font-medium text-sm border border-border text-foreground/90 hover:bg-background transition-colors">Gérer ma séance</Link>
                     </CardContent>
                   </Card>
                 ))}
@@ -300,9 +300,14 @@ export default async function DashboardPage(props: {
           )}
           {dashboardData.myBookings.length === 0 && (
             <div className="space-y-4 text-center py-20 bg-background/50 rounded-[2rem] border border-dashed border-border">
-               <Calendar className="size-12 text-gray-300 mx-auto mb-4" />
+               <Calendar className="size-12 text-muted-foreground mx-auto mb-4" />
                <h3 className="text-lg font-bold text-card-foreground">Aucune séance réservée</h3>
-               <p className="text-muted-foreground max-w-xs mx-auto">Vos futures réservations apparaîtront ici dès que vous aurez choisi un cours.</p>
+               <p className="text-muted-foreground max-w-xs mx-auto mb-6">Vos futures réservations apparaîtront ici dès que vous aurez choisi un cours.</p>
+               {member?.organizations?.slug && (
+                 <Link href={`/${member.organizations.slug}`}>
+                   <Button className="bg-primary text-primary-foreground font-bold rounded-xl h-11 px-8 uppercase tracking-widest text-xs">Réserver un cours</Button>
+                 </Link>
+               )}
             </div>
           )}
         </div>
