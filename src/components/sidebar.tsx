@@ -103,7 +103,7 @@ export function Sidebar({
       )}
 
       <aside className={cn(
-        "bg-background/50 border-r border-border/50 flex flex-col h-screen sticky top-0 backdrop-blur-xl transition-all duration-300 z-[80]",
+        "bg-background/50 border-r border-border/50 flex flex-col h-[100dvh] sticky top-0 backdrop-blur-xl transition-all duration-300 z-[80]",
         "fixed lg:sticky",
         isOpen ? "translate-x-0 w-64" : "-translate-x-full lg:translate-x-0 w-64",
         "lg:flex"
@@ -262,7 +262,7 @@ export function Sidebar({
           )}
         </nav>
 
-        <div className="p-4 space-y-2 border-t border-border/50">
+        <div className="p-4 pb-8 lg:pb-4 space-y-2 border-t border-border/50">
           <div className="px-3 py-2 flex items-center gap-3">
             <div className="size-8 rounded-full bg-card border border-border/50 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
               {avatarUrl ? (
