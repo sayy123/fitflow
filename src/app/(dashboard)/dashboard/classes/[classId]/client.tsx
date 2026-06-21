@@ -134,8 +134,8 @@ export default function ClassDetailClient({
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <Link href="/dashboard/classes" className="text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:underline mb-2 block">← Retour au planning</Link>
-          <h2 className="text-2xl font-black text-gray-900 tracking-tight">{cls.title}</h2>
-          <p className="text-sm font-medium text-gray-500">
+          <h2 className="text-2xl font-black text-card-foreground tracking-tight">{cls.title}</h2>
+          <p className="text-sm font-medium text-muted-foreground">
             {new Date(cls.starts_at).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })} à {new Date(cls.starts_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
           </p>
         </div>
@@ -147,7 +147,7 @@ export default function ClassDetailClient({
               <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
                 <DialogTrigger
                   render={
-                    <Button variant="outline" size="sm" className="rounded-xl h-9 px-4 font-bold text-xs uppercase tracking-widest border-gray-100 hover:bg-gray-50 transition-all">
+                    <Button variant="outline" size="sm" className="rounded-xl h-9 px-4 font-bold text-xs uppercase tracking-widest border-border/50 hover:bg-background transition-all">
                       <Edit2 className="size-3.5 mr-2" /> Modifier
                     </Button>
                   }
@@ -158,16 +158,16 @@ export default function ClassDetailClient({
                   </DialogHeader>
                   <form action={handleUpdateClass} className="space-y-3 pt-2">
                     <div className="space-y-2">
-                      <Label htmlFor="title" className="text-[10px] font-black uppercase tracking-widest text-gray-400">Titre</Label>
+                      <Label htmlFor="title" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Titre</Label>
                       <Input id="title" name="title" defaultValue={cls.title} className="rounded-xl h-11" required />
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="coach_id" className="text-[10px] font-black uppercase tracking-widest text-gray-400">Coach assigné</Label>
+                      <Label htmlFor="coach_id" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Coach assigné</Label>
                       <select 
                         name="coach_id" 
                         defaultValue={cls.coach_id || ""}
-                        className="w-full h-11 rounded-xl border border-zinc-200 bg-white px-3 text-sm text-zinc-900 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none"
+                        className="w-full h-11 rounded-xl border border-border bg-card px-3 text-sm text-foreground focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none"
                       >
                         <option value="">Aucun coach</option>
                         {coaches.map(c => (
@@ -182,20 +182,20 @@ export default function ClassDetailClient({
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="starts_at" className="text-[10px] font-black uppercase tracking-widest text-gray-400">Date et heure</Label>
+                        <Label htmlFor="starts_at" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Date et heure</Label>
                         <Input id="starts_at" name="starts_at" type="datetime-local" defaultValue={defaultStartsAt} className="rounded-xl h-11" required />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="duration_min" className="text-[10px] font-black uppercase tracking-widest text-gray-400">Durée (min)</Label>
+                        <Label htmlFor="duration_min" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Durée (min)</Label>
                         <Input id="duration_min" name="duration_min" type="number" defaultValue={cls.duration_min} className="rounded-xl h-11" required min="15" max="240" />
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="location" className="text-[10px] font-black uppercase tracking-widest text-gray-400">Adresse / Lieu</Label>
+                      <Label htmlFor="location" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Adresse / Lieu</Label>
                       <Input id="location" name="location" defaultValue={cls.location || ''} placeholder="ex: 12 rue du sport, Paris" className="rounded-xl h-11" />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="capacity" className="text-[10px] font-black uppercase tracking-widest text-gray-400">Capacité max</Label>
+                      <Label htmlFor="capacity" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Capacité max</Label>
                       <Input id="capacity" name="capacity" type="number" defaultValue={cls.capacity} className="rounded-xl h-11" required />
                     </div>
                     <DialogFooter className="pt-4">
@@ -216,20 +216,20 @@ export default function ClassDetailClient({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="border-none card-shadow rounded-2xl overflow-hidden">
           <CardHeader className="pb-2">
-            <CardTitle className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Capacité</CardTitle>
+            <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Capacité</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black text-gray-900">{cls.bookings.length} / {cls.capacity}</div>
-            <p className="text-[10px] font-bold text-gray-400 mt-1">{cls.capacity - cls.bookings.length} places libres</p>
+            <div className="text-2xl font-black text-card-foreground">{cls.bookings.length} / {cls.capacity}</div>
+            <p className="text-[10px] font-bold text-muted-foreground mt-1">{cls.capacity - cls.bookings.length} places libres</p>
           </CardContent>
         </Card>
         <Card className="border-none card-shadow rounded-2xl overflow-hidden">
           <CardHeader className="pb-2">
-            <CardTitle className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Coach</CardTitle>
+            <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Coach</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-3">
-                <div className="size-10 rounded-xl bg-gray-50 border border-gray-100 overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-black text-[10px] text-primary uppercase">
+                <div className="size-10 rounded-xl bg-background border border-border/50 overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-black text-[10px] text-primary uppercase">
                     {cls.org_members?.avatar_url ? (
                         <img src={cls.org_members.avatar_url} alt="" className="size-full object-cover" />
                     ) : (
@@ -237,82 +237,82 @@ export default function ClassDetailClient({
                     )}
                 </div>
                 <div>
-                    <p className="text-sm font-bold text-gray-900 truncate capitalize">{cls.org_members?.display_name || 'Non assigné'}</p>
-                    <p className="text-[9px] font-bold text-gray-400 mt-1 uppercase tracking-widest">Équipe {cls.organizations.name}</p>
+                    <p className="text-sm font-bold text-card-foreground truncate capitalize">{cls.org_members?.display_name || 'Non assigné'}</p>
+                    <p className="text-[9px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Équipe {cls.organizations.name}</p>
                 </div>
             </div>
           </CardContent>
         </Card>
         <Card className="border-none card-shadow rounded-2xl overflow-hidden">
           <CardHeader className="pb-2">
-            <CardTitle className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Lieu</CardTitle>
+            <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Lieu</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black text-gray-900 truncate">{cls.location || 'Studio'}</div>
+            <div className="text-2xl font-black text-card-foreground truncate">{cls.location || 'Studio'}</div>
             {googleMapsUrl ? (
               <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold text-primary hover:underline mt-1 flex items-center gap-1">
                 <MapPin className="size-3" /> Voir sur Google Maps <ExternalLink className="size-2.5" />
               </a>
             ) : (
-              <p className="text-[10px] font-bold text-gray-400 mt-1">Pas d'adresse spécifiée</p>
+              <p className="text-[10px] font-bold text-muted-foreground mt-1">Pas d'adresse spécifiée</p>
             )}
           </CardContent>
         </Card>
       </div>
 
       <Card className="border-none card-shadow rounded-2xl overflow-hidden">
-        <CardHeader className="border-b border-gray-50 flex flex-row items-center justify-between py-6 px-8">
+        <CardHeader className="border-b border-border/30 flex flex-row items-center justify-between py-6 px-8">
           <CardTitle className="text-sm font-black uppercase tracking-widest">Réservations ({cls.bookings.length})</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <div className="hidden md:block">
             <Table>
-              <TableHeader className="bg-gray-50/50">
+              <TableHeader className="bg-background/50">
                 <TableRow className="hover:bg-transparent border-none">
-                  <TableHead className="px-8 h-12 text-[10px] font-black uppercase tracking-widest text-gray-400">Membre</TableHead>
-                  <TableHead className="h-12 text-[10px] font-black uppercase tracking-widest text-gray-400">Email</TableHead>
-                  <TableHead className="h-12 text-[10px] font-black uppercase tracking-widest text-gray-400">Statut</TableHead>
-                  <TableHead className="h-12 text-[10px] font-black uppercase tracking-widest text-gray-400">Date</TableHead>
+                  <TableHead className="px-8 h-12 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Membre</TableHead>
+                  <TableHead className="h-12 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Email</TableHead>
+                  <TableHead className="h-12 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Statut</TableHead>
+                  <TableHead className="h-12 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Date</TableHead>
                   {isManagementAllowed && (
-                    <TableHead className="px-8 h-12 text-[10px] font-black uppercase tracking-widest text-gray-400 text-right">Actions</TableHead>
+                    <TableHead className="px-8 h-12 text-[10px] font-black uppercase tracking-widest text-muted-foreground text-right">Actions</TableHead>
                   )}
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {cls.bookings.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={isManagementAllowed ? 5 : 4} className="text-center text-gray-400 py-12 text-sm italic">Aucune réservation pour le moment.</TableCell>
+                    <TableCell colSpan={isManagementAllowed ? 5 : 4} className="text-center text-muted-foreground py-12 text-sm italic">Aucune réservation pour le moment.</TableCell>
                   </TableRow>
                 ) : (
                   cls.bookings.map((booking) => (
-                    <TableRow key={booking.id} className="hover:bg-gray-50/50 transition-colors border-gray-50">
+                    <TableRow key={booking.id} className="hover:bg-background/50 transition-colors border-border/30">
                     <TableCell className="px-8 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="size-9 rounded-xl bg-gray-50 border border-gray-100 overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-black text-[10px] text-primary uppercase">
+                        <div className="size-9 rounded-xl bg-background border border-border/50 overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-black text-[10px] text-primary uppercase">
                           {booking.studio_members?.full_name?.charAt(0) || '?'}
                         </div>
                         <div className="flex flex-col">
-                          <span className="font-bold text-sm text-gray-900">{booking.studio_members?.full_name || 'Inconnu'}</span>
-                          <span className="text-[11px] text-gray-400 font-medium">{booking.studio_members?.email || 'N/A'}</span>
+                          <span className="font-bold text-sm text-card-foreground">{booking.studio_members?.full_name || 'Inconnu'}</span>
+                          <span className="text-[11px] text-muted-foreground font-medium">{booking.studio_members?.email || 'N/A'}</span>
                         </div>
                       </div>
                     </TableCell>
-                      <TableCell className="text-sm text-gray-500 font-medium">{booking.studio_members.email}</TableCell>
+                      <TableCell className="text-sm text-muted-foreground font-medium">{booking.studio_members.email}</TableCell>
                       <TableCell>
                         <span className={cn(
                           "px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest",
-                          booking.status === 'confirmed' ? "bg-green-50 text-green-700 border border-green-100" : "bg-yellow-50 text-yellow-700 border border-yellow-100"
+                          booking.status === 'confirmed' ? "bg-muted text-foreground border border-border" : "bg-background text-muted-foreground border border-border/50"
                         )}>
                           {booking.status === 'confirmed' ? 'Confirmé' : 'Attente'}
                         </span>
                       </TableCell>
-                      <TableCell className="text-sm text-gray-400 font-bold">{new Date(booking.created_at!).toLocaleDateString('fr-FR')}</TableCell>
+                      <TableCell className="text-sm text-muted-foreground font-bold">{new Date(booking.created_at!).toLocaleDateString('fr-FR')}</TableCell>
                       <TableCell className="px-8 text-right flex items-center justify-end gap-2">
                         {booking.status === 'pending_payment' && isManagementAllowed && (
                           <Button
                             variant="outline"
                             size="sm"
-                            className="rounded-lg h-8 text-[10px] font-bold uppercase tracking-wider border-green-200 text-green-700 hover:bg-green-50"
+                            className="rounded-lg h-8 text-[10px] font-bold uppercase tracking-wider border-border text-foreground hover:bg-muted"
                             onClick={async () => {
                               const { confirmBookingPaymentAction } = await import('@/app/actions/bookings');
                               const res = await confirmBookingPaymentAction(booking.id);
@@ -330,7 +330,7 @@ export default function ClassDetailClient({
                           <Button 
                             variant="ghost" 
                             size="sm" 
-                            className="rounded-lg size-8 p-0 text-gray-400 hover:text-red-600 hover:bg-red-50"
+                            className="rounded-lg size-8 p-0 text-muted-foreground hover:text-foreground hover:bg-muted"
                             onClick={() => handleDeleteBooking(booking.id)}
                             disabled={isDeleting === booking.id}
                           >
@@ -347,37 +347,37 @@ export default function ClassDetailClient({
 
           <div className="md:hidden flex flex-col divide-y divide-gray-100">
             {cls.bookings.length === 0 ? (
-              <div className="text-center text-gray-400 py-12 text-sm italic">Aucune réservation pour le moment.</div>
+              <div className="text-center text-muted-foreground py-12 text-sm italic">Aucune réservation pour le moment.</div>
             ) : (
               cls.bookings.map((booking) => (
                 <div key={booking.id} className="p-4 space-y-3">
                   <div className="flex justify-between items-start">
                     <div className="flex items-center gap-3">
-                      <div className="size-10 rounded-xl bg-gray-50 border border-gray-100 overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-black text-[10px] text-primary uppercase">
+                      <div className="size-10 rounded-xl bg-background border border-border/50 overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-black text-[10px] text-primary uppercase">
                         {booking.studio_members?.full_name?.charAt(0) || '?'}
                       </div>
                       <div className="flex flex-col">
-                        <span className="font-bold text-sm text-gray-900">{booking.studio_members?.full_name || 'Inconnu'}</span>
-                        <span className="text-xs text-gray-500">{booking.studio_members?.email || 'N/A'}</span>
+                        <span className="font-bold text-sm text-card-foreground">{booking.studio_members?.full_name || 'Inconnu'}</span>
+                        <span className="text-xs text-muted-foreground">{booking.studio_members?.email || 'N/A'}</span>
                       </div>
                     </div>
                     <span className={cn(
                       "px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest border",
-                      booking.status === 'confirmed' ? "bg-green-50 text-green-700 border-green-100" : "bg-yellow-50 text-yellow-700 border-yellow-100"
+                      booking.status === 'confirmed' ? "bg-muted text-foreground border-border" : "bg-background text-muted-foreground border-border/50"
                     )}>
                       {booking.status === 'confirmed' ? 'Confirmé' : 'Attente'}
                     </span>
                   </div>
                   
                   <div className="flex justify-between items-center pt-2">
-                    <span className="text-xs text-gray-400 font-medium">Inscrit le {new Date(booking.created_at!).toLocaleDateString('fr-FR')}</span>
+                    <span className="text-xs text-muted-foreground font-medium">Inscrit le {new Date(booking.created_at!).toLocaleDateString('fr-FR')}</span>
                     {isManagementAllowed && (
                       <div className="flex gap-2">
                         {booking.status === 'pending_payment' && (
                           <Button
                             variant="outline"
                             size="sm"
-                            className="h-7 px-2 text-[9px] font-bold uppercase border-green-200 text-green-700 bg-green-50"
+                            className="h-7 px-2 text-[9px] font-bold uppercase border-border text-foreground hover:bg-muted"
                             onClick={async () => {
                               const { confirmBookingPaymentAction } = await import('@/app/actions/bookings');
                               const res = await confirmBookingPaymentAction(booking.id);
@@ -394,7 +394,7 @@ export default function ClassDetailClient({
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="size-7 p-0 text-gray-400 hover:text-red-600 bg-gray-50"
+                          className="size-7 p-0 text-muted-foreground hover:text-foreground hover:bg-muted"
                           onClick={() => handleDeleteBooking(booking.id)}
                           disabled={isDeleting === booking.id}
                         >

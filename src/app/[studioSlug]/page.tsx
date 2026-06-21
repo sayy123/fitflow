@@ -25,13 +25,13 @@ export default async function PublicStudioPage({ params }: { params: { studioSlu
   })
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-12">
+    <div className="min-h-screen bg-background pb-12">
       {/* Header Studio */}
-      <header className="bg-white border-b shadow-sm py-8 mb-8" style={{ borderTop: `4px solid ${org.color_primary || '#4f46e5'}` }}>
+      <header className="bg-card border-b shadow-sm py-8 mb-8" style={{ borderTop: `4px solid ${org.color_primary || '#4f46e5'}` }}>
         <div className="container mx-auto px-4 flex flex-col items-center">
           {org.logo_url && <img src={org.logo_url} alt={org.name} className="h-16 mb-4" />}
-          <h1 className="text-3xl font-bold text-gray-900">{org.name}</h1>
-          <p className="text-gray-500">Réservez votre prochaine séance</p>
+          <h1 className="text-3xl font-bold text-card-foreground">{org.name}</h1>
+          <p className="text-muted-foreground">Réservez votre prochaine séance</p>
         </div>
       </header>
 
@@ -41,7 +41,7 @@ export default async function PublicStudioPage({ params }: { params: { studioSlu
           
           {classes.length === 0 ? (
             <Card>
-              <CardContent className="py-12 text-center text-gray-500">
+              <CardContent className="py-12 text-center text-muted-foreground">
                 Aucun cours n'est prévu pour le moment.
               </CardContent>
             </Card>
@@ -55,16 +55,16 @@ export default async function PublicStudioPage({ params }: { params: { studioSlu
                       <div className="text-sm font-medium text-blue-600 mb-1" style={{ color: org.color_primary || '#4f46e5' }}>
                         {new Date(cls.starts_at).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
                       </div>
-                      <h3 className="text-xl font-bold text-gray-900">{cls.title}</h3>
-                      <p className="text-gray-500 text-sm">
+                      <h3 className="text-xl font-bold text-card-foreground">{cls.title}</h3>
+                      <p className="text-muted-foreground text-sm">
                         {new Date(cls.starts_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} • {cls.duration_min} min • Coach: {cls.org_members?.display_name || 'TBA'}
                       </p>
                     </div>
                     
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <span className="text-sm font-medium text-gray-900">{cls.capacity - 0} places restantes</span>
-                        <p className="text-xs text-gray-500">sur {cls.capacity}</p>
+                        <span className="text-sm font-medium text-card-foreground">{cls.capacity - 0} places restantes</span>
+                        <p className="text-xs text-muted-foreground">sur {cls.capacity}</p>
                       </div>
                       <Link href={`/${studioSlug}/book/${cls.id}`}>
                         <Button style={{ backgroundColor: org.color_primary || '#4f46e5' }}>Réserver</Button>

@@ -24,7 +24,7 @@ export function CancelBookingButton({ bookingId }: { bookingId: string }) {
           }
         }
       }}
-      className="w-full h-9 rounded-lg font-bold text-[10px] uppercase tracking-widest border-gray-200 text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors"
+      className="w-full h-9 rounded-lg font-bold text-[10px] uppercase tracking-widest border-border text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors"
     >
       {isPending ? "Annulation..." : "Annuler"}
     </Button>

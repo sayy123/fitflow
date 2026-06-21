@@ -74,7 +74,7 @@ export default async function MembersPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">
             Membres
           </h1>
         </div>
@@ -95,16 +95,16 @@ export default async function MembersPage() {
         )}
       </div>
 
-      <Card className="border border-gray-200 bg-white rounded-2xl shadow-sm overflow-hidden">
+      <Card className="border border-border bg-card rounded-2xl shadow-sm overflow-hidden">
         <CardHeader className="pb-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <CardTitle className="text-lg font-semibold text-gray-900 tracking-tight">
+            <CardTitle className="text-lg font-semibold text-card-foreground tracking-tight">
               Liste des clients ({studioMembers.length})
             </CardTitle>
             <div className="w-full md:w-64">
               <Input
                 placeholder="Rechercher..."
-                className="rounded-lg border-gray-200 h-10 text-sm"
+                className="rounded-lg border-border h-10 text-sm"
               />
             </div>
           </div>
@@ -112,31 +112,31 @@ export default async function MembersPage() {
         <CardContent className="pt-0">
           <div className="relative">
             {/* Mobile Scroll Hint */}
-            <div className="md:hidden flex items-center justify-center gap-2 mb-4 py-2 bg-zinc-50 rounded-xl border border-zinc-100 animate-pulse">
-              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Faites glisser pour voir plus →</span>
+            <div className="md:hidden flex items-center justify-center gap-2 mb-4 py-2 bg-background rounded-xl border border-border/50 animate-pulse">
+              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Faites glisser pour voir plus →</span>
             </div>
             
             <div className="overflow-x-auto touch-pan-x pb-4 scrollbar-hide">
               <div className="min-w-[800px] md:min-w-0">
                 <Table>
             <TableHeader>
-              <TableRow className="hover:bg-transparent border-gray-100">
-                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <TableRow className="hover:bg-transparent border-border/50">
+                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Nom
                 </TableHead>
-                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Email
                 </TableHead>
-                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Statut
                 </TableHead>
-                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">
+                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider text-center">
                   Séances
                 </TableHead>
-                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Inscrit le
                 </TableHead>
-                <TableHead className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <TableHead className="text-right text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Actions
                 </TableHead>
               </TableRow>
@@ -146,7 +146,7 @@ export default async function MembersPage() {
                 <TableRow>
                   <TableCell
                     colSpan={6}
-                    className="text-center text-gray-500 py-12 font-medium"
+                    className="text-center text-muted-foreground py-12 font-medium"
                   >
                     Aucun membre.
                   </TableCell>
@@ -155,19 +155,19 @@ export default async function MembersPage() {
                 studioMembers.map((m) => (
                   <TableRow
                     key={m.id}
-                    className="border-gray-100 hover:bg-gray-50/50 transition-colors"
+                    className="border-border/50 hover:bg-background/50 transition-colors"
                   >
                     <TableCell className="py-4">
                       <div className="flex items-center gap-3">
-                        <div className="size-9 rounded-full bg-gray-100 border border-gray-200 overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-semibold text-xs text-gray-600 uppercase">
+                        <div className="size-9 rounded-full bg-muted border border-border overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-semibold text-xs text-foreground/80 uppercase">
                           {m.full_name.charAt(0)}
                         </div>
-                        <span className="font-semibold text-gray-900 text-sm">
+                        <span className="font-semibold text-card-foreground text-sm">
                           {m.full_name}
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell className="text-gray-500 font-medium text-sm">
+                    <TableCell className="text-muted-foreground font-medium text-sm">
                       {m.email}
                     </TableCell>
                     <TableCell>
@@ -177,10 +177,10 @@ export default async function MembersPage() {
                         initialHasSubscription={m.has_active_subscription} 
                       />
                     </TableCell>
-                    <TableCell className="font-semibold text-gray-900 text-center text-sm">
+                    <TableCell className="font-semibold text-card-foreground text-center text-sm">
                       {m._count.bookings}
                     </TableCell>
-                    <TableCell className="text-gray-500 font-medium text-xs">
+                    <TableCell className="text-muted-foreground font-medium text-xs">
                       {new Date(m.created_at!).toLocaleDateString("fr-FR")}
                     </TableCell>
                     <TableCell className="text-right flex items-center justify-end gap-2">
@@ -188,7 +188,7 @@ export default async function MembersPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="rounded-lg h-8 font-medium text-sm text-zinc-600 hover:bg-zinc-100 transition-colors"
+                          className="rounded-lg h-8 font-medium text-sm text-foreground/80 hover:bg-muted transition-colors"
                         >
                           Détails
                         </Button>

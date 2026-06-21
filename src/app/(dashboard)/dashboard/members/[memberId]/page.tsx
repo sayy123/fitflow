@@ -47,97 +47,97 @@ export default async function MemberDetailPage(props: { params: Promise<{ member
     <div className="space-y-6 max-w-5xl mx-auto">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center gap-4">
-          <div className="size-16 rounded-[1.5rem] bg-gray-50 border border-gray-100 overflow-hidden flex items-center justify-center shrink-0 shadow-lg font-black text-xl text-primary uppercase">
+          <div className="size-16 rounded-[1.5rem] bg-background border border-border/50 overflow-hidden flex items-center justify-center shrink-0 shadow-lg font-black text-xl text-primary uppercase">
             {member.full_name.charAt(0)}
           </div>
           <div>
             <Link href="/dashboard/members" className="text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:underline mb-2 block">← Retour à la liste</Link>
-            <h2 className="text-2xl font-black text-gray-900 tracking-tight leading-none uppercase">{member.full_name}</h2>
-            <p className="text-sm font-medium text-gray-500 mt-1">{member.email}</p>
+            <h2 className="text-2xl font-black text-card-foreground tracking-tight leading-none uppercase">{member.full_name}</h2>
+            <p className="text-sm font-medium text-muted-foreground mt-1">{member.email}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
             <MemberSubscriptionToggle memberId={member.id} hasSubscription={member.has_active_subscription || false} />
-            <Button variant="outline" size="sm" className="rounded-xl h-9 px-4 font-bold text-xs uppercase tracking-widest border-gray-100 hover:bg-gray-50 transition-all">
+            <Button variant="outline" size="sm" className="rounded-xl h-9 px-4 font-bold text-xs uppercase tracking-widest border-border/50 hover:bg-background transition-all">
                 Modifier le profil
             </Button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="border-none card-shadow rounded-2xl overflow-hidden bg-white">
+        <Card className="border-none card-shadow rounded-2xl overflow-hidden bg-card">
           <CardHeader className="pb-2">
-            <CardTitle className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Statut</CardTitle>
+            <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Statut</CardTitle>
           </CardHeader>
           <CardContent>
             <div className={cn(
                 "text-lg font-black tracking-tight uppercase",
-                member.is_active ? "text-green-600" : "text-gray-400"
+                member.is_active ? "text-green-600" : "text-muted-foreground"
             )}>
                 {member.is_active ? 'Actif' : 'Inactif'}
             </div>
-            <p className="text-[9px] font-bold text-gray-400 mt-1 uppercase tracking-wider">Inscrit le {new Date(member.created_at!).toLocaleDateString('fr-FR')}</p>
+            <p className="text-[9px] font-bold text-muted-foreground mt-1 uppercase tracking-wider">Inscrit le {new Date(member.created_at!).toLocaleDateString('fr-FR')}</p>
           </CardContent>
         </Card>
         
-        <Card className="border-none card-shadow rounded-2xl overflow-hidden bg-white">
+        <Card className="border-none card-shadow rounded-2xl overflow-hidden bg-card">
           <CardHeader className="pb-2">
-            <CardTitle className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Séances</CardTitle>
+            <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Séances</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-lg font-black text-gray-900 tracking-tight">{member.bookings.length} séances</div>
-            <p className="text-[9px] font-bold text-gray-400 mt-1 uppercase tracking-wider">Réservations totales</p>
+            <div className="text-lg font-black text-card-foreground tracking-tight">{member.bookings.length} séances</div>
+            <p className="text-[9px] font-bold text-muted-foreground mt-1 uppercase tracking-wider">Réservations totales</p>
           </CardContent>
         </Card>
 
-        <Card className="border-none card-shadow rounded-2xl overflow-hidden bg-white">
+        <Card className="border-none card-shadow rounded-2xl overflow-hidden bg-card">
           <CardHeader className="pb-2">
-            <CardTitle className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Téléphone</CardTitle>
+            <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Téléphone</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-lg font-black text-gray-900 tracking-tight truncate">{member.phone || 'Pas enregistré'}</div>
-            <p className="text-[9px] font-bold text-gray-400 mt-1 uppercase tracking-wider">Contact client</p>
+            <div className="text-lg font-black text-card-foreground tracking-tight truncate">{member.phone || 'Pas enregistré'}</div>
+            <p className="text-[9px] font-bold text-muted-foreground mt-1 uppercase tracking-wider">Contact client</p>
           </CardContent>
         </Card>
       </div>
 
       {member.notes && (
-        <Card className="border-none card-shadow rounded-2xl overflow-hidden bg-gray-50/50">
+        <Card className="border-none card-shadow rounded-2xl overflow-hidden bg-background/50">
           <CardHeader className="pb-2">
-            <CardTitle className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Notes internes</CardTitle>
+            <CardTitle className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Notes internes</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-gray-600 font-medium leading-relaxed whitespace-pre-wrap italic">&quot;{member.notes}&quot;</p>
+            <p className="text-sm text-foreground/80 font-medium leading-relaxed whitespace-pre-wrap italic">&quot;{member.notes}&quot;</p>
           </CardContent>
         </Card>
       )}
 
-      <Card className="border-none card-shadow rounded-2xl overflow-hidden bg-white">
-        <CardHeader className="border-b border-gray-50 py-6 px-8">
-          <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-900">Historique des séances</CardTitle>
+      <Card className="border-none card-shadow rounded-2xl overflow-hidden bg-card">
+        <CardHeader className="border-b border-border/30 py-6 px-8">
+          <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-card-foreground">Historique des séances</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <Table>
-            <TableHeader className="bg-gray-50/20">
+            <TableHeader className="bg-background/20">
               <TableRow className="hover:bg-transparent border-none">
-                <TableHead className="px-8 h-12 text-[10px] font-black uppercase tracking-widest text-gray-400">Cours</TableHead>
-                <TableHead className="h-12 text-[10px] font-black uppercase tracking-widest text-gray-400">Date & Heure</TableHead>
-                <TableHead className="h-12 text-[10px] font-black uppercase tracking-widest text-gray-400">Statut</TableHead>
-                <TableHead className="px-8 h-12 text-[10px] font-black uppercase tracking-widest text-gray-400 text-right">Action</TableHead>
+                <TableHead className="px-8 h-12 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Cours</TableHead>
+                <TableHead className="h-12 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Date & Heure</TableHead>
+                <TableHead className="h-12 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Statut</TableHead>
+                <TableHead className="px-8 h-12 text-[10px] font-black uppercase tracking-widest text-muted-foreground text-right">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {member.bookings.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center text-gray-400 py-12 text-[10px] font-bold uppercase tracking-widest italic">Aucune séance enregistrée.</TableCell>
+                  <TableCell colSpan={4} className="text-center text-muted-foreground py-12 text-[10px] font-bold uppercase tracking-widest italic">Aucune séance enregistrée.</TableCell>
                 </TableRow>
               ) : (
                 member.bookings.map((booking) => (
-                  <TableRow key={booking.id} className="hover:bg-gray-50/50 transition-colors border-gray-50">
+                  <TableRow key={booking.id} className="hover:bg-background/50 transition-colors border-border/30">
                     <TableCell className="px-8 py-4">
-                      <span className="font-bold text-sm text-gray-900 uppercase tracking-tight">{booking.classes.title}</span>
+                      <span className="font-bold text-sm text-card-foreground uppercase tracking-tight">{booking.classes.title}</span>
                     </TableCell>
-                    <TableCell className="text-sm text-gray-500 font-medium">
+                    <TableCell className="text-sm text-muted-foreground font-medium">
                         {new Date(booking.classes.starts_at).toLocaleDateString('fr-FR')} à {new Date(booking.classes.starts_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                     </TableCell>
                     <TableCell>

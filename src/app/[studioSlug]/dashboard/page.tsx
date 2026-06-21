@@ -45,7 +45,7 @@ export default async function MemberDashboardPage({
           </CardHeader>
           <CardContent>
             {member?.bookings.length === 0 ? (
-              <div className="text-center py-6 text-gray-500">
+              <div className="text-center py-6 text-muted-foreground">
                 Vous n'avez pas encore de réservation.
               </div>
             ) : (
@@ -54,7 +54,7 @@ export default async function MemberDashboardPage({
                   <div key={booking.id} className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
                       <p className="font-bold">{booking.classes.title}</p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-muted-foreground">
                         {new Date(booking.classes.starts_at).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })} à {new Date(booking.classes.starts_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                       </p>
                     </div>
@@ -87,8 +87,8 @@ export default async function MemberDashboardPage({
                 </div>
               </div>
             ) : (
-              <div className="p-4 bg-gray-50 rounded-lg border border-dashed border-gray-300 text-center">
-                <p className="text-gray-600 mb-4">Vous n'avez pas encore d'abonnement actif dans ce studio.</p>
+              <div className="p-4 bg-background rounded-lg border border-dashed border-gray-300 text-center">
+                <p className="text-foreground/80 mb-4">Vous n'avez pas encore d'abonnement actif dans ce studio.</p>
                 <Button variant="outline" className="w-full">
                   <CreditCard className="mr-2 h-4 w-4" /> Voir les tarifs
                 </Button>

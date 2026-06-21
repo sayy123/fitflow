@@ -52,7 +52,7 @@ export default async function BookingPage({ params }: { params: Promise<{ studio
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <BookingClient 
         org={org} 
         cls={{

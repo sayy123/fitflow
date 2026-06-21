@@ -219,10 +219,10 @@ export function SettingsClient({
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <div className="flex flex-col gap-1">
-        <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
+        <h2 className="text-2xl font-bold text-card-foreground tracking-tight">
           Paramètres
         </h2>
-        <p className="text-sm font-medium text-gray-500">
+        <p className="text-sm font-medium text-muted-foreground">
           Gérez votre expérience sur Fitloww
         </p>
       </div>
@@ -243,15 +243,15 @@ export function SettingsClient({
                     "w-full flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 text-left",
                     isActive
                       ? "bg-primary/5 border-primary/20 text-primary"
-                      : "bg-transparent border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-200",
+                      : "bg-transparent border-transparent text-foreground/80 hover:bg-background hover:border-border",
                   )}
                 >
                   <div
                     className={cn(
                       "size-10 rounded-lg flex items-center justify-center transition-colors shrink-0",
                       isActive
-                        ? "bg-white text-primary shadow-sm border border-primary/10"
-                        : "bg-gray-50 text-gray-400 border border-gray-100",
+                        ? "bg-card text-primary shadow-sm border border-primary/10"
+                        : "bg-background text-muted-foreground border border-border/50",
                     )}
                   >
                     <Icon className="size-5" />
@@ -265,7 +265,7 @@ export function SettingsClient({
                     >
                       {item.label}
                     </p>
-                    <p className="text-xs font-medium text-gray-500 mt-0.5">
+                    <p className="text-xs font-medium text-muted-foreground mt-0.5">
                       {item.desc}
                     </p>
                   </div>
@@ -276,29 +276,29 @@ export function SettingsClient({
 
         {/* Content Area */}
         <div className="md:col-span-8">
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden transition-all duration-300">
+          <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden transition-all duration-300">
             {activeTab === "billing" && isOwner && (
-              <div className="p-6 sm:p-8 space-y-8 animate-in fade-in slide-in-from-right-4 duration-300 text-zinc-900">
-                <div className="pb-4 border-b border-gray-100 flex justify-between items-center">
+              <div className="p-6 sm:p-8 space-y-8 animate-in fade-in slide-in-from-right-4 duration-300 text-foreground">
+                <div className="pb-4 border-b border-border/50 flex justify-between items-center">
                   <div>
                     <h3 className="text-lg font-semibold">
                       Gestion de l'Abonnement
                     </h3>
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-sm text-muted-foreground mt-1">
                       Consultez votre grade actuel et améliorez vos capacités.
                     </p>
                   </div>
-                  <div className="bg-zinc-100 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-zinc-600 border border-zinc-200">
+                  <div className="bg-muted px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-foreground/80 border border-border">
                     Plan {organization.plan || "Starter"}
                   </div>
                 </div>
 
-                <div className="bg-zinc-50 border border-zinc-100 rounded-2xl p-6 flex items-center justify-between gap-6">
+                <div className="bg-background border border-border/50 rounded-2xl p-6 flex items-center justify-between gap-6">
                   <div className="space-y-1">
                     <p className="text-sm font-semibold">
                       Besoin de plus de puissance ?
                     </p>
-                    <p className="text-xs text-zinc-500 font-medium leading-relaxed">
+                    <p className="text-xs text-muted-foreground font-medium leading-relaxed">
                       Passez au grade Premium pour débloquer les membres
                       illimités, la gestion multi-salles et les rapports
                       mensuels.
@@ -315,19 +315,19 @@ export function SettingsClient({
 
             {activeTab === "profile" && (
               <div className="p-6 sm:p-8 space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
-                <div className="pb-4 border-b border-gray-100">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                <div className="pb-4 border-b border-border/50">
+                  <h3 className="text-lg font-semibold text-card-foreground">
                     Informations de Profil
                   </h3>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-muted-foreground mt-1">
                     Mettez à jour vos informations de contact.
                   </p>
                 </div>
 
                 {/* Avatar Section */}
-                <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-gray-50/50 rounded-xl border border-gray-100">
+                <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-background/50 rounded-xl border border-border/50">
                   <div className="relative group shrink-0">
-                    <div className="size-24 rounded-full bg-white border-4 border-white shadow-sm overflow-hidden flex items-center justify-center relative ring-1 ring-gray-100">
+                    <div className="size-24 rounded-full bg-card border-4 border-white shadow-sm overflow-hidden flex items-center justify-center relative ring-1 ring-gray-100">
                       {avatarUrl ? (
                         <img
                           src={avatarUrl}
@@ -355,10 +355,10 @@ export function SettingsClient({
                     </label>
                   </div>
                   <div className="flex-1 text-center sm:text-left space-y-2">
-                    <h4 className="text-sm font-semibold text-gray-900">
+                    <h4 className="text-sm font-semibold text-card-foreground">
                       Photo de profil
                     </h4>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted-foreground">
                       JPG, PNG ou WebP. Taille max 2Mo.
                       <br />
                       Elle sera visible par votre studio et sur le planning.
@@ -381,11 +381,11 @@ export function SettingsClient({
                         Nom complet
                       </Label>
                       <div className="relative">
-                        <User className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+                        <User className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                         <Input
                           value={userName}
                           onChange={(e) => setUserName(e.target.value)}
-                          className="rounded-lg border-gray-200 h-10 pl-10 text-sm focus:border-primary focus:ring-primary/20 transition-all"
+                          className="rounded-lg border-border h-10 pl-10 text-sm focus:border-primary focus:ring-primary/20 transition-all"
                         />
                       </div>
                     </div>
@@ -394,11 +394,11 @@ export function SettingsClient({
                         Email (Lecture seule)
                       </Label>
                       <div className="relative">
-                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                         <Input
                           value={user.email}
                           disabled
-                          className="rounded-lg border-gray-200 h-10 pl-10 text-sm bg-gray-50 text-gray-500"
+                          className="rounded-lg border-border h-10 pl-10 text-sm bg-background text-muted-foreground"
                         />
                       </div>
                     </div>
@@ -407,12 +407,12 @@ export function SettingsClient({
                         Téléphone mobile
                       </Label>
                       <div className="relative">
-                        <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+                        <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                         <Input
                           value={userPhone}
                           onChange={(e) => setUserPhone(e.target.value)}
                           placeholder="Non renseigné"
-                          className="rounded-lg border-gray-200 h-10 pl-10 text-sm focus:border-primary focus:ring-primary/20 transition-all"
+                          className="rounded-lg border-border h-10 pl-10 text-sm focus:border-primary focus:ring-primary/20 transition-all"
                         />
                       </div>
                     </div>
@@ -432,11 +432,11 @@ export function SettingsClient({
 
             {activeTab === "studio" && isOwner && (
               <div className="p-6 sm:p-8 space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
-                <div className="pb-4 border-b border-gray-100">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                <div className="pb-4 border-b border-border/50">
+                  <h3 className="text-lg font-semibold text-card-foreground">
                     Configuration du Studio
                   </h3>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-muted-foreground mt-1">
                     Gérez l'identité publique de votre établissement.
                   </p>
                 </div>
@@ -446,11 +446,11 @@ export function SettingsClient({
                       Nom commercial
                     </Label>
                     <div className="relative">
-                      <Building2 className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+                      <Building2 className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                       <Input
                         value={orgName}
                         onChange={(e) => setOrgName(e.target.value)}
-                        className="rounded-lg border-gray-200 h-10 pl-10 text-sm"
+                        className="rounded-lg border-border h-10 pl-10 text-sm"
                       />
                     </div>
                   </div>
@@ -459,12 +459,12 @@ export function SettingsClient({
                       Adresse physique
                     </Label>
                     <div className="relative">
-                      <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+                      <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                       <Input
                         value={orgAddress}
                         onChange={(e) => setOrgAddress(e.target.value)}
                         placeholder="Ex: 12 rue du Sport, Bruxelles"
-                        className="rounded-lg border-gray-200 h-10 pl-10 text-sm"
+                        className="rounded-lg border-border h-10 pl-10 text-sm"
                       />
                     </div>
                   </div>
@@ -473,11 +473,11 @@ export function SettingsClient({
                       Téléphone de contact
                     </Label>
                     <div className="relative">
-                      <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+                      <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                       <Input
                         value={orgPhone}
                         onChange={(e) => setOrgPhone(e.target.value)}
-                        className="rounded-lg border-gray-200 h-10 pl-10 text-sm"
+                        className="rounded-lg border-border h-10 pl-10 text-sm"
                       />
                     </div>
                   </div>
@@ -486,15 +486,15 @@ export function SettingsClient({
                       Lien de paiement universel
                     </Label>
                     <div className="relative">
-                      <CreditCard className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+                      <CreditCard className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                       <Input
                         value={orgPaymentLink}
                         onChange={(e) => setOrgPaymentLink(e.target.value)}
                         placeholder="Ex: https://revolut.me/tonnom, lydia-app.com/..., paypal.me/..."
-                        className="rounded-lg border-gray-200 h-10 pl-10 text-sm"
+                        className="rounded-lg border-border h-10 pl-10 text-sm"
                       />
                     </div>
-                    <p className="text-xs text-gray-500 leading-relaxed mt-1">
+                    <p className="text-xs text-muted-foreground leading-relaxed mt-1">
                       Vos membres seront redirigés vers ce lien pour régler leurs séances payantes. <br/>
                       <span className="font-semibold text-gray-700">Compatible avec :</span> Revolut, PayPal, Lydia, Paylib, SumUp, Stripe Payment Links, ou toute autre cagnotte.
                     </p>
@@ -512,11 +512,11 @@ export function SettingsClient({
 
             {activeTab === "security" && (
               <div className="p-6 sm:p-8 space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
-                <div className="pb-4 border-b border-gray-100">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                <div className="pb-4 border-b border-border/50">
+                  <h3 className="text-lg font-semibold text-card-foreground">
                     Sécurité du Compte
                   </h3>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-muted-foreground mt-1">
                     Protégez votre accès avec un mot de passe robuste.
                   </p>
                 </div>
@@ -527,13 +527,13 @@ export function SettingsClient({
                         Nouveau mot de passe
                       </Label>
                       <div className="relative">
-                        <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+                        <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                         <Input
                           type="password"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="••••••••"
-                          className="rounded-lg border-gray-200 h-10 pl-10 text-sm"
+                          className="rounded-lg border-border h-10 pl-10 text-sm"
                         />
                       </div>
                     </div>
@@ -542,13 +542,13 @@ export function SettingsClient({
                         Confirmer le mot de passe
                       </Label>
                       <div className="relative">
-                        <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+                        <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                         <Input
                           type="password"
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           placeholder="••••••••"
-                          className="rounded-lg border-gray-200 h-10 pl-10 text-sm"
+                          className="rounded-lg border-border h-10 pl-10 text-sm"
                         />
                       </div>
                     </div>

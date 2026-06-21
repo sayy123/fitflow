@@ -45,7 +45,7 @@ export function MemberStatusBadge({
       <span
         className={cn(
           "px-2.5 py-1 rounded-md text-xs font-semibold border",
-          isActive ? "bg-green-50 text-green-700 border-green-200" : "bg-gray-50 text-gray-600 border-gray-200"
+          isActive ? "bg-green-50 text-green-700 border-green-200" : "bg-background text-foreground/80 border-border"
         )}
       >
         {isActive ? "Actif" : "Inactif"}
@@ -58,7 +58,7 @@ export function MemberStatusBadge({
           "px-2.5 py-1 rounded-md text-xs font-semibold border flex items-center gap-1.5 transition-all",
           hasSub 
             ? "bg-amber-100 text-amber-800 border-amber-200 hover:bg-amber-50 cursor-pointer" 
-            : "bg-gray-50 text-gray-400 border-dashed border-gray-200 hover:bg-amber-50 hover:text-amber-600 hover:border-amber-200 cursor-pointer"
+            : "bg-background text-muted-foreground border-dashed border-border hover:bg-amber-50 hover:text-amber-600 hover:border-amber-200 cursor-pointer"
         )}
         title={hasSub ? "Retirer l'abonnement" : "Activer l'abonnement"}
       >

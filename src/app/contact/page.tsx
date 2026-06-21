@@ -19,10 +19,10 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50/50 flex flex-col items-center justify-center p-6 pt-24 md:pt-6 selection:bg-zinc-200 relative">
+    <div className="min-h-screen bg-background/50 flex flex-col items-center justify-center p-6 pt-24 md:pt-6 selection:bg-zinc-200 relative">
       <Link 
         href="/" 
-        className="absolute top-8 left-8 flex items-center gap-2 text-sm font-semibold text-zinc-500 hover:text-zinc-900 transition-colors group"
+        className="absolute top-8 left-8 flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors group"
       >
         <ArrowLeft className="size-4 group-hover:-translate-x-1 transition-transform" />
         Retour
@@ -31,27 +31,27 @@ export default function ContactPage() {
       <div className="w-full max-w-4xl grid md:grid-cols-2 gap-12 items-center">
         <div className="space-y-8">
           <div className="space-y-4">
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-zinc-900 leading-[1.1]">
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-foreground leading-[1.1]">
               Parlons de votre <br />
-              <span className="text-zinc-400">studio.</span>
+              <span className="text-muted-foreground">studio.</span>
             </h1>
-            <p className="text-base md:text-lg font-medium text-zinc-500 leading-relaxed max-w-md">
+            <p className="text-base md:text-lg font-medium text-muted-foreground leading-relaxed max-w-md">
               Besoin d&apos;aide, d&apos;une démonstration ou simplement envie de discuter ? Notre équipe est là.
             </p>
           </div>
 
           <div className="space-y-6">
             <div className="flex items-center gap-4 group">
-              <div className="size-12 rounded-2xl bg-white shadow-sm border border-zinc-200/60 flex items-center justify-center text-zinc-900">
+              <div className="size-12 rounded-2xl bg-card shadow-sm border border-border/60 flex items-center justify-center text-foreground">
                 <Mail className="size-5" />
               </div>
               <div className="flex-1">
-                <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Email Direct</p>
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Email Direct</p>
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-bold text-zinc-900">{email}</span>
+                  <span className="text-lg font-bold text-foreground">{email}</span>
                   <button 
                     onClick={copyToClipboard}
-                    className="p-1.5 rounded-lg hover:bg-zinc-100 text-zinc-400 hover:text-zinc-900 transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
                     title="Copier l'email"
                   >
                     {copied ? <Check className="size-4 text-emerald-500" /> : <Copy className="size-4" />}
@@ -61,26 +61,26 @@ export default function ContactPage() {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="size-12 rounded-2xl bg-white shadow-sm border border-zinc-200/60 flex items-center justify-center text-zinc-900">
+              <div className="size-12 rounded-2xl bg-card shadow-sm border border-border/60 flex items-center justify-center text-foreground">
                 <Clock className="size-5" />
               </div>
               <div>
-                <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Réponse moyenne</p>
-                <p className="text-lg font-bold text-zinc-900">Moins de 24 heures</p>
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Réponse moyenne</p>
+                <p className="text-lg font-bold text-foreground">Moins de 24 heures</p>
               </div>
             </div>
           </div>
         </div>
 
-        <Card className="border-zinc-200/60 shadow-2xl shadow-zinc-200/40 rounded-[2.5rem] overflow-hidden bg-white">
+        <Card className="border-border/60 shadow-2xl shadow-zinc-200/40 rounded-[2.5rem] overflow-hidden bg-card">
           <CardContent className="p-12 space-y-8">
             <div className="size-14 bg-zinc-900 rounded-2xl flex items-center justify-center text-white rotate-3">
               <MessageSquare className="size-6" />
             </div>
             
             <div className="space-y-2">
-              <h2 className="text-2xl font-bold text-zinc-900">Nous écrire</h2>
-              <p className="text-zinc-500 font-medium">
+              <h2 className="text-2xl font-bold text-foreground">Nous écrire</h2>
+              <p className="text-muted-foreground font-medium">
                 Choisissez votre service de messagerie favori pour nous contacter directement.
               </p>
             </div>
@@ -102,7 +102,7 @@ export default function ContactPage() {
               <Button 
                 asChild
                 variant="outline"
-                className="h-14 rounded-2xl font-bold border-zinc-200 hover:bg-zinc-50 transition-all flex items-center gap-3"
+                className="h-14 rounded-2xl font-bold border-border hover:bg-background transition-all flex items-center gap-3"
               >
                 <a 
                   href={`https://outlook.office.com/mail/deeplink/compose?to=${email}`}
@@ -114,15 +114,15 @@ export default function ContactPage() {
               </Button>
 
               <div className="flex items-center gap-3 py-2">
-                <div className="h-px flex-1 bg-zinc-100"></div>
-                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">ou</span>
-                <div className="h-px flex-1 bg-zinc-100"></div>
+                <div className="h-px flex-1 bg-muted"></div>
+                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">ou</span>
+                <div className="h-px flex-1 bg-muted"></div>
               </div>
 
               <Button 
                 asChild
                 variant="ghost"
-                className="h-12 rounded-xl text-zinc-500 font-bold hover:text-zinc-900 transition-all"
+                className="h-12 rounded-xl text-muted-foreground font-bold hover:text-foreground transition-all"
               >
                 <a href={`mailto:${email}`}>
                   Utiliser l&apos;application par défaut

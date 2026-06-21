@@ -84,19 +84,19 @@ export default async function DashboardPage(props: {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-12">
         <div className="text-center space-y-3">
-          <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Bienvenue sur Fitloww</h2>
-          <p className="text-gray-500 text-base max-w-sm mx-auto font-medium">Comment souhaitez-vous utiliser la plateforme ?</p>
+          <h2 className="text-3xl font-bold text-card-foreground tracking-tight">Bienvenue sur Fitloww</h2>
+          <p className="text-muted-foreground text-base max-w-sm mx-auto font-medium">Comment souhaitez-vous utiliser la plateforme ?</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
-          <Card className="border-2 border-dashed border-gray-200 hover:border-zinc-900 transition-colors group cursor-pointer overflow-hidden rounded-[2rem]">
+          <Card className="border-2 border-dashed border-border hover:border-zinc-900 transition-colors group cursor-pointer overflow-hidden rounded-[2rem]">
             <CardContent className="p-8">
               <div className="h-full flex flex-col items-center text-center space-y-4">
-                <div className="size-14 rounded-2xl bg-zinc-100 flex items-center justify-center group-hover:bg-zinc-900 transition-colors">
-                  <Zap className="size-6 text-zinc-600 group-hover:text-white" />
+                <div className="size-14 rounded-2xl bg-muted flex items-center justify-center group-hover:bg-zinc-900 transition-colors">
+                  <Zap className="size-6 text-foreground/80 group-hover:text-white" />
                 </div>
                 <div className="space-y-1">
-                  <h3 className="text-lg font-bold text-gray-900">Créer mon studio</h3>
-                  <p className="text-sm text-gray-500">Gérez votre planning et vos membres en quelques minutes.</p>
+                  <h3 className="text-lg font-bold text-card-foreground">Créer mon studio</h3>
+                  <p className="text-sm text-muted-foreground">Gérez votre planning et vos membres en quelques minutes.</p>
                 </div>
                 <Link href="/create-studio" className="w-full">
                   <Button className="w-full bg-zinc-900 text-white rounded-xl h-11">C&apos;est parti</Button>
@@ -107,7 +107,7 @@ export default async function DashboardPage(props: {
           <InviteJoiner />
         </div>
         <form action={signOutAction}>
-          <button type="submit" className="text-xs font-bold text-zinc-400 hover:text-zinc-900 transition-colors uppercase tracking-widest flex items-center gap-2">
+          <button type="submit" className="text-xs font-bold text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest flex items-center gap-2">
             <LogOut className="size-3" /> Se déconnecter
           </button>
         </form>
@@ -208,12 +208,12 @@ export default async function DashboardPage(props: {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {invitations.map((inv) => (
-              <Card key={inv.id} className="border border-gray-200 bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+              <Card key={inv.id} className="border border-border bg-card rounded-2xl shadow-sm hover:shadow-md transition-shadow">
                 <CardContent className="p-5 flex justify-between items-center gap-4">
                   <div className="space-y-1">
                     <p className="text-xs font-medium text-primary/80 uppercase tracking-wider">Nouvelle invitation</p>
-                    <h4 className="text-lg font-bold text-gray-900">{inv.organizations.name}</h4>
-                    <p className="text-sm text-gray-500">Vous êtes invité(e) en tant que <span className="font-semibold text-gray-700 capitalize">{inv.role}</span>.</p>
+                    <h4 className="text-lg font-bold text-card-foreground">{inv.organizations.name}</h4>
+                    <p className="text-sm text-muted-foreground">Vous êtes invité(e) en tant que <span className="font-semibold text-gray-700 capitalize">{inv.role}</span>.</p>
                   </div>
                   <div className="flex flex-col gap-2 shrink-0">
                     <form action={async () => { "use server"; await respondToInvitationAction(inv.id, true); }}>
@@ -230,26 +230,26 @@ export default async function DashboardPage(props: {
       {/* SECTION MES PROCHAINES SÉANCES (VISIBLE PAR TOUS) */}
       {dashboardData.myBookings.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-card-foreground flex items-center gap-2">
             <Zap className="size-4 text-emerald-500 fill-emerald-500" /> Mes prochaines séances
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {dashboardData.myBookings.map((booking) => (
-              <Card key={booking.id} className="overflow-hidden border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow rounded-2xl">
+              <Card key={booking.id} className="overflow-hidden border border-border bg-card shadow-sm hover:shadow-md transition-shadow rounded-2xl">
                 <div className="h-1 w-full" style={{ backgroundColor: booking.organizations?.color_primary || "#4f46e5" }} />
                 <CardContent className="p-5">
                   <div className="flex justify-between items-start mb-4">
                     <div className="space-y-1">
-                      <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{booking.organizations?.name}</p>
-                      <h4 className="text-lg font-bold text-gray-900 leading-tight">{booking.classes?.title}</h4>
+                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{booking.organizations?.name}</p>
+                      <h4 className="text-lg font-bold text-card-foreground leading-tight">{booking.classes?.title}</h4>
                     </div>
                     <span className={cn("px-2.5 py-1 rounded-md text-xs font-semibold border", booking.status === "confirmed" ? "bg-green-50 text-green-700 border-green-200" : "bg-yellow-50 text-yellow-700 border-yellow-200")}>
                       {booking.status === "confirmed" ? "Confirmé" : "En attente"}
                     </span>
                   </div>
-                  <div className="space-y-3 py-4 border-y border-gray-100 text-sm font-medium text-gray-600">
-                    <div className="flex items-center gap-3"><Calendar className="size-4 text-gray-400" /> {new Date(booking.classes?.starts_at || "").toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}</div>
-                    <div className="flex items-center gap-3"><Clock className="size-4 text-gray-400" /> {new Date(booking.classes?.starts_at || "").toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}</div>
+                  <div className="space-y-3 py-4 border-y border-border/50 text-sm font-medium text-foreground/80">
+                    <div className="flex items-center gap-3"><Calendar className="size-4 text-muted-foreground" /> {new Date(booking.classes?.starts_at || "").toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}</div>
+                    <div className="flex items-center gap-3"><Clock className="size-4 text-muted-foreground" /> {new Date(booking.classes?.starts_at || "").toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}</div>
                   </div>
                   <div className="mt-5 flex flex-col sm:flex-row gap-3">
                     {booking.status === 'pending_payment' && booking.organizations.payment_link && (
@@ -278,20 +278,20 @@ export default async function DashboardPage(props: {
         <div className="space-y-8">
           {member?.role === "coach" && (dashboardData.coachedClasses?.length || 0) > 0 && (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">Mes séances à coacher</h3>
+              <h3 className="text-lg font-semibold text-card-foreground flex items-center gap-2">Mes séances à coacher</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {dashboardData.coachedClasses?.map((cls) => (
-                  <Card key={cls.id} className="overflow-hidden border border-gray-200 bg-white rounded-2xl shadow-sm hover:shadow-md transition-all">
+                  <Card key={cls.id} className="overflow-hidden border border-border bg-card rounded-2xl shadow-sm hover:shadow-md transition-all">
                     <div className="h-1 w-full bg-orange-400" />
                     <CardContent className="p-5">
                       <div className="flex justify-between items-start mb-4">
                         <div className="space-y-1">
                           <p className="text-xs font-medium text-orange-500/80 uppercase tracking-wider">{cls.organizations?.name}</p>
-                          <h4 className="text-lg font-bold text-gray-900 leading-tight">{cls.title}</h4>
+                          <h4 className="text-lg font-bold text-card-foreground leading-tight">{cls.title}</h4>
                         </div>
                         <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-100">Coach</span>
                       </div>
-                      <Link href={`/dashboard/classes/${cls.id}`} className="mt-6 w-full h-9 flex items-center justify-center rounded-lg font-medium text-sm border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors">Gérer ma séance</Link>
+                      <Link href={`/dashboard/classes/${cls.id}`} className="mt-6 w-full h-9 flex items-center justify-center rounded-lg font-medium text-sm border border-border text-gray-700 hover:bg-background transition-colors">Gérer ma séance</Link>
                     </CardContent>
                   </Card>
                 ))}
@@ -299,27 +299,27 @@ export default async function DashboardPage(props: {
             </div>
           )}
           {dashboardData.myBookings.length === 0 && (
-            <div className="space-y-4 text-center py-20 bg-gray-50/50 rounded-[2rem] border border-dashed border-gray-200">
+            <div className="space-y-4 text-center py-20 bg-background/50 rounded-[2rem] border border-dashed border-border">
                <Calendar className="size-12 text-gray-300 mx-auto mb-4" />
-               <h3 className="text-lg font-bold text-gray-900">Aucune séance réservée</h3>
-               <p className="text-gray-500 max-w-xs mx-auto">Vos futures réservations apparaîtront ici dès que vous aurez choisi un cours.</p>
+               <h3 className="text-lg font-bold text-card-foreground">Aucune séance réservée</h3>
+               <p className="text-muted-foreground max-w-xs mx-auto">Vos futures réservations apparaîtront ici dès que vous aurez choisi un cours.</p>
             </div>
           )}
         </div>
       ) : (
         <div className="space-y-8">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
+          <div className="flex overflow-x-auto touch-pan-x snap-x snap-mandatory pb-4 md:pb-0 md:grid md:grid-cols-3 gap-4 md:gap-6" style={{ scrollbarWidth: 'none' }}>
             {[
-              { label: "Membres actifs", value: dashboardData.activeMembersCount, icon: "👥", color: "text-blue-600 bg-blue-50" },
-              { label: "Cours cette semaine", value: dashboardData.classesThisWeekCount, icon: "🗓️", color: "text-purple-600 bg-purple-50" },
-              { label: "Réservations totales", value: dashboardData.totalBookingsCount, icon: "🎟️", color: "text-orange-600 bg-orange-50" },
+              { label: "Membres", value: dashboardData.activeMembersCount, icon: "👥", color: "text-blue-400 bg-blue-500/10 border-blue-500/20" },
+              { label: "Cours", value: dashboardData.classesThisWeekCount, icon: "🗓️", color: "text-purple-400 bg-purple-500/10 border-purple-500/20" },
+              { label: "Réservations", value: dashboardData.totalBookingsCount, icon: "🎟️", color: "text-orange-400 bg-orange-500/10 border-orange-500/20" },
             ].map((stat) => (
-              <Card key={stat.label} className="border border-gray-200 bg-white rounded-2xl shadow-sm overflow-hidden">
-                <CardContent className="p-4 md:p-6 flex items-center gap-3 md:gap-4">
-                  <div className={cn("size-10 md:size-12 rounded-xl flex items-center justify-center text-lg md:text-xl shrink-0", stat.color)}>{stat.icon}</div>
+              <Card key={stat.label} className="border border-border bg-card rounded-2xl shadow-sm overflow-hidden min-w-[240px] md:min-w-0 snap-center shrink-0">
+                <CardContent className="p-5 flex items-center gap-4">
+                  <div className={cn("size-12 rounded-xl flex items-center justify-center text-xl shrink-0 border", stat.color)}>{stat.icon}</div>
                   <div>
-                    <CardTitle className="text-[10px] md:text-sm font-medium text-gray-500 mb-0.5 md:mb-1 uppercase tracking-wider">{stat.label}</CardTitle>
-                    <div className="text-xl md:text-3xl font-black text-gray-900 leading-none">{stat.value}</div>
+                    <CardTitle className="text-[10px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">{stat.label}</CardTitle>
+                    <div className="text-3xl font-black text-card-foreground leading-none">{stat.value}</div>
                   </div>
                 </CardContent>
               </Card>
@@ -328,30 +328,30 @@ export default async function DashboardPage(props: {
 
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">Prochaines séances du studio</h3>
+              <h3 className="text-lg font-semibold text-card-foreground flex items-center gap-2">Prochaines séances du studio</h3>
               <Link href="/dashboard/classes"><Button variant="link" className="text-sm font-medium text-primary hover:text-primary/80">Voir tout le planning &rarr;</Button></Link>
             </div>
             <div className="grid grid-cols-1 gap-3">
               {(dashboardData.upcomingStaffClasses?.length || 0) === 0 ? (
-                <Card className="border border-gray-100 bg-gray-50/50 rounded-2xl shadow-sm"><CardContent className="py-12 text-center text-gray-500 text-sm">Aucun cours prévu prochainement.</CardContent></Card>
+                <Card className="border border-border/50 bg-background/50 rounded-2xl shadow-sm"><CardContent className="py-12 text-center text-muted-foreground text-sm">Aucun cours prévu prochainement.</CardContent></Card>
               ) : (
                 dashboardData.upcomingStaffClasses?.map((cls) => (
-                  <Card key={cls.id} className="border border-gray-200 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow group">
+                  <Card key={cls.id} className="border border-border bg-card rounded-xl shadow-sm hover:shadow-md transition-shadow group">
                     <CardContent className="p-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                       <div className="flex items-center gap-4">
-                        <div className="size-12 rounded-xl bg-gray-50 border border-gray-100 flex flex-col items-center justify-center shrink-0">
-                          <span className="text-[10px] font-bold text-gray-500 uppercase">{new Date(cls.starts_at).toLocaleDateString("fr-FR", { month: "short" })}</span>
-                          <span className="text-lg font-bold text-gray-900 leading-none">{new Date(cls.starts_at).getDate()}</span>
+                        <div className="size-12 rounded-xl bg-background border border-border/50 flex flex-col items-center justify-center shrink-0">
+                          <span className="text-[10px] font-bold text-muted-foreground uppercase">{new Date(cls.starts_at).toLocaleDateString("fr-FR", { month: "short" })}</span>
+                          <span className="text-lg font-bold text-card-foreground leading-none">{new Date(cls.starts_at).getDate()}</span>
                         </div>
                         <div className="space-y-1">
-                          <h4 className="text-base font-semibold text-gray-900">{cls.title}</h4>
-                          <div className="flex items-center gap-4 text-xs font-medium text-gray-500">
+                          <h4 className="text-base font-semibold text-card-foreground">{cls.title}</h4>
+                          <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground">
                             <span className="flex items-center gap-1.5"><Clock className="size-3.5" /> {new Date(cls.starts_at).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}</span>
                             {cls.location && <span className="flex items-center gap-1.5"><MapPin className="size-3.5" /> {cls.location}</span>}
                           </div>
                         </div>
                       </div>
-                      <Link href={`/dashboard/classes/${cls.id}`} className="w-full sm:w-auto h-9 px-4 flex items-center justify-center rounded-lg font-medium text-sm border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors">Gérer le cours</Link>
+                      <Link href={`/dashboard/classes/${cls.id}`} className="w-full sm:w-auto h-9 px-4 flex items-center justify-center rounded-lg font-medium text-sm border border-border text-gray-700 hover:bg-background transition-colors">Gérer le cours</Link>
                     </CardContent>
                   </Card>
                 ))

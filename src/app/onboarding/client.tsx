@@ -11,7 +11,7 @@ export default function OnboardingClient({ organizationId }: { organizationId: s
   const handleNext = () => setStep(step + 1)
   
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-lg">
         <CardHeader>
           <CardTitle>Configuration de votre studio</CardTitle>
@@ -21,21 +21,21 @@ export default function OnboardingClient({ organizationId }: { organizationId: s
           {step === 1 && (
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Couleur principale</h3>
-              <p className="text-sm text-gray-500">Choisissez la couleur de votre studio (à venir).</p>
+              <p className="text-sm text-muted-foreground">Choisissez la couleur de votre studio (à venir).</p>
               <Button onClick={handleNext}>Continuer</Button>
             </div>
           )}
           {step === 2 && (
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Créer votre premier cours</h3>
-              <p className="text-sm text-gray-500">Ajoutez votre premier cours au planning (à venir).</p>
+              <p className="text-sm text-muted-foreground">Ajoutez votre premier cours au planning (à venir).</p>
               <Button onClick={handleNext}>Continuer</Button>
             </div>
           )}
           {step === 3 && (
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Invitez des membres</h3>
-              <p className="text-sm text-gray-500">Ajoutez votre premier client (à venir).</p>
+              <p className="text-sm text-muted-foreground">Ajoutez votre premier client (à venir).</p>
               <form action={completeOnboardingAction}>
                 <input type="hidden" name="orgId" value={organizationId} />
                 <Button type="submit">Terminer l'onboarding</Button>

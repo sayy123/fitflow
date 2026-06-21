@@ -41,15 +41,15 @@ export default function LoginPage() {
   };
 
   return (
-    <Card className="w-full max-w-[400px] border border-zinc-200/60 bg-white rounded-3xl shadow-xl shadow-zinc-900/5 overflow-hidden">
+    <Card className="w-full max-w-[400px] border border-border/60 bg-card rounded-3xl shadow-xl shadow-zinc-900/5 overflow-hidden">
       <CardHeader className="pt-10 pb-6 px-10 text-center">
-        <div className="size-12 rounded-2xl bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-900 mx-auto mb-4">
+        <div className="size-12 rounded-2xl bg-background border border-border/50 flex items-center justify-center text-foreground mx-auto mb-4">
           <LogIn className="size-5" />
         </div>
-        <CardTitle className="text-2xl font-bold tracking-tight text-zinc-900">
+        <CardTitle className="text-2xl font-bold tracking-tight text-foreground">
           Content de vous revoir
         </CardTitle>
-        <CardDescription className="text-zinc-500 font-medium mt-1">
+        <CardDescription className="text-muted-foreground font-medium mt-1">
           Accédez à votre espace personnel Fitloww.
         </CardDescription>
       </CardHeader>
@@ -68,7 +68,7 @@ export default function LoginPage() {
               type="email"
               required
               placeholder="ex: jean@email.com"
-              className="h-11 rounded-xl border-zinc-200 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all bg-zinc-50/50 hover:bg-zinc-50"
+              className="h-11 rounded-xl border-border focus:ring-zinc-900/5 focus:border-zinc-900 transition-all bg-background/50 hover:bg-background"
             />
           </div>
           <div className="space-y-1.5">
@@ -85,7 +85,7 @@ export default function LoginPage() {
               type="password"
               required
               placeholder="••••••••"
-              className="h-11 rounded-xl border-zinc-200 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all bg-zinc-50/50 hover:bg-zinc-50"
+              className="h-11 rounded-xl border-border focus:ring-zinc-900/5 focus:border-zinc-900 transition-all bg-background/50 hover:bg-background"
             />
           </div>
           {state?.error && (
@@ -123,16 +123,16 @@ export default function LoginPage() {
 
         <div className="relative my-8">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-zinc-100" />
+            <span className="w-full border-t border-border/50" />
           </div>
-          <div className="relative flex justify-center text-xs font-medium text-zinc-400">
-            <span className="bg-white px-4">Ou continuer avec</span>
+          <div className="relative flex justify-center text-xs font-medium text-muted-foreground">
+            <span className="bg-card px-4">Ou continuer avec</span>
           </div>
         </div>
 
         <Button
           variant="outline"
-          className="w-full h-11 rounded-xl font-semibold text-sm border-zinc-200 text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition-colors flex items-center justify-center gap-3"
+          className="w-full h-11 rounded-xl font-semibold text-sm border-border text-zinc-700 hover:bg-background hover:text-foreground transition-colors flex items-center justify-center gap-3"
           onClick={() => signInWithGoogleAction()}
         >
           <svg className="size-5" viewBox="0 0 24 24">
@@ -156,11 +156,11 @@ export default function LoginPage() {
           Google
         </Button>
 
-        <div className="mt-8 text-center text-sm text-zinc-500">
+        <div className="mt-8 text-center text-sm text-muted-foreground">
           Pas encore de compte ?{" "}
           <Link
             href="/register"
-            className="text-zinc-900 font-semibold hover:underline"
+            className="text-foreground font-semibold hover:underline"
           >
             S'inscrire
           </Link>

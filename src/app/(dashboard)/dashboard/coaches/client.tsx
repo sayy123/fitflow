@@ -130,10 +130,10 @@ export function CoachesClient({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
+        <h2 className="text-2xl font-bold text-card-foreground tracking-tight">
           Gestion des Coachs
         </h2>
-        <p className="text-gray-500 font-medium text-sm">
+        <p className="text-muted-foreground font-medium text-sm">
           Créez des coachs internes ou invitez des collaborateurs externes.
         </p>
       </div>
@@ -141,36 +141,36 @@ export function CoachesClient({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Forms Section */}
         <div className="lg:col-span-1 space-y-6">
-          <Card className="border border-gray-200 bg-white rounded-2xl shadow-sm overflow-hidden">
+          <Card className="border border-border bg-card rounded-2xl shadow-sm overflow-hidden">
             <CardHeader className="pb-4">
               <div className="flex items-center gap-3 mb-1">
                 <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                   <UserPlus className="size-4" />
                 </div>
-                <CardTitle className="text-lg font-semibold text-gray-900">
+                <CardTitle className="text-lg font-semibold text-card-foreground">
                   Ajouter un Coach
                 </CardTitle>
               </div>
             </CardHeader>
             <CardContent className="pt-0">
               <Tabs defaultValue="virtual" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-6 bg-gray-50 rounded-lg h-10 p-1">
+                <TabsList className="grid w-full grid-cols-2 mb-6 bg-background rounded-lg h-10 p-1">
                   <TabsTrigger
                     value="virtual"
-                    className="rounded-md text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                    className="rounded-md text-sm font-medium data-[state=active]:bg-card data-[state=active]:shadow-sm"
                   >
                     Virtuel
                   </TabsTrigger>
                   <TabsTrigger
                     value="invite"
-                    className="rounded-md text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                    className="rounded-md text-sm font-medium data-[state=active]:bg-card data-[state=active]:shadow-sm"
                   >
                     Inviter
                   </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="virtual" className="space-y-4">
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     Un coach virtuel n'a pas de compte utilisateur. Il sert
                     uniquement à l'attribution des séances dans le planning.
                   </p>
@@ -183,7 +183,7 @@ export function CoachesClient({
                         value={virtualName}
                         onChange={(e) => setVirtualName(e.target.value)}
                         placeholder="Ex: Coach Sarah"
-                        className="rounded-lg border-gray-200 h-10 text-sm"
+                        className="rounded-lg border-border h-10 text-sm"
                         required
                       />
                     </div>
@@ -198,7 +198,7 @@ export function CoachesClient({
                 </TabsContent>
 
                 <TabsContent value="invite" className="space-y-4">
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     L'invité recevra une notification dans son dashboard pour
                     rejoindre votre studio.
                   </p>
@@ -212,7 +212,7 @@ export function CoachesClient({
                         value={inviteEmail}
                         onChange={(e) => setInviteEmail(e.target.value)}
                         placeholder="email@exemple.com"
-                        className="rounded-lg border-gray-200 h-10 text-sm"
+                        className="rounded-lg border-border h-10 text-sm"
                         required
                       />
                     </div>
@@ -246,7 +246,7 @@ export function CoachesClient({
                 </div>
               </div>
               <Link href="/dashboard/billing" className="block">
-                <Button variant="outline" className="w-full h-9 rounded-xl text-xs font-bold bg-white border-amber-200 text-amber-900 hover:bg-amber-100 hover:border-amber-300 transition-all">
+                <Button variant="outline" className="w-full h-9 rounded-xl text-xs font-bold bg-card border-amber-200 text-amber-900 hover:bg-amber-100 hover:border-amber-300 transition-all">
                   Améliorer mon plan &rarr;
                 </Button>
               </Link>
@@ -257,13 +257,13 @@ export function CoachesClient({
         {/* List Section */}
         <div className="lg:col-span-2 space-y-6">
           {/* Active Coaches */}
-          <Card className="border border-gray-200 bg-white rounded-2xl shadow-sm overflow-hidden">
-            <CardHeader className="pb-4 border-b border-gray-100 flex flex-row items-center justify-between">
+          <Card className="border border-border bg-card rounded-2xl shadow-sm overflow-hidden">
+            <CardHeader className="pb-4 border-b border-border/50 flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-lg font-semibold text-gray-900">
+                <CardTitle className="text-lg font-semibold text-card-foreground">
                   Équipe active
                 </CardTitle>
-                <CardDescription className="text-sm font-medium text-gray-500 mt-1">
+                <CardDescription className="text-sm font-medium text-muted-foreground mt-1">
                   {team.length} membre{team.length > 1 ? "s" : ""}
                 </CardDescription>
               </div>
@@ -274,13 +274,13 @@ export function CoachesClient({
                   {team.map((m) => (
                     <TableRow
                       key={m.id}
-                      className="hover:bg-gray-50/50 border-gray-100 h-16"
+                      className="hover:bg-background/50 border-border/50 h-16"
                     >
                       <TableCell className="pl-6">
                         <div className="flex items-center gap-4">
                           <div
                             className={cn(
-                              "size-10 rounded-full flex items-center justify-center font-bold text-xs overflow-hidden border border-gray-200 shadow-sm",
+                              "size-10 rounded-full flex items-center justify-center font-bold text-xs overflow-hidden border border-border shadow-sm",
                               m.user_id
                                 ? "bg-primary/5 text-primary"
                                 : "bg-orange-50 text-orange-600",
@@ -299,10 +299,10 @@ export function CoachesClient({
                             )}
                           </div>
                           <div>
-                            <p className="font-semibold text-sm text-gray-900">
+                            <p className="font-semibold text-sm text-card-foreground">
                               {m.display_name}
                             </p>
-                            <p className="text-xs font-medium text-gray-500 mt-0.5">
+                            <p className="text-xs font-medium text-muted-foreground mt-0.5">
                               {m.role === "owner"
                                 ? "Propriétaire"
                                 : m.role === "coach"
@@ -319,7 +319,7 @@ export function CoachesClient({
                             variant="ghost"
                             size="icon"
                             onClick={() => handleDeleteCoach(m.id)}
-                            className="size-8 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md"
+                            className="size-8 text-muted-foreground hover:text-red-600 hover:bg-red-50 rounded-md"
                           >
                             <Trash2 className="size-4" />
                           </Button>
@@ -339,9 +339,9 @@ export function CoachesClient({
 
           {/* Pending Invitations */}
           {invitations.length > 0 && (
-            <Card className="border border-gray-200 bg-white rounded-2xl shadow-sm overflow-hidden">
-              <CardHeader className="pb-4 border-b border-gray-100">
-                <CardTitle className="text-lg font-semibold text-gray-900">
+            <Card className="border border-border bg-card rounded-2xl shadow-sm overflow-hidden">
+              <CardHeader className="pb-4 border-b border-border/50">
+                <CardTitle className="text-lg font-semibold text-card-foreground">
                   Invitations en attente
                 </CardTitle>
               </CardHeader>
@@ -351,18 +351,18 @@ export function CoachesClient({
                     {invitations.map((inv) => (
                       <TableRow
                         key={inv.id}
-                        className="hover:bg-gray-50/50 border-gray-100 h-16"
+                        className="hover:bg-background/50 border-border/50 h-16"
                       >
                         <TableCell className="pl-6">
-                          <div className="flex items-center gap-4 text-gray-500">
-                            <div className="size-10 rounded-full bg-gray-50 flex items-center justify-center border border-gray-200">
+                          <div className="flex items-center gap-4 text-muted-foreground">
+                            <div className="size-10 rounded-full bg-background flex items-center justify-center border border-border">
                               <Clock className="size-4" />
                             </div>
                             <div>
                               <p className="font-medium text-sm text-gray-700">
                                 {inv.email}
                               </p>
-                              <p className="text-xs text-gray-500 mt-0.5">
+                              <p className="text-xs text-muted-foreground mt-0.5">
                                 En attente d'acceptation
                               </p>
                             </div>

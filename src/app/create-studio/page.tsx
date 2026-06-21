@@ -17,8 +17,8 @@ export default async function CreateStudioPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50/50 flex flex-col items-center justify-center p-6 selection:bg-zinc-200">
-      <Link href="/dashboard" className="absolute top-8 left-8 text-sm font-semibold text-zinc-500 hover:text-zinc-900 transition-colors">
+    <div className="min-h-screen bg-background/50 flex flex-col items-center justify-center p-6 selection:bg-zinc-200">
+      <Link href="/dashboard" className="absolute top-8 left-8 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
         &larr; Retour au tableau de bord
       </Link>
       
@@ -27,17 +27,17 @@ export default async function CreateStudioPage() {
           <div className="size-16 bg-zinc-900 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-zinc-900/20 mb-6">
             <Zap className="size-8 text-white" />
           </div>
-          <CardTitle className="text-3xl font-black tracking-tight text-zinc-900">
+          <CardTitle className="text-3xl font-black tracking-tight text-foreground">
             Lancez votre studio
           </CardTitle>
-          <CardDescription className="text-base font-medium text-zinc-500 mt-2">
+          <CardDescription className="text-base font-medium text-muted-foreground mt-2">
             Donnez un nom à votre espace pour commencer à gérer vos plannings et vos membres.
           </CardDescription>
         </CardHeader>
         <CardContent className="p-8 pt-4">
           <form action={async (fd) => { "use server"; await createFirstStudioAction(fd); }} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">
+              <Label htmlFor="name" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">
                 Nom du studio
               </Label>
               <Input
@@ -46,7 +46,7 @@ export default async function CreateStudioPage() {
                 required
                 minLength={2}
                 placeholder="Ex: Fitloww Yoga Paris"
-                className="h-14 rounded-xl border-zinc-200 bg-white text-base shadow-sm focus-visible:ring-zinc-900 focus-visible:border-zinc-900"
+                className="h-14 rounded-xl border-border bg-card text-base shadow-sm focus-visible:ring-zinc-900 focus-visible:border-zinc-900"
               />
             </div>
             <Button

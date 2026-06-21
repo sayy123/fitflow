@@ -35,7 +35,7 @@ export function DeleteMemberButton({ memberId }: { memberId: string }) {
       size="icon"
       onClick={handleDelete}
       disabled={loading}
-      className="size-8 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+      className="size-8 text-muted-foreground hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
     >
       <Trash2 className="size-4" />
     </Button>

@@ -107,24 +107,24 @@ export default function ClassesClient({
   }
 
   return (
-    <div className="bg-white p-4 md:p-8 rounded-2xl md:rounded-[2rem] card-shadow border-none overflow-hidden">
+    <div className="bg-card p-4 md:p-8 rounded-2xl md:rounded-[2rem] card-shadow border-none overflow-hidden">
       {isStaff && (
         <div className="mb-6 flex justify-end">
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger render={<Button className="w-full sm:w-auto h-11 sm:h-10 rounded-xl"> Nouveau cours</Button>} />
             <DialogContent className="rounded-3xl max-w-md w-[95vw] sm:w-full max-h-[85vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle className="text-xl font-black uppercase tracking-tight text-zinc-900">Créer un cours</DialogTitle>
+                <DialogTitle className="text-xl font-black uppercase tracking-tight text-foreground">Créer un cours</DialogTitle>
               </DialogHeader>
               <form action={handleCreateClass} className="space-y-3 pt-2">
                 {(organizations?.length ?? 0) > 1 && (
-                  <div className="space-y-2 text-zinc-900">
-                    <Label htmlFor="organization_id" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Studio</Label>
+                  <div className="space-y-2 text-foreground">
+                    <Label htmlFor="organization_id" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Studio</Label>
                     <select 
                       name="organization_id" 
                       defaultValue={organizations![0].id} 
                       required
-                      className="w-full h-11 rounded-xl border border-zinc-200 bg-white px-3 text-sm text-zinc-900 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none"
+                      className="w-full h-11 rounded-xl border border-border bg-card px-3 text-sm text-foreground focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none"
                     >
                       {organizations!.map(org => (
                         <option key={org.id} value={org.id}>{org.name}</option>
@@ -136,17 +136,17 @@ export default function ClassesClient({
                   <input type="hidden" name="organization_id" value={organizations![0].id} />
                 )}
 
-                <div className="space-y-2 text-zinc-900">
-                  <Label htmlFor="title" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Titre</Label>
-                  <Input id="title" name="title" required placeholder="ex: Yoga" className="h-11 rounded-xl border-zinc-100 bg-white" />
+                <div className="space-y-2 text-foreground">
+                  <Label htmlFor="title" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Titre</Label>
+                  <Input id="title" name="title" required placeholder="ex: Yoga" className="h-11 rounded-xl border-border/50 bg-card" />
                 </div>
                 
-                <div className="space-y-2 text-zinc-900">
-                  <Label htmlFor="coach_id" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Coach</Label>
+                <div className="space-y-2 text-foreground">
+                  <Label htmlFor="coach_id" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Coach</Label>
                   <select 
                     name="coach_id" 
                     defaultValue={currentMemberId}
-                    className="w-full h-11 rounded-xl border border-zinc-200 bg-white px-3 text-sm text-zinc-900 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none"
+                    className="w-full h-11 rounded-xl border border-border bg-card px-3 text-sm text-foreground focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none"
                   >
                     <option value="">Aucun coach</option>
                     {coaches.map(c => (
@@ -157,27 +157,27 @@ export default function ClassesClient({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="starts_at" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Date et heure</Label>
-                    <Input id="starts_at" name="starts_at" type="datetime-local" required className="h-11 rounded-xl border-zinc-100 bg-white text-zinc-900" />
+                    <Label htmlFor="starts_at" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Date et heure</Label>
+                    <Input id="starts_at" name="starts_at" type="datetime-local" required className="h-11 rounded-xl border-border/50 bg-card text-foreground" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="duration_min" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Durée (min)</Label>
-                    <Input id="duration_min" name="duration_min" type="number" defaultValue="60" required className="h-11 rounded-xl border-zinc-100 bg-white text-zinc-900" />
+                    <Label htmlFor="duration_min" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Durée (min)</Label>
+                    <Input id="duration_min" name="duration_min" type="number" defaultValue="60" required className="h-11 rounded-xl border-border/50 bg-card text-foreground" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="capacity" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Capacité</Label>
-                    <Input id="capacity" name="capacity" type="number" defaultValue="15" required className="h-11 rounded-xl border-zinc-100 bg-white text-zinc-900" />
+                    <Label htmlFor="capacity" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Capacité</Label>
+                    <Input id="capacity" name="capacity" type="number" defaultValue="15" required className="h-11 rounded-xl border-border/50 bg-card text-foreground" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="price" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Prix (€) - Optionnel</Label>
-                    <Input id="price" name="price" type="number" step="0.50" min="0" placeholder="0 = Gratuit" className="h-11 rounded-xl border-zinc-100 bg-white text-zinc-900" />
+                    <Label htmlFor="price" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Prix (€) - Optionnel</Label>
+                    <Input id="price" name="price" type="number" step="0.50" min="0" placeholder="0 = Gratuit" className="h-11 rounded-xl border-border/50 bg-card text-foreground" />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="color" className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Couleur</Label>
-                  <Input id="color" name="color" type="color" defaultValue="#4f46e5" className="h-11 p-1 w-full rounded-xl border-zinc-100 bg-white" />
+                  <Label htmlFor="color" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Couleur</Label>
+                  <Input id="color" name="color" type="color" defaultValue="#4f46e5" className="h-11 p-1 w-full rounded-xl border-border/50 bg-card" />
                 </div>
                 <Button type="submit" className="w-full h-12 rounded-xl bg-zinc-900 text-white font-black uppercase tracking-widest text-[10px] mt-2 shadow-lg shadow-zinc-900/10">Enregistrer</Button>
               </form>
@@ -214,7 +214,7 @@ export default function ClassesClient({
               </div>
               {coach && (
                 <div className="flex items-center gap-1.5">
-                  <div className="size-4 rounded-full bg-white/20 overflow-hidden flex items-center justify-center shrink-0 border border-white/20">
+                  <div className="size-4 rounded-full bg-card/20 overflow-hidden flex items-center justify-center shrink-0 border border-white/20">
                     {coach.avatar_url ? (
                       <img src={coach.avatar_url} alt="" className="size-full object-cover" />
                     ) : (

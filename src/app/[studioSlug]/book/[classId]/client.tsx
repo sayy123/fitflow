@@ -116,7 +116,7 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
           <div className="flex justify-between items-start">
             <div className="space-y-1">
               <CardTitle className="text-2xl font-black tracking-tight">Détails de la séance</CardTitle>
-              <CardDescription className="text-gray-500 font-bold uppercase tracking-widest text-[9px]">
+              <CardDescription className="text-muted-foreground font-bold uppercase tracking-widest text-[9px]">
                 {cls.title} • {org.name}
               </CardDescription>
             </div>
@@ -128,8 +128,8 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
             </span>
           </div>
           {cls.org_members && (
-            <div className="mt-4 flex items-center gap-3 p-3 bg-gray-50/50 rounded-xl border border-gray-100">
-                <div className="size-8 rounded-lg bg-white border border-gray-100 overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-black text-[9px] text-primary uppercase">
+            <div className="mt-4 flex items-center gap-3 p-3 bg-background/50 rounded-xl border border-border/50">
+                <div className="size-8 rounded-lg bg-card border border-border/50 overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-black text-[9px] text-primary uppercase">
                     {cls.org_members.avatar_url ? (
                         <img src={cls.org_members.avatar_url} alt="" className="size-full object-cover" />
                     ) : (
@@ -137,26 +137,26 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
                     )}
                 </div>
                 <div className="flex-1">
-                    <p className="text-[7px] font-black text-gray-400 uppercase tracking-widest">Coach de la séance</p>
-                    <p className="text-[11px] font-black text-gray-900 uppercase tracking-tight">{cls.org_members.display_name}</p>
+                    <p className="text-[7px] font-black text-muted-foreground uppercase tracking-widest">Coach de la séance</p>
+                    <p className="text-[11px] font-black text-card-foreground uppercase tracking-tight">{cls.org_members.display_name}</p>
                 </div>
             </div>
           )}
         </CardHeader>
         <CardContent className="px-8 pb-8 space-y-8">
-          <div className="grid grid-cols-1 gap-3 p-5 bg-gray-50 rounded-2xl">
-            <p className="text-sm font-bold text-gray-900 flex items-center gap-3">
-              <Calendar className="size-4 text-gray-400" />
+          <div className="grid grid-cols-1 gap-3 p-5 bg-background rounded-2xl">
+            <p className="text-sm font-bold text-card-foreground flex items-center gap-3">
+              <Calendar className="size-4 text-muted-foreground" />
               {new Date(cls.starts_at).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
             </p>
-            <p className="text-sm font-bold text-gray-900 flex items-center gap-3">
-              <Clock className="size-4 text-gray-400" />
+            <p className="text-sm font-bold text-card-foreground flex items-center gap-3">
+              <Clock className="size-4 text-muted-foreground" />
               {new Date(cls.starts_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} ({cls.duration_min} min)
             </p>
             {cls.location && (
               <div className="flex flex-col gap-1 pl-7">
-                <div className="text-sm font-bold text-gray-900 flex items-center gap-3 -ml-7">
-                  <MapPin className="size-4 text-gray-400" />
+                <div className="text-sm font-bold text-card-foreground flex items-center gap-3 -ml-7">
+                  <MapPin className="size-4 text-muted-foreground" />
                   {cls.location}
                 </div>
                 {googleMapsUrl && (
@@ -170,12 +170,12 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Participants ({cls.bookings.length} / {cls.capacity})</h4>
+              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Participants ({cls.bookings.length} / {cls.capacity})</h4>
             </div>
             <div className="grid grid-cols-2 gap-2">
               {cls.bookings.map((b) => (
-                <div key={b.id} className="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-gray-50 card-shadow text-xs font-bold text-gray-700">
-                  <div className="size-6 rounded-lg border border-gray-100 overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-black text-[8px] text-primary uppercase bg-gray-50">
+                <div key={b.id} className="flex items-center gap-2.5 p-2 rounded-xl bg-card border border-border/30 card-shadow text-xs font-bold text-gray-700">
+                  <div className="size-6 rounded-lg border border-border/50 overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-black text-[8px] text-primary uppercase bg-background">
                     {b.studio_members.avatar_url ? (
                         <img src={b.studio_members.avatar_url} alt="" className="size-full object-cover" />
                     ) : (
@@ -190,7 +190,7 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
 
           <div className="pt-2 flex flex-col gap-2">
             <Link href="/dashboard">
-              <Button variant="outline" className="w-full h-12 rounded-xl font-black uppercase tracking-widest text-[10px] border-gray-100 hover:bg-gray-50 transition-all">
+              <Button variant="outline" className="w-full h-12 rounded-xl font-black uppercase tracking-widest text-[10px] border-border/50 hover:bg-background transition-all">
                 Retour au tableau de bord
               </Button>
             </Link>
@@ -209,12 +209,12 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
       <CardHeader className="p-8 pb-4 text-center">
         <CardTitle className="text-2xl font-black tracking-tight">{isInvite ? 'Invitation' : 'Réserver une séance'}</CardTitle>
         <div className="mt-3 space-y-1">
-          <CardDescription className="text-gray-500 font-bold uppercase tracking-widest text-[9px]">
+          <CardDescription className="text-muted-foreground font-bold uppercase tracking-widest text-[9px]">
             {cls.title} • {new Date(cls.starts_at).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })} à {new Date(cls.starts_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
           </CardDescription>
           {cls.location && (
             <div className="flex flex-col items-center">
-              <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1">
+              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1">
                 <MapPin className="size-3" /> {cls.location}
               </span>
               {googleMapsUrl && (
@@ -237,11 +237,11 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
         {currentUser && (
           <div className="mb-8 p-6 bg-zinc-900 rounded-[2rem] text-white space-y-4 shadow-xl shadow-zinc-900/20 animate-in zoom-in duration-500">
             <div className="flex items-center gap-4">
-              <div className="size-10 rounded-full bg-white/10 flex items-center justify-center border border-white/20">
+              <div className="size-10 rounded-full bg-card/10 flex items-center justify-center border border-white/20">
                 <span className="text-lg">✨</span>
               </div>
               <div className="flex-1">
-                <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Connecté</p>
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Connecté</p>
                 <p className="text-sm font-black truncate">{currentUser.email}</p>
               </div>
             </div>
@@ -253,12 +253,12 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
               <Button 
                 onClick={handleAutoJoin}
                 disabled={isAutoJoining}
-                className="w-full h-12 rounded-xl bg-white text-zinc-900 font-black uppercase tracking-widest text-[10px] hover:bg-zinc-100 transition-all"
+                className="w-full h-12 rounded-xl bg-card text-foreground font-black uppercase tracking-widest text-[10px] hover:bg-muted transition-all"
               >
                 {isAutoJoining ? "Réservation..." : (cls.price && cls.price > 0 && org.payment_link && !hasSubscription ? `Réserver et payer ${cls.price}€` : "Réserver la séance directement")}
               </Button>
               {cls.price && cls.price > 0 && org.payment_link && !hasSubscription && (
-                <p className="text-[10px] text-zinc-400 font-medium text-center italic mt-2">
+                <p className="text-[10px] text-muted-foreground font-medium text-center italic mt-2">
                   ⚠️ Pensez à indiquer votre Nom/Prénom en motif de paiement sur la page suivante.
                 </p>
               )}
@@ -277,7 +277,7 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
           <div className="mb-6">
             <Button 
               variant="outline" 
-              className="w-full h-11 rounded-xl font-bold border-gray-100 hover:bg-gray-50 transition-all flex items-center justify-center gap-3"
+              className="w-full h-11 rounded-xl font-bold border-border/50 hover:bg-background transition-all flex items-center justify-center gap-3"
               onClick={() => signInWithGoogleAction()}
             >
               <svg className="size-4" viewBox="0 0 24 24">
@@ -302,10 +302,10 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
             </Button>
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-gray-100" />
+                <span className="w-full border-t border-border/50" />
               </div>
               <div className="relative flex justify-center text-[8px] uppercase tracking-widest font-bold">
-                <span className="bg-white px-3 text-gray-400">Ou via email</span>
+                <span className="bg-card px-3 text-muted-foreground">Ou via email</span>
               </div>
             </div>
           </div>
@@ -316,19 +316,19 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
           <input type="hidden" name="organizationId" value={org.id} />
           
           <div className="space-y-1.5">
-            <Label htmlFor="fullName" className="text-[9px] font-black uppercase tracking-[0.2em] text-gray-400 ml-1">Nom complet</Label>
+            <Label htmlFor="fullName" className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Nom complet</Label>
             <Input 
               id="fullName" 
               name="fullName" 
               required 
               placeholder="ex: Jean Dupont" 
               defaultValue={currentUser?.user_metadata?.full_name || ''} 
-              className="h-11 rounded-xl border-gray-100 focus:ring-primary/20"
+              className="h-11 rounded-xl border-border/50 focus:ring-primary/20"
             />
           </div>
           
           <div className="space-y-1.5">
-            <Label htmlFor="email" className="text-[9px] font-black uppercase tracking-[0.2em] text-gray-400 ml-1">Email</Label>
+            <Label htmlFor="email" className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Email</Label>
             <Input 
               id="email" 
               name="email" 
@@ -337,7 +337,7 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
               placeholder="ex: jean@email.com" 
               defaultValue={currentUser?.email || ''}
               readOnly={!!currentUser}
-              className={cn("h-11 rounded-xl border-gray-100 focus:ring-primary/20", currentUser ? 'bg-gray-50' : '')}
+              className={cn("h-11 rounded-xl border-border/50 focus:ring-primary/20", currentUser ? 'bg-background' : '')}
             />
           </div>
 
@@ -347,9 +347,9 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
                 id="createAccount" 
                 checked={createAccount} 
                 onCheckedChange={(checked) => setCreateAccount(checked === true)} 
-                className="size-4 rounded-md border-gray-200"
+                className="size-4 rounded-md border-border"
               />
-              <Label htmlFor="createAccount" className="text-[11px] font-bold text-gray-600 cursor-pointer">
+              <Label htmlFor="createAccount" className="text-[11px] font-bold text-foreground/80 cursor-pointer">
                 Créer un compte pour suivre mes séances
               </Label>
             </div>
@@ -357,15 +357,15 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
 
           {createAccount && !currentUser && (
             <div className="space-y-1.5 animate-in fade-in slide-in-from-top-2 duration-300">
-              <Label htmlFor="password" title="Mot de passe" className="text-[9px] font-black uppercase tracking-[0.2em] text-gray-400 ml-1">Mot de passe</Label>
-              <Input id="password" name="password" type="password" required={createAccount} placeholder="••••••••" className="h-11 rounded-xl border-gray-100" />
+              <Label htmlFor="password" title="Mot de passe" className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Mot de passe</Label>
+              <Input id="password" name="password" type="password" required={createAccount} placeholder="••••••••" className="h-11 rounded-xl border-border/50" />
             </div>
           )}
 
           <div className="flex items-start space-x-2 pt-2 px-1">
             <Checkbox id="terms" name="terms" required className="mt-0.5 border-gray-300" />
-            <label htmlFor="terms" className="text-[10px] font-medium leading-tight text-gray-500">
-              J'accepte les <Link href="/legal" target="_blank" className="text-gray-800 underline hover:text-gray-600">Mentions Légales</Link> et la politique de confidentialité.
+            <label htmlFor="terms" className="text-[10px] font-medium leading-tight text-muted-foreground">
+              J'accepte les <Link href="/legal" target="_blank" className="text-gray-800 underline hover:text-foreground/80">Mentions Légales</Link> et la politique de confidentialité.
             </label>
           </div>
           
@@ -381,14 +381,14 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
             {isPending ? 'Réservation...' : (isFull ? 'Rejoindre la liste d\'attente' : (cls.price && cls.price > 0 && org.payment_link && !hasSubscription ? `Réserver et payer ${cls.price}€` : 'Confirmer la réservation'))}
           </Button>
           {cls.price && cls.price > 0 && org.payment_link && !hasSubscription && (
-            <p className="text-[10px] text-zinc-400 font-medium text-center italic mt-2">
+            <p className="text-[10px] text-muted-foreground font-medium text-center italic mt-2">
               ⚠️ Pensez à indiquer votre Nom/Prénom en motif de paiement sur la page suivante.
             </p>
           )}
         </form>
         
         <div className="mt-6 text-center">
-          <Link href={`/${org.slug}`} className="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-gray-600 transition-colors">Annuler</Link>
+          <Link href={`/${org.slug}`} className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground/80 transition-colors">Annuler</Link>
         </div>
       </CardContent>
     </Card>

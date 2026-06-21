@@ -88,9 +88,9 @@ export function Sidebar({
       <div className="lg:hidden fixed top-4 left-4 z-[60]">
         <button
           onClick={() => setIsOpen(true)}
-          className="size-10 bg-white border border-zinc-200 rounded-xl flex items-center justify-center shadow-sm"
+          className="size-10 bg-card border border-border rounded-xl flex items-center justify-center shadow-sm"
         >
-          <Menu className="size-5 text-zinc-600" />
+          <Menu className="size-5 text-foreground/80" />
         </button>
       </div>
 
@@ -103,7 +103,7 @@ export function Sidebar({
       )}
 
       <aside className={cn(
-        "bg-zinc-50/50 border-r border-zinc-200/50 flex flex-col h-screen sticky top-0 backdrop-blur-xl transition-all duration-300 z-[80]",
+        "bg-background/50 border-r border-border/50 flex flex-col h-screen sticky top-0 backdrop-blur-xl transition-all duration-300 z-[80]",
         "fixed lg:sticky",
         isOpen ? "translate-x-0 w-64" : "-translate-x-full lg:translate-x-0 w-64",
         "lg:flex"
@@ -111,15 +111,15 @@ export function Sidebar({
         {/* Mobile Close Button */}
         <button
           onClick={() => setIsOpen(false)}
-          className="lg:hidden absolute top-4 right-4 size-8 bg-zinc-100 rounded-lg flex items-center justify-center"
+          className="lg:hidden absolute top-4 right-4 size-8 bg-muted rounded-lg flex items-center justify-center"
         >
-          <X className="size-4 text-zinc-500" />
+          <X className="size-4 text-muted-foreground" />
         </button>
 
         <div className="p-8 pb-4">
           {showOrgName ? (
             <div className="space-y-3">
-              <h1 className="text-lg font-semibold text-zinc-900 tracking-tight leading-none">
+              <h1 className="text-lg font-semibold text-foreground tracking-tight leading-none">
                 {organizationName}
               </h1>
               {isOwner && (
@@ -128,7 +128,7 @@ export function Sidebar({
                     "inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border transition-all group-hover/badge:scale-105 active:group-hover/badge:scale-95",
                     plan === 'premium' 
                       ? "bg-zinc-900 text-white border-zinc-800 shadow-sm group-hover/badge:bg-zinc-800" 
-                      : "bg-white text-zinc-600 border-zinc-200 group-hover/badge:border-zinc-300"
+                      : "bg-card text-foreground/80 border-border group-hover/badge:border-zinc-300"
                   )}>
                     {isTrialing 
                       ? '🎁 Essai' 
@@ -144,7 +144,7 @@ export function Sidebar({
               <Activity className="size-5 text-white" />
             </div>
           )}
-          <p className="text-[11px] font-medium text-zinc-500 mt-1.5 uppercase tracking-wider">
+          <p className="text-[11px] font-medium text-muted-foreground mt-1.5 uppercase tracking-wider">
             Fitloww
           </p>
         </div>
@@ -157,13 +157,13 @@ export function Sidebar({
                 <Zap className="size-3 text-emerald-400 fill-emerald-400" />
                 <p className="text-[10px] font-bold text-white uppercase tracking-wider">Essai gratuit</p>
               </div>
-              <p className="text-[11px] text-zinc-400 leading-tight mb-2">
+              <p className="text-[11px] text-muted-foreground leading-tight mb-2">
                 Il vous reste <span className="text-white font-bold">
                   {daysLeft > 0 ? `${daysLeft} jours` : `${hoursLeft} heures`}
                 </span> pour tester Fitloww.
               </p>
               <Link href="/dashboard/billing">
-                <button className="w-full h-7 rounded-lg bg-white text-zinc-900 text-[10px] font-bold hover:bg-zinc-100 transition-colors">
+                <button className="w-full h-7 rounded-lg bg-card text-foreground text-[10px] font-bold hover:bg-muted transition-colors">
                   S'abonner
                 </button>
               </Link>
@@ -184,7 +184,7 @@ export function Sidebar({
                   "flex items-center gap-3 px-3 py-2 text-[13px] font-medium rounded-lg transition-colors group",
                   isActive
                     ? "bg-zinc-900 text-white shadow-sm"
-                    : "text-zinc-600 hover:bg-zinc-200/50 hover:text-zinc-900",
+                    : "text-foreground/80 hover:bg-zinc-200/50 hover:text-foreground",
                 )}
               >
                 <Icon
@@ -192,7 +192,7 @@ export function Sidebar({
                     "size-4",
                     isActive
                       ? "text-white"
-                      : "text-zinc-400 group-hover:text-zinc-600",
+                      : "text-muted-foreground group-hover:text-foreground/80",
                   )}
                 />
                 {item.name}
@@ -202,7 +202,7 @@ export function Sidebar({
 
           {isStaff && (
             <div className="pt-8 space-y-1">
-              <p className="px-3 text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-3">
+              <p className="px-3 text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-3">
                 Administration
               </p>
               {staffItems.map((item) => {
@@ -217,7 +217,7 @@ export function Sidebar({
                       "flex items-center gap-3 px-3 py-2 text-[13px] font-medium rounded-lg transition-colors group",
                       isActive
                         ? "bg-zinc-900 text-white shadow-sm"
-                        : "text-zinc-600 hover:bg-zinc-200/50 hover:text-zinc-900",
+                        : "text-foreground/80 hover:bg-zinc-200/50 hover:text-foreground",
                     )}
                   >
                     <Icon
@@ -225,7 +225,7 @@ export function Sidebar({
                         "size-4",
                         isActive
                           ? "text-white"
-                          : "text-zinc-400 group-hover:text-zinc-600",
+                          : "text-muted-foreground group-hover:text-foreground/80",
                       )}
                     />
                     {item.name}
@@ -238,7 +238,7 @@ export function Sidebar({
           {/* Show Join Studio for everyone except the owner */}
           {(role !== "owner" || !organizationName) && (
             <div className="pt-8 px-3 space-y-3">
-              <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">
+              <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
                 Rejoindre un studio
               </p>
               <div className="space-y-2">
@@ -247,12 +247,12 @@ export function Sidebar({
                   placeholder="Lien d'invitation..."
                   value={inviteLink}
                   onChange={(e) => setInviteLink(e.target.value)}
-                  className="w-full h-8 px-3 rounded-lg border border-zinc-200 bg-white text-[11px] font-medium focus:ring-1 focus:ring-zinc-900 outline-none transition-all"
+                  className="w-full h-8 px-3 rounded-lg border border-border bg-card text-[11px] font-medium focus:ring-1 focus:ring-zinc-900 outline-none transition-all"
                 />
                 <button
                   onClick={handleJoin}
                   disabled={!inviteLink.trim().includes("http")}
-                  className="w-full h-8 flex items-center justify-center gap-2 rounded-lg bg-zinc-100 text-zinc-600 text-[11px] font-bold hover:bg-zinc-900 hover:text-white transition-all disabled:opacity-50 disabled:hover:bg-zinc-100 disabled:hover:text-zinc-600"
+                  className="w-full h-8 flex items-center justify-center gap-2 rounded-lg bg-muted text-foreground/80 text-[11px] font-bold hover:bg-zinc-900 hover:text-white transition-all disabled:opacity-50 disabled:hover:bg-muted disabled:hover:text-foreground/80"
                 >
                   <PlusCircle className="size-3.5" />
                   Rejoindre
@@ -262,9 +262,9 @@ export function Sidebar({
           )}
         </nav>
 
-        <div className="p-4 space-y-2 border-t border-zinc-200/50">
+        <div className="p-4 space-y-2 border-t border-border/50">
           <div className="px-3 py-2 flex items-center gap-3">
-            <div className="size-8 rounded-full bg-white border border-zinc-200/50 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
+            <div className="size-8 rounded-full bg-card border border-border/50 overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
               {avatarUrl ? (
                 <img
                   src={avatarUrl}
@@ -272,14 +272,14 @@ export function Sidebar({
                   className="size-full object-cover"
                 />
               ) : (
-                <User className="size-4 text-zinc-400" />
+                <User className="size-4 text-muted-foreground" />
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-semibold text-zinc-900 truncate leading-tight">
+              <p className="text-[13px] font-semibold text-foreground truncate leading-tight">
                 {user.user_metadata?.full_name || "Utilisateur"}
               </p>
-              <p className="text-[11px] font-medium text-zinc-500 capitalize truncate mt-0.5">
+              <p className="text-[11px] font-medium text-muted-foreground capitalize truncate mt-0.5">
                 {role}
               </p>
             </div>
@@ -288,9 +288,9 @@ export function Sidebar({
           <form action={signOutAction}>
             <button
               type="submit"
-              className="flex w-full items-center gap-3 px-3 py-2 text-[13px] font-medium rounded-lg text-zinc-500 hover:bg-zinc-200/50 hover:text-zinc-900 transition-colors group"
+              className="flex w-full items-center gap-3 px-3 py-2 text-[13px] font-medium rounded-lg text-muted-foreground hover:bg-zinc-200/50 hover:text-foreground transition-colors group"
             >
-              <LogOut className="size-4 text-zinc-400 group-hover:text-zinc-600" />
+              <LogOut className="size-4 text-muted-foreground group-hover:text-foreground/80" />
               Déconnexion
             </button>
           </form>

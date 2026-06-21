@@ -40,12 +40,12 @@ export default async function MemberDashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white border-b shadow-sm p-4">
+    <div className="min-h-screen bg-background">
+      <nav className="bg-card border-b shadow-sm p-4">
         <div className="container mx-auto flex justify-between items-center">
           <span className="font-bold text-lg">{org.name} — Espace Membre</span>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">{user.email}</span>
+            <span className="text-sm text-foreground/80">{user.email}</span>
             <form action="/api/auth/signout" method="post">
               <button className="text-sm text-red-600 hover:underline">Déconnexion</button>
             </form>

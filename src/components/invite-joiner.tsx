@@ -13,7 +13,7 @@ export function InviteJoiner() {
 
   return (
     <div className="w-full space-y-2">
-      <label htmlFor="invite-link" className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">
+      <label htmlFor="invite-link" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">
         Lien d'invitation
       </label>
       <div className="flex flex-col sm:flex-row gap-2">
@@ -23,7 +23,7 @@ export function InviteJoiner() {
           value={link}
           onChange={(e) => setLink(e.target.value)}
           placeholder="Coller le lien ici..."
-          className="flex-1 h-12 rounded-2xl border border-zinc-200 bg-zinc-50 px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-all"
+          className="flex-1 h-12 rounded-2xl border border-border bg-background px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-all"
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               handleJoin()

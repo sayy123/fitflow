@@ -31,7 +31,7 @@ export default async function DashboardLayout({
 
   if (memberships.length === 0) {
     return (
-      <div className="flex min-h-screen bg-zinc-50/30 text-zinc-900 font-sans selection:bg-zinc-200">
+      <div className="flex min-h-screen bg-background/30 text-foreground font-sans selection:bg-zinc-200">
         <Sidebar
           organizationName=""
           role="member"
@@ -83,7 +83,7 @@ export default async function DashboardLayout({
   const isSubscriptionInactive = !isTrialing && userProfile?.subscription_status !== "active";
 
   return (
-    <div className="flex min-h-screen bg-zinc-50/30 text-zinc-900 font-sans selection:bg-zinc-200">
+    <div className="flex min-h-screen bg-background/30 text-foreground font-sans selection:bg-zinc-200">
       <Sidebar
         organizationName={member.organizations.name}
         role={member.role}

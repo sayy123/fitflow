@@ -74,8 +74,8 @@ export function TrialBlockedWrapper({
 
   if (showBlockedScreen) {
     return (
-      <div className="fixed inset-0 z-[100] bg-white/80 backdrop-blur-xl flex items-center justify-center p-6 ml-0 md:ml-64">
-        <div className="max-w-xl w-full bg-white rounded-[3rem] p-12 shadow-[0_32px_128px_-16px_rgba(0,0,0,0.1)] border border-zinc-200/50 text-center relative overflow-hidden group animate-in fade-in zoom-in duration-700">
+      <div className="fixed inset-0 z-[100] bg-card/80 backdrop-blur-xl flex items-center justify-center p-6 ml-0 md:ml-64">
+        <div className="max-w-xl w-full bg-card rounded-[3rem] p-12 shadow-[0_32px_128px_-16px_rgba(0,0,0,0.1)] border border-border/50 text-center relative overflow-hidden group animate-in fade-in zoom-in duration-700">
           {/* Subtle background flair */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1 bg-gradient-to-r from-transparent via-zinc-900/10 to-transparent" />
           
@@ -85,10 +85,10 @@ export function TrialBlockedWrapper({
             </div>
             
             <div className="space-y-3">
-              <h2 className="text-4xl font-bold tracking-tight text-zinc-900">
+              <h2 className="text-4xl font-bold tracking-tight text-foreground">
                 {isBlockedByTrial ? "Votre période d'essai est terminée." : "Votre abonnement a expiré."}
               </h2>
-              <p className="text-zinc-500 font-medium text-lg max-w-sm mx-auto leading-relaxed">
+              <p className="text-muted-foreground font-medium text-lg max-w-sm mx-auto leading-relaxed">
                 {isBlockedByTrial 
                   ? "Votre période d'essai de 14 jours s'est achevée. Pour continuer à faire grandir votre communauté, activez votre accès complet."
                   : "Votre abonnement n'est plus actif. Pour continuer à gérer votre studio et accéder à vos données, veuillez régulariser votre situation."}
@@ -96,13 +96,13 @@ export function TrialBlockedWrapper({
             </div>
 
             <div className="grid gap-4 py-4">
-              <div className="flex items-center gap-4 text-left p-4 rounded-2xl bg-zinc-50 border border-zinc-100">
-                <div className="size-10 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0">
+              <div className="flex items-center gap-4 text-left p-4 rounded-2xl bg-background border border-border/50">
+                <div className="size-10 rounded-xl bg-card shadow-sm flex items-center justify-center shrink-0">
                   <div className="size-2 bg-emerald-500 rounded-full animate-pulse" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-zinc-900">Données préservées</p>
-                  <p className="text-xs text-zinc-500 font-medium">Vos plannings et membres sont en sécurité.</p>
+                  <p className="text-sm font-bold text-foreground">Données préservées</p>
+                  <p className="text-xs text-muted-foreground font-medium">Vos plannings et membres sont en sécurité.</p>
                 </div>
               </div>
             </div>
@@ -118,10 +118,10 @@ export function TrialBlockedWrapper({
               </Button>
               
               <div className="flex flex-col items-center gap-1">
-                <p className="text-xs text-zinc-400 font-medium italic">
+                <p className="text-xs text-muted-foreground font-medium italic">
                   Besoin d'aide ou d'un délai ?
                 </p>
-                <Link href="/contact" className="text-xs font-bold text-zinc-900 hover:underline">
+                <Link href="/contact" className="text-xs font-bold text-foreground hover:underline">
                   Contactez l'équipe Fitloww
                 </Link>
               </div>

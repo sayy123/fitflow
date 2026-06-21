@@ -46,10 +46,10 @@ export default function StudiosClient({
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">
             Mes Salles
           </h1>
-          <p className="text-zinc-500 font-medium text-sm mt-1">
+          <p className="text-muted-foreground font-medium text-sm mt-1">
             Gérez vos différents studios depuis une seule interface.
           </p>
         </div>
@@ -97,7 +97,7 @@ export default function StudiosClient({
                   name="name"
                   placeholder="Ex: Fitloww Paris 15"
                   required
-                  className="bg-white"
+                  className="bg-card"
                 />
               </div>
               <Button type="submit" disabled={loading} className="w-32">
@@ -118,7 +118,7 @@ export default function StudiosClient({
             className={`relative overflow-hidden transition-all ${
               studio.id === activeStudioId
                 ? "border-zinc-900 shadow-md ring-1 ring-zinc-900"
-                : "border-zinc-200 hover:border-zinc-300"
+                : "border-border hover:border-zinc-300"
             }`}
           >
             {studio.id === activeStudioId && (
@@ -127,20 +127,20 @@ export default function StudiosClient({
               </div>
             )}
             <CardHeader className="pb-4">
-              <div className="size-12 rounded-xl bg-zinc-100 border border-zinc-200 flex items-center justify-center mb-4">
-                <Building2 className="size-6 text-zinc-500" />
+              <div className="size-12 rounded-xl bg-muted border border-border flex items-center justify-center mb-4">
+                <Building2 className="size-6 text-muted-foreground" />
               </div>
-              <CardTitle className="text-lg font-bold text-zinc-900 line-clamp-1">
+              <CardTitle className="text-lg font-bold text-foreground line-clamp-1">
                 {studio.name}
               </CardTitle>
-              <p className="text-sm text-zinc-500 font-medium">
+              <p className="text-sm text-muted-foreground font-medium">
                 {studio.address || "Adresse non renseignée"}
               </p>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-2 mb-6">
                 <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
-                  studio.plan === 'premium' ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-600'
+                  studio.plan === 'premium' ? 'bg-zinc-900 text-white' : 'bg-muted text-foreground/80'
                 }`}>
                   {studio.plan}
                 </span>

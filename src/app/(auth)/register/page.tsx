@@ -35,15 +35,15 @@ function RegisterContent() {
   const defaultName = searchParams.get("name") || "";
 
   return (
-    <Card className="w-full max-w-[400px] border border-zinc-200/60 bg-white rounded-3xl shadow-xl shadow-zinc-900/5 overflow-hidden">
+    <Card className="w-full max-w-[400px] border border-border/60 bg-card rounded-3xl shadow-xl shadow-zinc-900/5 overflow-hidden">
       <CardHeader className="pt-10 pb-6 px-10 text-center">
-        <div className="size-12 rounded-2xl bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-900 mx-auto mb-4">
+        <div className="size-12 rounded-2xl bg-background border border-border/50 flex items-center justify-center text-foreground mx-auto mb-4">
           <UserPlus className="size-5" />
         </div>
-        <CardTitle className="text-2xl font-bold tracking-tight text-zinc-900">
+        <CardTitle className="text-2xl font-bold tracking-tight text-foreground">
           Rejoignez Fitloww
         </CardTitle>
-        <CardDescription className="text-zinc-500 font-medium mt-1">
+        <CardDescription className="text-muted-foreground font-medium mt-1">
           {role === "manager"
             ? "Lancez votre studio de fitness."
             : "Accédez aux plannings de vos coachs."}
@@ -55,16 +55,16 @@ function RegisterContent() {
           className="mb-6"
           onValueChange={(v) => setRole(v as "member" | "manager")}
         >
-          <TabsList className="grid w-full grid-cols-2 p-1 bg-zinc-50/80 rounded-xl h-10">
+          <TabsList className="grid w-full grid-cols-2 p-1 bg-background/80 rounded-xl h-10">
             <TabsTrigger
               value="manager"
-              className="rounded-lg font-semibold text-xs data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-zinc-900 text-zinc-500"
+              className="rounded-lg font-semibold text-xs data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-foreground text-muted-foreground"
             >
               Gérant
             </TabsTrigger>
             <TabsTrigger
               value="member"
-              className="rounded-lg font-semibold text-xs data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-zinc-900 text-zinc-500"
+              className="rounded-lg font-semibold text-xs data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-foreground text-muted-foreground"
             >
               Membre
             </TabsTrigger>
@@ -88,7 +88,7 @@ function RegisterContent() {
               required
               defaultValue={defaultName}
               placeholder="ex: Jean Dupont"
-              className="h-11 rounded-xl border-zinc-200 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all bg-zinc-50/50 hover:bg-zinc-50"
+              className="h-11 rounded-xl border-border focus:ring-zinc-900/5 focus:border-zinc-900 transition-all bg-background/50 hover:bg-background"
             />
           </div>
 
@@ -105,7 +105,7 @@ function RegisterContent() {
                 name="studioName"
                 required={role === "manager"}
                 placeholder="ex: Fit Studio"
-                className="h-11 rounded-xl border-zinc-200 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all bg-zinc-50/50 hover:bg-zinc-50"
+                className="h-11 rounded-xl border-border focus:ring-zinc-900/5 focus:border-zinc-900 transition-all bg-background/50 hover:bg-background"
               />
             </div>
           )}
@@ -124,7 +124,7 @@ function RegisterContent() {
               required
               defaultValue={defaultEmail}
               placeholder="ex: jean@email.com"
-              className="h-11 rounded-xl border-zinc-200 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all bg-zinc-50/50 hover:bg-zinc-50"
+              className="h-11 rounded-xl border-border focus:ring-zinc-900/5 focus:border-zinc-900 transition-all bg-background/50 hover:bg-background"
             />
           </div>
 
@@ -142,7 +142,7 @@ function RegisterContent() {
               type="password"
               required
               placeholder="••••••••"
-              className="h-11 rounded-xl border-zinc-200 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all bg-zinc-50/50 hover:bg-zinc-50"
+              className="h-11 rounded-xl border-border focus:ring-zinc-900/5 focus:border-zinc-900 transition-all bg-background/50 hover:bg-background"
             />
           </div>
 
@@ -156,10 +156,10 @@ function RegisterContent() {
             <Checkbox id="terms" name="terms" required className="mt-1" />
             <label
               htmlFor="terms"
-              className="text-xs font-medium leading-relaxed text-zinc-600"
+              className="text-xs font-medium leading-relaxed text-foreground/80"
             >
               J'accepte les{" "}
-              <Link href="/legal" className="text-zinc-900 underline hover:text-zinc-700">
+              <Link href="/legal" className="text-foreground underline hover:text-zinc-700">
                 Mentions Légales
               </Link>{" "}
               et la politique de confidentialité.
@@ -181,16 +181,16 @@ function RegisterContent() {
 
         <div className="relative my-8">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-zinc-100" />
+            <span className="w-full border-t border-border/50" />
           </div>
-          <div className="relative flex justify-center text-xs font-medium text-zinc-400">
-            <span className="bg-white px-4">Ou s'inscrire avec</span>
+          <div className="relative flex justify-center text-xs font-medium text-muted-foreground">
+            <span className="bg-card px-4">Ou s'inscrire avec</span>
           </div>
         </div>
 
         <Button
           variant="outline"
-          className="w-full h-11 rounded-xl font-semibold text-sm border-zinc-200 text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition-colors flex items-center justify-center gap-3"
+          className="w-full h-11 rounded-xl font-semibold text-sm border-border text-zinc-700 hover:bg-background hover:text-foreground transition-colors flex items-center justify-center gap-3"
           onClick={() => signInWithGoogleAction()}
         >
           <svg className="size-5" viewBox="0 0 24 24">
@@ -214,11 +214,11 @@ function RegisterContent() {
           Google
         </Button>
 
-        <div className="mt-8 text-center text-sm text-zinc-500">
+        <div className="mt-8 text-center text-sm text-muted-foreground">
           Déjà inscrit ?{" "}
           <Link
             href="/login"
-            className="text-zinc-900 font-semibold hover:underline ml-1"
+            className="text-foreground font-semibold hover:underline ml-1"
           >
             Se connecter
           </Link>
@@ -232,7 +232,7 @@ export default function RegisterPage() {
   return (
     <Suspense
       fallback={
-        <div className="w-full max-w-md h-[600px] animate-pulse bg-white/50 rounded-[2rem] card-shadow" />
+        <div className="w-full max-w-md h-[600px] animate-pulse bg-card/50 rounded-[2rem] card-shadow" />
       }
     >
       <RegisterContent />

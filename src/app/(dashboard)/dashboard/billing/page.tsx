@@ -64,9 +64,9 @@ export default async function BillingPage() {
   const isBlocked = isTrialExpired || isSubscriptionInactive;
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20 text-zinc-900">
+    <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20 text-foreground">
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 text-zinc-800 text-[10px] font-bold uppercase tracking-widest mb-4 ring-1 ring-zinc-200">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted text-zinc-800 text-[10px] font-bold uppercase tracking-widest mb-4 ring-1 ring-zinc-200">
           Gestion de l'abonnement
         </div>
         <h1 className="text-4xl font-bold tracking-tight">
@@ -76,7 +76,7 @@ export default async function BillingPage() {
               ? "Votre abonnement a expiré"
               : "Propulsez votre studio"}
         </h1>
-        <p className="text-zinc-500 text-lg max-w-2xl mx-auto">
+        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
           {isTrialExpired
             ? "Votre période d'essai de 14 jours est terminée. Choisissez un forfait pour continuer."
             : isSubscriptionInactive
@@ -87,10 +87,10 @@ export default async function BillingPage() {
 
       <div className="grid md:grid-cols-2 gap-8 pt-8">
         {/* Starter Plan */}
-        <Card className="border border-zinc-200 bg-white rounded-3xl shadow-sm flex flex-col hover:border-zinc-300 transition-colors">
+        <Card className="border border-border bg-card rounded-3xl shadow-sm flex flex-col hover:border-zinc-300 transition-colors">
           <CardHeader className="pb-8">
             <div className="flex justify-between items-start">
-              <CardTitle className="text-2xl font-bold text-zinc-900 tracking-tight">
+              <CardTitle className="text-2xl font-bold text-foreground tracking-tight">
                 Starter
               </CardTitle>
               {plan === "starter" &&
@@ -102,7 +102,7 @@ export default async function BillingPage() {
             </div>
             <div className="mt-4 flex items-baseline gap-1">
               <span className="text-4xl font-bold">19€</span>
-              <span className="text-zinc-500 font-medium">/ mois</span>
+              <span className="text-muted-foreground font-medium">/ mois</span>
             </div>
           </CardHeader>
           <CardContent className="space-y-8 flex-1">
@@ -116,7 +116,7 @@ export default async function BillingPage() {
               ].map((f, i) => (
                 <div key={i} className="flex items-center gap-3">
                   <CheckCircle2 className="size-5 text-emerald-500" />
-                  <span className="text-zinc-600 font-medium text-sm">{f}</span>
+                  <span className="text-foreground/80 font-medium text-sm">{f}</span>
                 </div>
               ))}
             </div>
@@ -135,7 +135,7 @@ export default async function BillingPage() {
             </BillingButton>
 
             {plan === "premium" && subscription_status === "active" && (
-              <p className="text-[10px] text-zinc-400 text-center font-medium">
+              <p className="text-[10px] text-muted-foreground text-center font-medium">
                 Pour passer au plan Starter, annulez d'abord votre abonnement actuel depuis le bouton "Gérer mon abonnement" Premium.
               </p>
             )}
@@ -145,7 +145,7 @@ export default async function BillingPage() {
         {/* Premium Plan */}
         <Card className="border border-zinc-900 bg-zinc-900 rounded-3xl shadow-xl flex flex-col relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-6 z-20">
-            <div className="bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-white text-[10px] font-bold uppercase tracking-widest border border-white/10">
+            <div className="bg-card/10 backdrop-blur-md px-3 py-1 rounded-full text-white text-[10px] font-bold uppercase tracking-widest border border-white/10">
               Populaire
             </div>
           </div>
@@ -156,14 +156,14 @@ export default async function BillingPage() {
               </CardTitle>
               {plan === "premium" &&
                 subscription_status === "active" && (
-                  <span className="bg-white/10 text-white text-[10px] font-bold px-2 py-1 rounded-md border border-white/10">
+                  <span className="bg-card/10 text-white text-[10px] font-bold px-2 py-1 rounded-md border border-white/10">
                     Actuel
                   </span>
                 )}
             </div>
             <div className="mt-4 flex items-baseline gap-1">
               <span className="text-4xl font-bold">39€</span>
-              <span className="text-zinc-500 font-medium text-zinc-400">
+              <span className="text-muted-foreground font-medium text-muted-foreground">
                 / mois
               </span>
             </div>
@@ -186,7 +186,7 @@ export default async function BillingPage() {
             
             <BillingButton
               plan="premium"
-              className="w-full h-12 rounded-xl font-bold bg-white text-zinc-900 hover:bg-zinc-100"
+              className="w-full h-12 rounded-xl font-bold bg-card text-foreground hover:bg-muted"
               isCurrentPlan={plan === "premium" && subscription_status === "active"}
             >
               {plan === "premium" && subscription_status === "active"
@@ -194,12 +194,12 @@ export default async function BillingPage() {
                 : "Activer Premium"}
             </BillingButton>
           </CardContent>
-          <div className="absolute top-0 right-0 -mr-16 -mt-16 size-64 bg-white/5 rounded-full blur-3xl pointer-events-none group-hover:bg-white/10 transition-colors duration-700" />
+          <div className="absolute top-0 right-0 -mr-16 -mt-16 size-64 bg-card/5 rounded-full blur-3xl pointer-events-none group-hover:bg-card/10 transition-colors duration-700" />
         </Card>
       </div>
 
-      <div className="bg-zinc-100/50 rounded-2xl p-6 text-center border border-zinc-200/50">
-        <p className="text-sm font-medium text-zinc-500 italic">
+      <div className="bg-muted/50 rounded-2xl p-6 text-center border border-border/50">
+        <p className="text-sm font-medium text-muted-foreground italic">
           Sécurisé par Stripe. Vous serez redirigé vers leur plateforme de paiement.
         </p>
       </div>
@@ -208,7 +208,7 @@ export default async function BillingPage() {
         <div className="text-center pt-4">
           <Link
             href="/dashboard"
-            className="text-zinc-400 hover:text-zinc-900 text-sm font-medium transition-colors flex items-center justify-center gap-1 group"
+            className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors flex items-center justify-center gap-1 group"
           >
             Continuer l'essai gratuit pour le moment{" "}
             <ArrowRight className="size-3 group-hover:translate-x-0.5 transition-transform" />

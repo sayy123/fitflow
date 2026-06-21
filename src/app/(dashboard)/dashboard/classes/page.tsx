@@ -168,10 +168,10 @@ export default async function ClassesPage(props: {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
+        <h2 className="text-2xl font-bold text-card-foreground tracking-tight">
           Mes Studios
         </h2>
-        <p className="text-sm text-gray-500 font-medium mt-1">
+        <p className="text-sm text-muted-foreground font-medium mt-1">
           Sélectionnez un studio pour voir son planning et réserver.
         </p>
       </div>
@@ -181,7 +181,7 @@ export default async function ClassesPage(props: {
           return (
             <Card
               key={org.id}
-              className="border border-gray-200 bg-white rounded-2xl shadow-sm hover:shadow-md transition-all group"
+              className="border border-border bg-card rounded-2xl shadow-sm hover:shadow-md transition-all group"
             >
               <CardHeader className="flex flex-row items-center gap-4 pb-4">
                 <div className="size-12 rounded-full bg-primary/5 border border-primary/10 overflow-hidden flex items-center justify-center text-xl font-bold text-primary shadow-sm shrink-0">
@@ -196,10 +196,10 @@ export default async function ClassesPage(props: {
                   )}
                 </div>
                 <div className="min-w-0">
-                  <CardTitle className="text-lg font-semibold text-gray-900 leading-tight truncate">
+                  <CardTitle className="text-lg font-semibold text-card-foreground leading-tight truncate">
                     {org.name}
                   </CardTitle>
-                  <p className="text-xs text-gray-500 font-medium truncate mt-0.5">
+                  <p className="text-xs text-muted-foreground font-medium truncate mt-0.5">
                     {org.address || ""}
                   </p>
                 </div>

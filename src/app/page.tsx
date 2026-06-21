@@ -81,13 +81,13 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] text-zinc-900 selection:bg-zinc-200 font-sans overflow-hidden">
+    <div className="min-h-screen bg-[#FAFAFA] text-foreground selection:bg-zinc-200 font-sans overflow-hidden">
       {/* Navigation */}
       <nav
         className={cn(
           "fixed top-0 inset-x-0 z-50 transition-all duration-300 border-b",
           scrolled
-            ? "bg-white/80 backdrop-blur-xl border-zinc-200/50 shadow-sm"
+            ? "bg-card/80 backdrop-blur-xl border-border/50 shadow-sm"
             : "bg-transparent border-transparent",
         )}
       >
@@ -103,19 +103,19 @@ export default function LandingPage() {
           <div className="hidden md:flex items-center gap-6">
             <Link
               href="/pricing"
-              className="text-sm font-semibold text-zinc-500 hover:text-zinc-900 transition-colors"
+              className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
             >
               Tarifs
             </Link>
             <Link
               href="/contact"
-              className="text-sm font-semibold text-zinc-500 hover:text-zinc-900 transition-colors"
+              className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
             >
               Contact
             </Link>
             <Link
               href="/login"
-              className="text-sm font-semibold text-zinc-500 hover:text-zinc-900 transition-colors"
+              className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
             >
               Connexion
             </Link>
@@ -128,7 +128,7 @@ export default function LandingPage() {
           
           {/* Mobile Nav Button */}
           <div className="md:hidden flex items-center gap-3">
-             <Link href="/login" className="text-xs font-bold text-zinc-900 px-3 py-2">
+             <Link href="/login" className="text-xs font-bold text-foreground px-3 py-2">
                 Connexion
              </Link>
              <Link href="/register">
@@ -147,12 +147,12 @@ export default function LandingPage() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-b from-zinc-200/50 via-zinc-100/20 to-transparent blur-3xl -z-10 rounded-full" />
 
           <div className="text-center max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white text-zinc-800 text-xs font-semibold mb-8 ring-1 ring-zinc-200/80 shadow-sm hover:shadow-md transition-shadow cursor-default hover:-translate-y-0.5 duration-300">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-card text-zinc-800 text-xs font-semibold mb-8 ring-1 ring-zinc-200/80 shadow-sm hover:shadow-md transition-shadow cursor-default hover:-translate-y-0.5 duration-300">
               <span className="flex size-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse" />
               La nouvelle norme pour les studios
             </div>
 
-            <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-zinc-900 mb-8 leading-[1.05]">
+            <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-foreground mb-8 leading-[1.05]">
               Gérez votre studio.
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-500 to-zinc-400">
@@ -160,7 +160,7 @@ export default function LandingPage() {
               </span>
             </h1>
 
-            <p className="text-lg md:text-xl text-zinc-500 mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
+            <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
               Fitloww est l'écosystème élégant conçu pour les studios de fitness
               boutique. Centralisez vos plannings, vos coachs et vos membres
               dans une interface d'une clarté absolue.
@@ -176,7 +176,7 @@ export default function LandingPage() {
               <Link href="/register?role=member">
                 <Button
                   variant="outline"
-                  className="w-full sm:w-auto rounded-full px-8 h-14 text-base font-semibold border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition-colors shadow-sm group"
+                  className="w-full sm:w-auto rounded-full px-8 h-14 text-base font-semibold border-border bg-card text-zinc-700 hover:bg-background hover:text-foreground transition-colors shadow-sm group"
                 >
                   <Play className="size-4 mr-2 fill-zinc-400 group-hover:fill-zinc-600 transition-colors" />{" "}
                   Je suis un membre
@@ -188,8 +188,8 @@ export default function LandingPage() {
           {/* Hero Image Showcase with Parallax-like floating */}
           <div className="mt-28 relative mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300 fill-mode-both">
             <div className="absolute -inset-4 bg-gradient-to-tr from-zinc-200/50 to-white/50 opacity-60 blur-2xl -z-10 rounded-[3rem]" />
-            <div className="rounded-[2.5rem] p-2 bg-white/60 backdrop-blur-2xl border border-zinc-200/60 shadow-2xl ring-1 ring-zinc-900/5 hover:shadow-3xl transition-shadow duration-700 group">
-              <div className="rounded-[2rem] overflow-hidden relative aspect-[16/9] md:aspect-[21/9] bg-zinc-100">
+            <div className="rounded-[2.5rem] p-2 bg-card/60 backdrop-blur-2xl border border-border/60 shadow-2xl ring-1 ring-zinc-900/5 hover:shadow-3xl transition-shadow duration-700 group">
+              <div className="rounded-[2rem] overflow-hidden relative aspect-[16/9] md:aspect-[21/9] bg-muted">
                 <img
                   src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?q=80&w=2500&auto=format&fit=crop"
                   alt="Studio de fitness moderne"
@@ -202,13 +202,13 @@ export default function LandingPage() {
         </section>
 
         {/* How it works (Replaces Marquee) */}
-        <section className="py-24 border-y border-zinc-200/50 bg-white/50">
+        <section className="py-24 border-y border-border/50 bg-card/50">
           <div className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-16 max-w-3xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-zinc-900 mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-4">
                 De l'inscription à la première séance en 3 étapes.
               </h2>
-              <p className="text-zinc-500 text-lg font-medium">
+              <p className="text-muted-foreground text-lg font-medium">
                 Un processus pensé pour être immédiat. Aucun paramétrage
                 technique complexe n'est requis.
               </p>
@@ -239,13 +239,13 @@ export default function LandingPage() {
                   key={i}
                   className="relative flex flex-col items-center text-center group"
                 >
-                  <div className="size-24 rounded-full bg-white border border-zinc-200 shadow-sm flex items-center justify-center text-2xl font-bold text-zinc-900 mb-6 relative z-10 group-hover:scale-110 group-hover:border-zinc-300 transition-all duration-300">
+                  <div className="size-24 rounded-full bg-card border border-border shadow-sm flex items-center justify-center text-2xl font-bold text-foreground mb-6 relative z-10 group-hover:scale-110 group-hover:border-zinc-300 transition-all duration-300">
                     {item.step}
                   </div>
-                  <h3 className="text-xl font-bold text-zinc-900 mb-3">
+                  <h3 className="text-xl font-bold text-foreground mb-3">
                     {item.title}
                   </h3>
-                  <p className="text-zinc-500 font-medium leading-relaxed max-w-sm">
+                  <p className="text-muted-foreground font-medium leading-relaxed max-w-sm">
                     {item.desc}
                   </p>
                 </div>
@@ -258,18 +258,18 @@ export default function LandingPage() {
         <section id="features" className="py-32 px-6">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-20 max-w-3xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900 mb-6 leading-tight">
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-6 leading-tight">
                 Une puissance invisible.
                 <br />
                 Une élégance visible.
               </h2>
-              <p className="text-zinc-500 text-xl font-medium leading-relaxed">
+              <p className="text-muted-foreground text-xl font-medium leading-relaxed">
                 Découvrez comment Fitloww simplifie chaque aspect de la gestion
                 de votre studio, de la réservation à l'encaissement.
               </p>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-12 items-center bg-white rounded-[3rem] p-4 md:p-8 border border-zinc-200/60 shadow-xl shadow-zinc-900/5">
+            <div className="flex flex-col lg:flex-row gap-12 items-center bg-card rounded-[3rem] p-4 md:p-8 border border-border/60 shadow-xl shadow-zinc-900/5">
               {/* Left: Interactive List */}
               <div className="w-full lg:w-1/3 flex flex-col gap-2">
                 {interactiveFeatures.map((feat, index) => {
@@ -282,8 +282,8 @@ export default function LandingPage() {
                       className={cn(
                         "text-left p-6 rounded-2xl transition-all duration-300 relative overflow-hidden group",
                         isActive
-                          ? "bg-zinc-50 border-zinc-200 shadow-sm"
-                          : "hover:bg-zinc-50/50 border-transparent",
+                          ? "bg-background border-border shadow-sm"
+                          : "hover:bg-background/50 border-transparent",
                       )}
                     >
                       {isActive && (
@@ -293,8 +293,8 @@ export default function LandingPage() {
                         className={cn(
                           "size-12 rounded-xl flex items-center justify-center mb-4 transition-colors duration-300",
                           isActive
-                            ? "bg-white shadow-sm text-zinc-900"
-                            : "bg-zinc-100 text-zinc-500 group-hover:bg-white group-hover:text-zinc-900",
+                            ? "bg-card shadow-sm text-foreground"
+                            : "bg-muted text-muted-foreground group-hover:bg-card group-hover:text-foreground",
                         )}
                       >
                         <Icon className="size-5" />
@@ -302,7 +302,7 @@ export default function LandingPage() {
                       <h3
                         className={cn(
                           "text-xl font-bold mb-2 transition-colors",
-                          isActive ? "text-zinc-900" : "text-zinc-600",
+                          isActive ? "text-foreground" : "text-foreground/80",
                         )}
                       >
                         {feat.title}
@@ -310,7 +310,7 @@ export default function LandingPage() {
                       <p
                         className={cn(
                           "text-sm leading-relaxed transition-colors font-medium",
-                          isActive ? "text-zinc-600" : "text-zinc-400",
+                          isActive ? "text-foreground/80" : "text-muted-foreground",
                         )}
                       >
                         {feat.desc}
@@ -322,7 +322,7 @@ export default function LandingPage() {
 
               {/* Right: Dynamic Image */}
               <div className="w-full lg:w-2/3">
-                <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden bg-zinc-100 border border-zinc-200 shadow-inner">
+                <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden bg-muted border border-border shadow-inner">
                   {interactiveFeatures.map((feat, index) => (
                     <div
                       key={feat.id}
@@ -349,15 +349,15 @@ export default function LandingPage() {
 
         {/* Real Product Value (Replaces Testimonials) */}
         <section className="py-24 bg-zinc-900 text-white px-6 relative overflow-hidden">
-          <div className="absolute top-0 right-0 -mr-40 -mt-40 size-[500px] bg-white/5 rounded-full blur-[100px] pointer-events-none" />
-          <div className="absolute bottom-0 left-0 -ml-40 -mb-40 size-[500px] bg-white/5 rounded-full blur-[100px] pointer-events-none" />
+          <div className="absolute top-0 right-0 -mr-40 -mt-40 size-[500px] bg-card/5 rounded-full blur-[100px] pointer-events-none" />
+          <div className="absolute bottom-0 left-0 -ml-40 -mb-40 size-[500px] bg-card/5 rounded-full blur-[100px] pointer-events-none" />
 
           <div className="max-w-7xl mx-auto relative z-10">
             <div className="text-center mb-20 max-w-3xl mx-auto">
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
                 L'indépendance technologique.
               </h2>
-              <p className="text-zinc-400 text-xl font-medium">
+              <p className="text-muted-foreground text-xl font-medium">
                 Nous ne sommes pas une marketplace. Fitloww est votre outil,
                 conçu pour mettre en valeur votre marque, pas la nôtre.
               </p>
@@ -388,15 +388,15 @@ export default function LandingPage() {
               ].map((item, i) => (
                 <div
                   key={i}
-                  className="bg-white/5 hover:bg-white/10 border border-white/10 p-8 rounded-[2rem] transition-colors duration-300"
+                  className="bg-card/5 hover:bg-card/10 border border-white/10 p-8 rounded-[2rem] transition-colors duration-300"
                 >
-                  <div className="size-12 rounded-xl bg-white/10 flex items-center justify-center mb-6">
+                  <div className="size-12 rounded-xl bg-card/10 flex items-center justify-center mb-6">
                     <item.icon className="size-6 text-white" />
                   </div>
                   <h3 className="text-xl font-bold text-white mb-3">
                     {item.title}
                   </h3>
-                  <p className="text-zinc-400 font-medium leading-relaxed">
+                  <p className="text-muted-foreground font-medium leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
@@ -408,10 +408,10 @@ export default function LandingPage() {
         {/* FAQ Section */}
         <section className="py-32 px-6 max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold tracking-tight text-zinc-900 mb-4">
+            <h2 className="text-4xl font-bold tracking-tight text-foreground mb-4">
               Questions fréquentes
             </h2>
-            <p className="text-zinc-500 font-medium text-lg">
+            <p className="text-muted-foreground font-medium text-lg">
               Tout ce que vous devez savoir avant de vous lancer.
             </p>
           </div>
@@ -423,26 +423,26 @@ export default function LandingPage() {
                 <div
                   key={index}
                   className={cn(
-                    "border border-zinc-200/60 rounded-2xl overflow-hidden transition-colors duration-300",
+                    "border border-border/60 rounded-2xl overflow-hidden transition-colors duration-300",
                     isOpen
-                      ? "bg-white shadow-md shadow-zinc-900/5"
-                      : "bg-transparent hover:bg-white/50",
+                      ? "bg-card shadow-md shadow-zinc-900/5"
+                      : "bg-transparent hover:bg-card/50",
                   )}
                 >
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : index)}
                     className="w-full text-left p-6 flex justify-between items-center focus:outline-none"
                   >
-                    <span className="font-bold text-lg text-zinc-900">
+                    <span className="font-bold text-lg text-foreground">
                       {faq.q}
                     </span>
                     <div
                       className={cn(
-                        "size-8 rounded-full bg-zinc-100 flex items-center justify-center shrink-0 transition-transform duration-300",
+                        "size-8 rounded-full bg-muted flex items-center justify-center shrink-0 transition-transform duration-300",
                         isOpen ? "rotate-180" : "",
                       )}
                     >
-                      <ChevronDown className="size-4 text-zinc-600" />
+                      <ChevronDown className="size-4 text-foreground/80" />
                     </div>
                   </button>
                   <div
@@ -454,7 +454,7 @@ export default function LandingPage() {
                     )}
                   >
                     <div className="overflow-hidden">
-                      <p className="p-6 pt-0 text-zinc-500 font-medium leading-relaxed">
+                      <p className="p-6 pt-0 text-muted-foreground font-medium leading-relaxed">
                         {faq.a}
                       </p>
                     </div>
@@ -468,19 +468,19 @@ export default function LandingPage() {
         {/* Call to Action */}
         <section className="pb-32 px-6 relative overflow-hidden">
           <div className="max-w-5xl mx-auto bg-gradient-to-br from-zinc-900 to-black rounded-[3rem] p-12 md:p-20 text-center text-white overflow-hidden relative shadow-2xl shadow-zinc-900/20">
-            <div className="absolute top-0 right-0 -mr-20 -mt-20 size-[400px] bg-white/5 rounded-full blur-[80px]" />
-            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 size-[400px] bg-white/5 rounded-full blur-[80px]" />
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 size-[400px] bg-card/5 rounded-full blur-[80px]" />
+            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 size-[400px] bg-card/5 rounded-full blur-[80px]" />
 
             <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 relative z-10 leading-tight">
               Prêt à accélérer ?
             </h2>
-            <p className="text-zinc-400 text-xl mb-10 max-w-2xl mx-auto relative z-10 font-medium">
+            <p className="text-muted-foreground text-xl mb-10 max-w-2xl mx-auto relative z-10 font-medium">
               Créez votre compte gratuitement. Configuration en 5 minutes.
               Aucune carte de crédit requise.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
               <Link href="/register?role=manager">
-                <Button className="w-full sm:w-auto bg-white text-zinc-900 rounded-full px-10 h-14 text-lg font-bold hover:bg-zinc-100 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl">
+                <Button className="w-full sm:w-auto bg-card text-foreground rounded-full px-10 h-14 text-lg font-bold hover:bg-muted hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl">
                   Créer mon studio maintenant
                 </Button>
               </Link>
@@ -490,34 +490,34 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-200/50 py-16 px-6 bg-white">
+      <footer className="border-t border-border/50 py-16 px-6 bg-card">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex flex-col items-center md:items-start gap-3">
-            <div className="flex items-center gap-2.5 font-bold text-xl text-zinc-900 tracking-tight">
+            <div className="flex items-center gap-2.5 font-bold text-xl text-foreground tracking-tight">
               <div className="size-6 bg-zinc-900 rounded-md flex items-center justify-center">
                 <Activity className="size-3 text-white" />
               </div>
               Fitloww
             </div>
-            <p className="text-zinc-500 text-sm font-medium">
+            <p className="text-muted-foreground text-sm font-medium">
               L'outil de gestion ultime pour les studios de fitness.
             </p>
           </div>
-          <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 text-sm font-semibold text-zinc-500">
-            <Link href="#features" className="hover:text-zinc-900 transition-colors">
+          <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 text-sm font-semibold text-muted-foreground">
+            <Link href="#features" className="hover:text-foreground transition-colors">
               Fonctionnalités
             </Link>
-            <Link href="/pricing" className="hover:text-zinc-900 transition-colors">
+            <Link href="/pricing" className="hover:text-foreground transition-colors">
               Tarifs
             </Link>
-            <Link href="/contact" className="hover:text-zinc-900 transition-colors">
+            <Link href="/contact" className="hover:text-foreground transition-colors">
               Contact
             </Link>
-            <Link href="/legal" className="hover:text-zinc-900 transition-colors">
+            <Link href="/legal" className="hover:text-foreground transition-colors">
               Légal
             </Link>
           </div>
-          <p className="text-sm font-medium text-zinc-400">
+          <p className="text-sm font-medium text-muted-foreground">
             © 2026 Fitloww. Tous droits réservés.
           </p>
         </div>
