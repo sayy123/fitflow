@@ -291,7 +291,7 @@ export default async function DashboardPage(props: {
                         </div>
                         <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-100">Coach</span>
                       </div>
-                      <Link href={`/dashboard/classes/${cls.id}`} className="mt-6 w-full h-9 flex items-center justify-center rounded-lg font-medium text-sm border border-border text-foreground/90 hover:bg-background transition-colors">Gérer ma séance</Link>
+                      <Link href={`/dashboard/classes/${cls.id}`} className="mt-6 w-full h-9 flex items-center justify-center rounded-lg font-bold text-[10px] uppercase tracking-widest border border-border text-foreground/90 hover:bg-muted hover:text-foreground transition-colors">Gérer ma séance</Link>
                     </CardContent>
                   </Card>
                 ))}
@@ -356,7 +356,7 @@ export default async function DashboardPage(props: {
                           </div>
                         </div>
                       </div>
-                      <Link href={`/dashboard/classes/${cls.id}`} className="w-full sm:w-auto h-9 px-4 flex items-center justify-center rounded-lg font-medium text-sm border border-border text-gray-700 hover:bg-background transition-colors">Gérer le cours</Link>
+                      <Link href={`/dashboard/classes/${cls.id}`} className="w-full sm:w-auto h-9 px-4 flex items-center justify-center rounded-lg font-bold text-[10px] uppercase tracking-widest border border-border text-foreground/90 hover:bg-muted hover:text-foreground transition-colors">Gérer le cours</Link>
                     </CardContent>
                   </Card>
                 ))
