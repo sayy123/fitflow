@@ -15,6 +15,14 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Fitloww | Gestion de studio de fitness et réservations",
   description: "La solution moderne pour gérer votre studio de fitness. Planning, réservations, membres et paiements centralisés.",
+  icons: {
+    icon: [
+      { url: '/icon.png', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-icon.png', type: 'image/png' },
+    ],
+  },
 };
 
 import { Toaster } from "@/components/ui/sonner"
