@@ -392,13 +392,14 @@ export default function ClassDetailClient({
                           </Button>
                         )}
                         <Button 
-                          variant="ghost" 
+                          variant="outline" 
                           size="sm" 
-                          className="size-7 p-0 text-muted-foreground hover:text-foreground hover:bg-muted"
+                          className="h-8 px-3 rounded-lg text-xs font-bold text-red-500 border-border/50 hover:bg-red-500/10 hover:border-red-500/30 transition-colors"
                           onClick={() => handleDeleteBooking(booking.id)}
                           disabled={isDeleting === booking.id}
                         >
-                          <Trash2 className="size-3.5" />
+                          <Trash2 className="size-3.5 mr-1.5" />
+                          Retirer
                         </Button>
                       </div>
                     )}
