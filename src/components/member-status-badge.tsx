@@ -41,11 +41,11 @@ export function MemberStatusBadge({
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center gap-1.5 md:gap-2 justify-end">
       <span
         className={cn(
-          "px-2.5 py-1 rounded-md text-xs font-semibold border",
-          isActive ? "bg-green-50 text-green-700 border-green-200" : "bg-background text-foreground/80 border-border"
+          "px-2 py-0.5 md:px-2.5 md:py-1 rounded-md text-[10px] md:text-xs font-semibold border whitespace-nowrap",
+          isActive ? "bg-muted text-foreground border-border" : "bg-background text-muted-foreground border-border/50"
         )}
       >
         {isActive ? "Actif" : "Inactif"}
@@ -55,15 +55,16 @@ export function MemberStatusBadge({
         onClick={handleToggle}
         disabled={isPending}
         className={cn(
-          "px-2.5 py-1 rounded-md text-xs font-semibold border flex items-center gap-1.5 transition-all",
+          "px-2 py-0.5 md:px-2.5 md:py-1 rounded-md text-[10px] md:text-xs font-semibold border flex items-center gap-1 transition-all whitespace-nowrap",
           hasSub 
-            ? "bg-amber-100 text-amber-800 border-amber-200 hover:bg-amber-50 cursor-pointer" 
-            : "bg-background text-muted-foreground border-dashed border-border hover:bg-amber-50 hover:text-amber-600 hover:border-amber-200 cursor-pointer"
+            ? "bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 cursor-pointer" 
+            : "bg-background text-muted-foreground border-dashed border-border/50 hover:bg-muted hover:text-foreground cursor-pointer"
         )}
         title={hasSub ? "Retirer l'abonnement" : "Activer l'abonnement"}
       >
-        <Crown className={cn("size-3", hasSub ? "fill-amber-500 text-amber-600" : "")} />
-        {hasSub ? "Abonné" : "Sans abonnement"}
+        <Crown className={cn("size-3", hasSub ? "fill-primary text-primary" : "")} />
+        <span className="hidden sm:inline">{hasSub ? "Abonné" : "Non abonné"}</span>
+        <span className="sm:hidden">{hasSub ? "Abo" : "À la carte"}</span>
       </button>
     </div>
   )
