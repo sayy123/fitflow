@@ -110,8 +110,8 @@ export default function ClassesClient({
     <div className="bg-card p-4 md:p-8 rounded-2xl md:rounded-[2rem] card-shadow border-none overflow-hidden">
       {isStaff && (
         <div className="mb-6 flex justify-end">
+          <Button onClick={() => setIsModalOpen(true)} className="w-full sm:w-auto h-11 sm:h-10 rounded-xl"> Nouveau cours</Button>
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-            <DialogTrigger render={<Button className="w-full sm:w-auto h-11 sm:h-10 rounded-xl"> Nouveau cours</Button>} />
             <DialogContent className="rounded-3xl max-w-md w-[95vw] sm:w-full max-h-[85vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="text-xl font-black uppercase tracking-tight text-foreground">Créer un cours</DialogTitle>
