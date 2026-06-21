@@ -41,7 +41,7 @@ export default function LoginPage() {
   };
 
   return (
-    <Card className="w-full max-w-[400px] border border-border/60 bg-card rounded-3xl shadow-xl shadow-zinc-900/5 overflow-hidden">
+    <Card className="w-full max-w-[400px] border border-border/60 bg-card rounded-3xl shadow-xl shadow-primary/5 overflow-hidden">
       <CardHeader className="pt-10 pb-6 px-10 text-center">
         <div className="size-12 rounded-2xl bg-background border border-border/50 flex items-center justify-center text-foreground mx-auto mb-4">
           <LogIn className="size-5" />
@@ -58,7 +58,7 @@ export default function LoginPage() {
           <div className="space-y-1.5">
             <Label
               htmlFor="email"
-              className="text-xs font-semibold text-zinc-700"
+              className="text-xs font-semibold text-foreground/90"
             >
               Email
             </Label>
@@ -68,14 +68,14 @@ export default function LoginPage() {
               type="email"
               required
               placeholder="ex: jean@email.com"
-              className="h-11 rounded-xl border-border focus:ring-zinc-900/5 focus:border-zinc-900 transition-all bg-background/50 hover:bg-background"
+              className="h-11 rounded-xl border-border focus:ring-primary/5 focus:border-primary transition-all bg-background/50 hover:bg-background"
             />
           </div>
           <div className="space-y-1.5">
             <Label
               htmlFor="password"
               title="Mot de passe"
-              className="text-xs font-semibold text-zinc-700"
+              className="text-xs font-semibold text-foreground/90"
             >
               Mot de passe
             </Label>
@@ -85,7 +85,7 @@ export default function LoginPage() {
               type="password"
               required
               placeholder="••••••••"
-              className="h-11 rounded-xl border-border focus:ring-zinc-900/5 focus:border-zinc-900 transition-all bg-background/50 hover:bg-background"
+              className="h-11 rounded-xl border-border focus:ring-primary/5 focus:border-primary transition-all bg-background/50 hover:bg-background"
             />
           </div>
           {state?.error && (
@@ -114,7 +114,7 @@ export default function LoginPage() {
           )}
           <Button
             type="submit"
-            className="w-full h-11 rounded-xl font-semibold text-sm bg-zinc-900 text-white hover:bg-zinc-800 transition-colors mt-2"
+            className="w-full h-11 rounded-xl font-semibold text-sm bg-primary text-primary-foreground hover:bg-primary/90 transition-colors mt-2"
             disabled={isPending}
           >
             {isPending ? "Connexion en cours..." : "Se connecter"}
@@ -132,7 +132,7 @@ export default function LoginPage() {
 
         <Button
           variant="outline"
-          className="w-full h-11 rounded-xl font-semibold text-sm border-border text-zinc-700 hover:bg-background hover:text-foreground transition-colors flex items-center justify-center gap-3"
+          className="w-full h-11 rounded-xl font-semibold text-sm border-border text-foreground/90 hover:bg-background hover:text-foreground transition-colors flex items-center justify-center gap-3"
           onClick={() => signInWithGoogleAction()}
         >
           <svg className="size-5" viewBox="0 0 24 24">

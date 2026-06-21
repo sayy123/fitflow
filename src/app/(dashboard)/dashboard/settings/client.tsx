@@ -305,7 +305,7 @@ export function SettingsClient({
                     </p>
                   </div>
                   <Link href="/dashboard/billing">
-                    <Button className="h-10 px-5 rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 text-sm font-semibold shrink-0">
+                    <Button className="h-10 px-5 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-semibold shrink-0">
                       Améliorer mon grade
                     </Button>
                   </Link>
@@ -343,7 +343,7 @@ export function SettingsClient({
                         </div>
                       )}
                     </div>
-                    <label className="absolute bottom-0 right-0 size-8 bg-primary text-white rounded-full shadow-md flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors border-2 border-white">
+                    <label className="absolute bottom-0 right-0 size-8 bg-primary text-primary-foreground rounded-full shadow-md flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors border-2 border-white">
                       <Camera className="size-4" />
                       <input
                         type="file"

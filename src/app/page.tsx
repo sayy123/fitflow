@@ -81,7 +81,7 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] text-foreground selection:bg-zinc-200 font-sans overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground selection:bg-primary/20 font-sans overflow-hidden">
       {/* Navigation */}
       <nav
         className={cn(
@@ -93,10 +93,10 @@ export default function LandingPage() {
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="font-bold text-lg tracking-tight flex items-center gap-2.5">
-            <div className="size-7 bg-gradient-to-tr from-zinc-900 to-zinc-800 rounded-lg flex items-center justify-center shadow-sm shadow-zinc-900/20 ring-1 ring-zinc-900/5">
-              <Activity className="size-4 text-white" />
+            <div className="size-7 bg-gradient-to-tr from-zinc-900 to-zinc-800 rounded-lg flex items-center justify-center shadow-sm shadow-black/50 ring-1 ring-border/50">
+              <Activity className="size-4 " />
             </div>
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-zinc-900 to-zinc-600">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground to-muted-foreground">
               Fitloww
             </span>
           </div>
@@ -120,7 +120,7 @@ export default function LandingPage() {
               Connexion
             </Link>
             <Link href="/register">
-              <Button className="bg-zinc-900 text-white rounded-full px-5 h-9 text-sm font-semibold hover:bg-zinc-800 transition-all shadow-md shadow-zinc-900/10 ring-1 ring-inset ring-zinc-900/10 hover:ring-zinc-900/20 hover:scale-105">
+              <Button className="bg-primary text-primary-foreground  rounded-full px-5 h-9 text-sm font-semibold hover:bg-primary/90 text-primary-foreground transition-all shadow-md shadow-black/50 ring-1 ring-inset ring-border hover:ring-border hover:scale-105">
                 Commencer
               </Button>
             </Link>
@@ -132,7 +132,7 @@ export default function LandingPage() {
                 Connexion
              </Link>
              <Link href="/register">
-              <Button className="bg-zinc-900 text-white rounded-full px-4 h-8 text-[10px] font-bold hover:bg-zinc-800 transition-all">
+              <Button className="bg-primary text-primary-foreground  rounded-full px-4 h-8 text-[10px] font-bold hover:bg-primary/90 text-primary-foreground transition-all">
                 S'inscrire
               </Button>
             </Link>
@@ -144,10 +144,10 @@ export default function LandingPage() {
         {/* Hero Section */}
         <section className="relative pt-40 pb-20 px-6 max-w-7xl mx-auto">
           {/* Ambient Background Glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-b from-zinc-200/50 via-zinc-100/20 to-transparent blur-3xl -z-10 rounded-full" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-b from-primary/10 via-primary/5 to-transparent blur-3xl -z-10 rounded-full" />
 
           <div className="text-center max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-card text-zinc-800 text-xs font-semibold mb-8 ring-1 ring-zinc-200/80 shadow-sm hover:shadow-md transition-shadow cursor-default hover:-translate-y-0.5 duration-300">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-card text-foreground text-xs font-semibold mb-8 ring-1 ring-border shadow-sm hover:shadow-md transition-shadow cursor-default hover:-translate-y-0.5 duration-300">
               <span className="flex size-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse" />
               La nouvelle norme pour les studios
             </div>
@@ -168,7 +168,7 @@ export default function LandingPage() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/register?role=manager">
-                <Button className="w-full sm:w-auto bg-zinc-900 text-white rounded-full px-8 h-14 text-base font-semibold hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-zinc-900/10 flex items-center gap-2 group ring-1 ring-inset ring-white/10">
+                <Button className="w-full sm:w-auto bg-primary text-primary-foreground  rounded-full px-8 h-14 text-base font-semibold hover:bg-primary/90 text-primary-foreground hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-black/50 flex items-center gap-2 group ring-1 ring-inset ring-white/10">
                   Créer mon studio{" "}
                   <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -176,9 +176,9 @@ export default function LandingPage() {
               <Link href="/register?role=member">
                 <Button
                   variant="outline"
-                  className="w-full sm:w-auto rounded-full px-8 h-14 text-base font-semibold border-border bg-card text-zinc-700 hover:bg-background hover:text-foreground transition-colors shadow-sm group"
+                  className="w-full sm:w-auto rounded-full px-8 h-14 text-base font-semibold border-border bg-card text-foreground/90 hover:bg-background hover:text-foreground transition-colors shadow-sm group"
                 >
-                  <Play className="size-4 mr-2 fill-zinc-400 group-hover:fill-zinc-600 transition-colors" />{" "}
+                  <Play className="size-4 mr-2 fill-muted-foreground group-hover:fill-foreground transition-colors" />{" "}
                   Je suis un membre
                 </Button>
               </Link>
@@ -187,15 +187,15 @@ export default function LandingPage() {
 
           {/* Hero Image Showcase with Parallax-like floating */}
           <div className="mt-28 relative mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300 fill-mode-both">
-            <div className="absolute -inset-4 bg-gradient-to-tr from-zinc-200/50 to-white/50 opacity-60 blur-2xl -z-10 rounded-[3rem]" />
-            <div className="rounded-[2.5rem] p-2 bg-card/60 backdrop-blur-2xl border border-border/60 shadow-2xl ring-1 ring-zinc-900/5 hover:shadow-3xl transition-shadow duration-700 group">
+            <div className="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-background/50 opacity-60 blur-2xl -z-10 rounded-[3rem]" />
+            <div className="rounded-[2.5rem] p-2 bg-card/60 backdrop-blur-2xl border border-border/60 shadow-2xl ring-1 ring-border/50 hover:shadow-3xl transition-shadow duration-700 group">
               <div className="rounded-[2rem] overflow-hidden relative aspect-[16/9] md:aspect-[21/9] bg-muted">
                 <img
                   src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?q=80&w=2500&auto=format&fit=crop"
                   alt="Studio de fitness moderne"
                   className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-[15s] ease-out"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/20 via-transparent to-transparent mix-blend-multiply" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent mix-blend-multiply" />
               </div>
             </div>
           </div>
@@ -216,7 +216,7 @@ export default function LandingPage() {
 
             <div className="grid md:grid-cols-3 gap-12 relative">
               {/* Connecting line for desktop */}
-              <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-px bg-zinc-200" />
+              <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-px bg-muted" />
 
               {[
                 {
@@ -269,7 +269,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-12 items-center bg-card rounded-[3rem] p-4 md:p-8 border border-border/60 shadow-xl shadow-zinc-900/5">
+            <div className="flex flex-col lg:flex-row gap-12 items-center bg-card rounded-[3rem] p-4 md:p-8 border border-border/60 shadow-xl shadow-black/20">
               {/* Left: Interactive List */}
               <div className="w-full lg:w-1/3 flex flex-col gap-2">
                 {interactiveFeatures.map((feat, index) => {
@@ -287,7 +287,7 @@ export default function LandingPage() {
                       )}
                     >
                       {isActive && (
-                        <div className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-zinc-900 rounded-r-full" />
+                        <div className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-primary text-primary-foreground rounded-r-full" />
                       )}
                       <div
                         className={cn(
@@ -348,7 +348,7 @@ export default function LandingPage() {
         </section>
 
         {/* Real Product Value (Replaces Testimonials) */}
-        <section className="py-24 bg-zinc-900 text-white px-6 relative overflow-hidden">
+        <section className="py-24 bg-primary text-primary-foreground  px-6 relative overflow-hidden">
           <div className="absolute top-0 right-0 -mr-40 -mt-40 size-[500px] bg-card/5 rounded-full blur-[100px] pointer-events-none" />
           <div className="absolute bottom-0 left-0 -ml-40 -mb-40 size-[500px] bg-card/5 rounded-full blur-[100px] pointer-events-none" />
 
@@ -357,7 +357,7 @@ export default function LandingPage() {
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
                 L'indépendance technologique.
               </h2>
-              <p className="text-muted-foreground text-xl font-medium">
+              <p className="text-primary-foreground/80 text-xl font-medium">
                 Nous ne sommes pas une marketplace. Fitloww est votre outil,
                 conçu pour mettre en valeur votre marque, pas la nôtre.
               </p>
@@ -386,17 +386,17 @@ export default function LandingPage() {
                   icon: ShieldCheck,
                 },
               ].map((item, i) => (
-                <div
+                  <div
                   key={i}
-                  className="bg-card/5 hover:bg-card/10 border border-white/10 p-8 rounded-[2rem] transition-colors duration-300"
+                  className="bg-primary-foreground/5 hover:bg-primary-foreground/10 border border-primary-foreground/10 p-8 rounded-[2rem] transition-colors duration-300"
                 >
-                  <div className="size-12 rounded-xl bg-card/10 flex items-center justify-center mb-6">
-                    <item.icon className="size-6 text-white" />
+                  <div className="size-12 rounded-xl bg-primary-foreground/10 flex items-center justify-center mb-6">
+                    <item.icon className="size-6 text-primary-foreground" />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-3">
+                  <h3 className="text-xl font-bold mb-3 text-primary-foreground">
                     {item.title}
                   </h3>
-                  <p className="text-muted-foreground font-medium leading-relaxed">
+                  <p className="text-primary-foreground/80 font-medium leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
@@ -425,7 +425,7 @@ export default function LandingPage() {
                   className={cn(
                     "border border-border/60 rounded-2xl overflow-hidden transition-colors duration-300",
                     isOpen
-                      ? "bg-card shadow-md shadow-zinc-900/5"
+                      ? "bg-card shadow-md shadow-black/20"
                       : "bg-transparent hover:bg-card/50",
                   )}
                 >
@@ -467,7 +467,7 @@ export default function LandingPage() {
 
         {/* Call to Action */}
         <section className="pb-32 px-6 relative overflow-hidden">
-          <div className="max-w-5xl mx-auto bg-gradient-to-br from-zinc-900 to-black rounded-[3rem] p-12 md:p-20 text-center text-white overflow-hidden relative shadow-2xl shadow-zinc-900/20">
+          <div className="max-w-5xl mx-auto bg-gradient-to-br from-zinc-900 to-black rounded-[3rem] p-12 md:p-20 text-center  overflow-hidden relative shadow-2xl shadow-black/50">
             <div className="absolute top-0 right-0 -mr-20 -mt-20 size-[400px] bg-card/5 rounded-full blur-[80px]" />
             <div className="absolute bottom-0 left-0 -ml-20 -mb-20 size-[400px] bg-card/5 rounded-full blur-[80px]" />
 
@@ -494,8 +494,8 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex flex-col items-center md:items-start gap-3">
             <div className="flex items-center gap-2.5 font-bold text-xl text-foreground tracking-tight">
-              <div className="size-6 bg-zinc-900 rounded-md flex items-center justify-center">
-                <Activity className="size-3 text-white" />
+              <div className="size-6 bg-primary text-primary-foreground rounded-md flex items-center justify-center">
+                <Activity className="size-3 " />
               </div>
               Fitloww
             </div>

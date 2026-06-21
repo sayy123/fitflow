@@ -97,7 +97,7 @@ export function Sidebar({
       {/* Mobile Overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-zinc-900/20 backdrop-blur-sm z-[70] lg:hidden"
+          className="fixed inset-0 bg-primary/20 backdrop-blur-sm z-[70] lg:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
@@ -127,7 +127,7 @@ export function Sidebar({
                   <div className={cn(
                     "inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border transition-all group-hover/badge:scale-105 active:group-hover/badge:scale-95",
                     plan === 'premium' 
-                      ? "bg-zinc-900 text-white border-zinc-800 shadow-sm group-hover/badge:bg-zinc-800" 
+                      ? "bg-primary text-primary-foreground border-zinc-800 shadow-sm group-hover/badge:bg-primary/90" 
                       : "bg-card text-foreground/80 border-border group-hover/badge:border-zinc-300"
                   )}>
                     {isTrialing 
@@ -140,8 +140,8 @@ export function Sidebar({
               )}
             </div>
           ) : (
-            <div className="size-10 bg-zinc-900 rounded-xl flex items-center justify-center shadow-lg shadow-zinc-900/10 mb-2">
-              <Activity className="size-5 text-white" />
+            <div className="size-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/10 mb-2">
+              <Activity className="size-5 text-primary-foreground" />
             </div>
           )}
           <p className="text-[11px] font-medium text-muted-foreground mt-1.5 uppercase tracking-wider">
@@ -152,13 +152,13 @@ export function Sidebar({
         {/* Trial Countdown for Owners */}
         {isOwner && isTrialing && (
           <div className="px-6 mb-2">
-            <div className="bg-zinc-900 rounded-xl p-3 shadow-sm ring-1 ring-white/10">
+            <div className="bg-primary rounded-xl p-3 shadow-sm ring-1 ring-white/10">
               <div className="flex items-center gap-2 mb-1.5">
                 <Zap className="size-3 text-emerald-400 fill-emerald-400" />
-                <p className="text-[10px] font-bold text-white uppercase tracking-wider">Essai gratuit</p>
+                <p className="text-[10px] font-bold text-primary-foreground uppercase tracking-wider">Essai gratuit</p>
               </div>
               <p className="text-[11px] text-muted-foreground leading-tight mb-2">
-                Il vous reste <span className="text-white font-bold">
+                Il vous reste <span className="text-primary-foreground font-bold">
                   {daysLeft > 0 ? `${daysLeft} jours` : `${hoursLeft} heures`}
                 </span> pour tester Fitloww.
               </p>
@@ -183,15 +183,15 @@ export function Sidebar({
                 className={cn(
                   "flex items-center gap-3 px-3 py-2 text-[13px] font-medium rounded-lg transition-colors group",
                   isActive
-                    ? "bg-zinc-900 text-white shadow-sm"
-                    : "text-foreground/80 hover:bg-zinc-200/50 hover:text-foreground",
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-foreground/80 hover:bg-muted/50 hover:text-foreground",
                 )}
               >
                 <Icon
                   className={cn(
                     "size-4",
                     isActive
-                      ? "text-white"
+                      ? "text-primary-foreground"
                       : "text-muted-foreground group-hover:text-foreground/80",
                   )}
                 />
@@ -216,15 +216,15 @@ export function Sidebar({
                     className={cn(
                       "flex items-center gap-3 px-3 py-2 text-[13px] font-medium rounded-lg transition-colors group",
                       isActive
-                        ? "bg-zinc-900 text-white shadow-sm"
-                        : "text-foreground/80 hover:bg-zinc-200/50 hover:text-foreground",
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "text-foreground/80 hover:bg-muted/50 hover:text-foreground",
                     )}
                   >
                     <Icon
                       className={cn(
                         "size-4",
                         isActive
-                          ? "text-white"
+                          ? "text-primary-foreground"
                           : "text-muted-foreground group-hover:text-foreground/80",
                       )}
                     />
@@ -247,12 +247,12 @@ export function Sidebar({
                   placeholder="Lien d'invitation..."
                   value={inviteLink}
                   onChange={(e) => setInviteLink(e.target.value)}
-                  className="w-full h-8 px-3 rounded-lg border border-border bg-card text-[11px] font-medium focus:ring-1 focus:ring-zinc-900 outline-none transition-all"
+                  className="w-full h-8 px-3 rounded-lg border border-border bg-card text-[11px] font-medium focus:ring-1 focus:ring-primary outline-none transition-all"
                 />
                 <button
                   onClick={handleJoin}
                   disabled={!inviteLink.trim().includes("http")}
-                  className="w-full h-8 flex items-center justify-center gap-2 rounded-lg bg-muted text-foreground/80 text-[11px] font-bold hover:bg-zinc-900 hover:text-white transition-all disabled:opacity-50 disabled:hover:bg-muted disabled:hover:text-foreground/80"
+                  className="w-full h-8 flex items-center justify-center gap-2 rounded-lg bg-muted text-foreground/80 text-[11px] font-bold hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-50 disabled:hover:bg-muted disabled:hover:text-foreground/80"
                 >
                   <PlusCircle className="size-3.5" />
                   Rejoindre
@@ -288,7 +288,7 @@ export function Sidebar({
           <form action={signOutAction}>
             <button
               type="submit"
-              className="flex w-full items-center gap-3 px-3 py-2 text-[13px] font-medium rounded-lg text-muted-foreground hover:bg-zinc-200/50 hover:text-foreground transition-colors group"
+              className="flex w-full items-center gap-3 px-3 py-2 text-[13px] font-medium rounded-lg text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors group"
             >
               <LogOut className="size-4 text-muted-foreground group-hover:text-foreground/80" />
               Déconnexion

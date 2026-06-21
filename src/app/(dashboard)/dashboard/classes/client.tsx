@@ -179,7 +179,7 @@ export default function ClassesClient({
                   <Label htmlFor="color" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Couleur</Label>
                   <Input id="color" name="color" type="color" defaultValue="#4f46e5" className="h-11 p-1 w-full rounded-xl border-border/50 bg-card" />
                 </div>
-                <Button type="submit" className="w-full h-12 rounded-xl bg-zinc-900 text-white font-black uppercase tracking-widest text-[10px] mt-2 shadow-lg shadow-zinc-900/10">Enregistrer</Button>
+                <Button type="submit" className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-black uppercase tracking-widest text-[10px] mt-2 shadow-lg shadow-primary/10">Enregistrer</Button>
               </form>
             </DialogContent>
           </Dialog>
@@ -218,10 +218,10 @@ export default function ClassesClient({
                     {coach.avatar_url ? (
                       <img src={coach.avatar_url} alt="" className="size-full object-cover" />
                     ) : (
-                      <span className="text-[8px] font-black text-white uppercase">{coach.display_name?.charAt(0)}</span>
+                      <span className="text-[8px] font-black text-primary-foreground uppercase">{coach.display_name?.charAt(0)}</span>
                     )}
                   </div>
-                  <span className="text-[9px] font-bold text-white/90 truncate uppercase tracking-tight leading-none">
+                  <span className="text-[9px] font-bold text-primary-foreground/90 truncate uppercase tracking-tight leading-none">
                     {coach.display_name || "Coach sans nom"}
                   </span>
                 </div>

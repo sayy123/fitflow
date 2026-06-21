@@ -86,7 +86,7 @@ export default async function MembersPage() {
             <Link href="/dashboard/billing" className="ml-auto sm:ml-0">
               <Button
                 size="sm"
-                className="h-7 bg-orange-600 hover:bg-orange-700 text-white text-[10px] font-bold uppercase tracking-wider"
+                className="h-7 bg-orange-600 hover:bg-orange-700 text-primary-foreground text-[10px] font-bold uppercase tracking-wider"
               >
                 Passer en Premium
               </Button>

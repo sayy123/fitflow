@@ -66,7 +66,7 @@ export default async function BillingPage() {
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20 text-foreground">
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted text-zinc-800 text-[10px] font-bold uppercase tracking-widest mb-4 ring-1 ring-zinc-200">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted text-foreground text-[10px] font-bold uppercase tracking-widest mb-4 ring-1 ring-border/50">
           Gestion de l'abonnement
         </div>
         <h1 className="text-4xl font-bold tracking-tight">
@@ -123,7 +123,7 @@ export default async function BillingPage() {
             
             <BillingButton
               plan="starter"
-              className="w-full h-12 rounded-xl font-semibold bg-zinc-900 text-white hover:bg-zinc-800"
+              className="w-full h-12 rounded-xl font-semibold bg-primary text-primary-foreground hover:bg-primary/90"
               isCurrentPlan={plan === "starter" && subscription_status === "active"}
               disabled={plan === "premium" && subscription_status === "active"}
             >
@@ -143,33 +143,33 @@ export default async function BillingPage() {
         </Card>
 
         {/* Premium Plan */}
-        <Card className="border border-zinc-900 bg-zinc-900 rounded-3xl shadow-xl flex flex-col relative overflow-hidden group">
+        <Card className="border border-primary bg-primary rounded-3xl shadow-xl flex flex-col relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-6 z-20">
-            <div className="bg-card/10 backdrop-blur-md px-3 py-1 rounded-full text-white text-[10px] font-bold uppercase tracking-widest border border-white/10">
+            <div className="bg-primary-foreground/10 backdrop-blur-md px-3 py-1 rounded-full text-primary-foreground text-[10px] font-bold uppercase tracking-widest border border-primary-foreground/10">
               Populaire
             </div>
           </div>
-          <CardHeader className="pb-8 relative z-10 text-white">
+          <CardHeader className="pb-8 relative z-10 text-primary-foreground">
             <div className="flex justify-between items-start">
               <CardTitle className="text-2xl font-bold tracking-tight">
                 Premium
               </CardTitle>
               {plan === "premium" &&
                 subscription_status === "active" && (
-                  <span className="bg-card/10 text-white text-[10px] font-bold px-2 py-1 rounded-md border border-white/10">
+                  <span className="bg-primary-foreground/10 text-primary-foreground text-[10px] font-bold px-2 py-1 rounded-md border border-primary-foreground/10">
                     Actuel
                   </span>
                 )}
             </div>
             <div className="mt-4 flex items-baseline gap-1">
               <span className="text-4xl font-bold">39€</span>
-              <span className="text-muted-foreground font-medium text-muted-foreground">
+              <span className="text-primary-foreground/80 font-medium">
                 / mois
               </span>
             </div>
           </CardHeader>
           <CardContent className="space-y-8 flex-1 relative z-10">
-            <div className="space-y-4 text-zinc-300">
+            <div className="space-y-4 text-primary-foreground/90">
               {[
                 "Jusqu'à 3 salles gérées",
                 "Membres illimités",
@@ -178,7 +178,7 @@ export default async function BillingPage() {
                 "Rapports mensuels",
               ].map((f, i) => (
                 <div key={i} className="flex items-center gap-3">
-                  <CheckCircle2 className="size-5 text-emerald-400" />
+                  <CheckCircle2 className="size-5 text-primary-foreground" />
                   <span className="font-medium text-sm">{f}</span>
                 </div>
               ))}

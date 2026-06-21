@@ -80,8 +80,8 @@ export function TrialBlockedWrapper({
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1 bg-gradient-to-r from-transparent via-zinc-900/10 to-transparent" />
           
           <div className="relative z-10 space-y-8">
-            <div className="size-20 bg-zinc-900 rounded-[2rem] flex items-center justify-center mx-auto mb-4 shadow-2xl shadow-zinc-900/20 rotate-3 group-hover:rotate-0 transition-transform duration-500">
-              <LogOut className="size-8 text-white rotate-180" />
+            <div className="size-20 bg-primary rounded-[2rem] flex items-center justify-center mx-auto mb-4 shadow-2xl shadow-primary/20 rotate-3 group-hover:rotate-0 transition-transform duration-500">
+              <LogOut className="size-8 text-primary-foreground rotate-180" />
             </div>
             
             <div className="space-y-3">
@@ -110,7 +110,7 @@ export function TrialBlockedWrapper({
             <div className="pt-2 space-y-4">
               <Button 
                 asChild
-                className="w-full bg-zinc-900 text-white rounded-full h-16 text-lg font-bold hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-zinc-900/10"
+                className="w-full bg-primary text-primary-foreground rounded-full h-16 text-lg font-bold hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-primary/10"
               >
                 <Link href="/dashboard/billing">
                   {isBlockedByTrial ? "Choisir mon forfait" : "Réactiver mon abonnement"}

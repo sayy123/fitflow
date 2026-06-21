@@ -75,7 +75,7 @@ export default function StudiosClient({
             </div>
           </div>
           <Link href="/dashboard/billing" className="w-full md:w-auto shrink-0">
-            <Button className="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold border-none">
+            <Button className="w-full bg-amber-600 hover:bg-amber-700 text-primary-foreground font-bold border-none">
               <Zap className="size-4 mr-2" />
               Passer en Premium
             </Button>
@@ -117,12 +117,12 @@ export default function StudiosClient({
             key={studio.id}
             className={`relative overflow-hidden transition-all ${
               studio.id === activeStudioId
-                ? "border-zinc-900 shadow-md ring-1 ring-zinc-900"
+                ? "border-primary shadow-md ring-1 ring-primary"
                 : "border-border hover:border-zinc-300"
             }`}
           >
             {studio.id === activeStudioId && (
-              <div className="absolute top-0 right-0 bg-zinc-900 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">
+              <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-[10px] font-bold px-3 py-1 rounded-bl-lg">
                 Actif
               </div>
             )}
@@ -140,7 +140,7 @@ export default function StudiosClient({
             <CardContent>
               <div className="flex items-center gap-2 mb-6">
                 <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
-                  studio.plan === 'premium' ? 'bg-zinc-900 text-white' : 'bg-muted text-foreground/80'
+                  studio.plan === 'premium' ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground/80'
                 }`}>
                   {studio.plan}
                 </span>

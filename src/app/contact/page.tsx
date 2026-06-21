@@ -19,7 +19,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background/50 flex flex-col items-center justify-center p-6 pt-24 md:pt-6 selection:bg-zinc-200 relative">
+    <div className="min-h-screen bg-background/50 flex flex-col items-center justify-center p-6 pt-24 md:pt-6 selection:bg-primary/20 relative">
       <Link 
         href="/" 
         className="absolute top-8 left-8 flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors group"
@@ -72,9 +72,9 @@ export default function ContactPage() {
           </div>
         </div>
 
-        <Card className="border-border/60 shadow-2xl shadow-zinc-200/40 rounded-[2.5rem] overflow-hidden bg-card">
+        <Card className="border-border/60 shadow-2xl shadow-black/50 rounded-[2.5rem] overflow-hidden bg-card">
           <CardContent className="p-12 space-y-8">
-            <div className="size-14 bg-zinc-900 rounded-2xl flex items-center justify-center text-white rotate-3">
+            <div className="size-14 bg-primary rounded-2xl flex items-center justify-center text-primary-foreground rotate-3">
               <MessageSquare className="size-6" />
             </div>
             
@@ -88,7 +88,7 @@ export default function ContactPage() {
             <div className="grid gap-3 pt-4">
               <Button 
                 asChild
-                className="h-14 rounded-2xl bg-zinc-900 text-white font-bold hover:bg-zinc-800 transition-all shadow-xl shadow-zinc-900/10 flex items-center gap-3"
+                className="h-14 rounded-2xl bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-all shadow-xl shadow-primary/10 flex items-center gap-3"
               >
                 <a 
                   href={`https://mail.google.com/mail/?view=cm&fs=1&to=${email}`}

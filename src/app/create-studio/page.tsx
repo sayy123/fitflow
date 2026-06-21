@@ -17,15 +17,15 @@ export default async function CreateStudioPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background/50 flex flex-col items-center justify-center p-6 selection:bg-zinc-200">
+    <div className="min-h-screen bg-background/50 flex flex-col items-center justify-center p-6 selection:bg-primary/20">
       <Link href="/dashboard" className="absolute top-8 left-8 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
         &larr; Retour au tableau de bord
       </Link>
       
-      <Card className="w-full max-w-md border-none shadow-xl shadow-zinc-900/5 rounded-3xl overflow-hidden">
+      <Card className="w-full max-w-md border-none shadow-xl shadow-primary/5 rounded-3xl overflow-hidden">
         <CardHeader className="text-center p-8 pb-4">
-          <div className="size-16 bg-zinc-900 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-zinc-900/20 mb-6">
-            <Zap className="size-8 text-white" />
+          <div className="size-16 bg-primary rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-primary/20 mb-6">
+            <Zap className="size-8 text-primary-foreground" />
           </div>
           <CardTitle className="text-3xl font-black tracking-tight text-foreground">
             Lancez votre studio
@@ -46,12 +46,12 @@ export default async function CreateStudioPage() {
                 required
                 minLength={2}
                 placeholder="Ex: Fitloww Yoga Paris"
-                className="h-14 rounded-xl border-border bg-card text-base shadow-sm focus-visible:ring-zinc-900 focus-visible:border-zinc-900"
+                className="h-14 rounded-xl border-border bg-card text-base shadow-sm focus-visible:ring-primary focus-visible:border-primary"
               />
             </div>
             <Button
               type="submit"
-              className="w-full h-14 rounded-xl bg-zinc-900 text-white font-black uppercase tracking-widest text-[11px] shadow-lg shadow-zinc-900/10 hover:bg-zinc-800 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full h-14 rounded-xl bg-primary text-primary-foreground font-black uppercase tracking-widest text-[11px] shadow-lg shadow-primary/10 hover:bg-primary/90 transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               Créer mon espace
             </Button>

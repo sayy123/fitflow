@@ -23,7 +23,7 @@ export function InviteJoiner() {
           value={link}
           onChange={(e) => setLink(e.target.value)}
           placeholder="Coller le lien ici..."
-          className="flex-1 h-12 rounded-2xl border border-border bg-background px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-900 transition-all"
+          className="flex-1 h-12 rounded-2xl border border-border bg-background px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               handleJoin()
@@ -32,7 +32,7 @@ export function InviteJoiner() {
         />
         <button
           onClick={handleJoin}
-          className="h-12 px-6 rounded-2xl bg-zinc-900 text-white font-bold text-sm shadow-xl shadow-zinc-900/10 hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all shrink-0"
+          className="h-12 px-6 rounded-2xl bg-primary text-primary-foreground font-bold text-sm shadow-xl shadow-primary/10 hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98] transition-all shrink-0"
         >
           Rejoindre
         </button>

@@ -88,18 +88,18 @@ export default async function DashboardPage(props: {
           <p className="text-muted-foreground text-base max-w-sm mx-auto font-medium">Comment souhaitez-vous utiliser la plateforme ?</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
-          <Card className="border-2 border-dashed border-border hover:border-zinc-900 transition-colors group cursor-pointer overflow-hidden rounded-[2rem]">
+          <Card className="border-2 border-dashed border-border hover:border-primary transition-colors group cursor-pointer overflow-hidden rounded-[2rem]">
             <CardContent className="p-8">
               <div className="h-full flex flex-col items-center text-center space-y-4">
-                <div className="size-14 rounded-2xl bg-muted flex items-center justify-center group-hover:bg-zinc-900 transition-colors">
-                  <Zap className="size-6 text-foreground/80 group-hover:text-white" />
+                <div className="size-14 rounded-2xl bg-muted flex items-center justify-center group-hover:bg-primary transition-colors">
+                  <Zap className="size-6 text-foreground/80 group-hover:text-primary-foreground" />
                 </div>
                 <div className="space-y-1">
                   <h3 className="text-lg font-bold text-card-foreground">Créer mon studio</h3>
                   <p className="text-sm text-muted-foreground">Gérez votre planning et vos membres en quelques minutes.</p>
                 </div>
                 <Link href="/create-studio" className="w-full">
-                  <Button className="w-full bg-zinc-900 text-white rounded-xl h-11">C&apos;est parti</Button>
+                  <Button className="w-full bg-primary text-primary-foreground rounded-xl h-11">C&apos;est parti</Button>
                 </Link>
               </div>
             </CardContent>
@@ -217,7 +217,7 @@ export default async function DashboardPage(props: {
                   </div>
                   <div className="flex flex-col gap-2 shrink-0">
                     <form action={async () => { "use server"; await respondToInvitationAction(inv.id, true); }}>
-                      <Button type="submit" className="w-full h-9 px-4 rounded-lg font-medium text-sm bg-primary text-white hover:bg-primary/90 transition-colors">Accepter</Button>
+                      <Button type="submit" className="w-full h-9 px-4 rounded-lg font-medium text-sm bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">Accepter</Button>
                     </form>
                   </div>
                 </CardContent>
@@ -253,12 +253,12 @@ export default async function DashboardPage(props: {
                   </div>
                   <div className="mt-5 flex flex-col sm:flex-row gap-3">
                     {booking.status === 'pending_payment' && booking.organizations.payment_link && (
-                      <a href={booking.organizations.payment_link} target="_blank" rel="noopener noreferrer" className="flex-1 h-9 flex items-center justify-center rounded-lg font-bold text-[10px] uppercase tracking-widest bg-emerald-600 text-white hover:bg-emerald-700 transition-colors text-center px-2 leading-tight">
+                      <a href={booking.organizations.payment_link} target="_blank" rel="noopener noreferrer" className="flex-1 h-9 flex items-center justify-center rounded-lg font-bold text-[10px] uppercase tracking-widest bg-emerald-600 text-primary-foreground hover:bg-emerald-700 transition-colors text-center px-2 leading-tight">
                         Payer {booking.classes.price ? `${booking.classes.price}€` : ''} (si non fait)
                       </a>
                     )}
                     <div className="flex-1 flex gap-2">
-                      <Link href={`/${booking.organizations?.slug}/book/${booking.classes?.id}`} className="flex-1 h-9 flex items-center justify-center rounded-lg font-bold text-[10px] uppercase tracking-widest bg-gray-900 text-white hover:bg-gray-800 transition-colors">
+                      <Link href={`/${booking.organizations?.slug}/book/${booking.classes?.id}`} className="flex-1 h-9 flex items-center justify-center rounded-lg font-bold text-[10px] uppercase tracking-widest bg-gray-900 text-primary-foreground hover:bg-gray-800 transition-colors">
                         Détails
                       </Link>
                       <div className="flex-1">

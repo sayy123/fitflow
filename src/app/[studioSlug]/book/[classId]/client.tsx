@@ -235,7 +235,7 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
         )}
 
         {currentUser && (
-          <div className="mb-8 p-6 bg-zinc-900 rounded-[2rem] text-white space-y-4 shadow-xl shadow-zinc-900/20 animate-in zoom-in duration-500">
+          <div className="mb-8 p-6 bg-primary rounded-[2rem] text-primary-foreground space-y-4 shadow-xl shadow-primary/20 animate-in zoom-in duration-500">
             <div className="flex items-center gap-4">
               <div className="size-10 rounded-full bg-card/10 flex items-center justify-center border border-white/20">
                 <span className="text-lg">✨</span>
@@ -247,7 +247,7 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
             </div>
 
             <div className="space-y-3 pt-2">
-              <p className="text-xs font-medium text-zinc-300 leading-relaxed">
+              <p className="text-xs font-medium text-primary-foreground/80 leading-relaxed">
                 Vous pouvez rejoindre ce studio en un clic pour suivre vos cours et gérer vos réservations.
               </p>
               <Button 
