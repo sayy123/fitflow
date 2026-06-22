@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -11,10 +10,9 @@ import { signInWithGoogleAction } from '@/app/actions/auth'
 import { CancelBookingButton } from '@/components/cancel-booking-button'
 import { toast } from 'sonner'
 import Link from 'next/link'
-import { useSearchParams, usePathname } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { MapPin, ExternalLink, Calendar, Clock } from 'lucide-react'
-
+import { MapPin, ExternalLink, Calendar, Clock, ChevronLeft, CheckCircle2, UserCircle2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 interface BookingClientProps {
@@ -59,11 +57,11 @@ interface BookingClientProps {
 export default function BookingClient({ org, cls, currentUser, hasSubscription }: BookingClientProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const pathname = usePathname()
   const isInvite = searchParams.get('invite') === 'true'
   
   const [isPending, setIsPending] = useState(false)
   const [createAccount, setCreateAccount] = useState(isInvite && !currentUser)
+  const [isAutoJoining, setIsAutoJoining] = useState(false)
 
   const isUserBooked = currentUser && cls.bookings.some((b) => b.studio_members.email === currentUser.email)
   const userBooking = isUserBooked ? cls.bookings.find((b) => b.studio_members.email === currentUser.email) : null
@@ -71,6 +69,9 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
   const googleMapsUrl = cls.location 
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(cls.location)}`
     : null
+
+  const isFull = cls.bookings.length >= cls.capacity
+  const buttonColor = org.color_primary || '#10b981'
 
   async function handleSubmit(formData: FormData) {
     setIsPending(true)
@@ -80,7 +81,6 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
     if (res.error) {
       toast.error(res.error)
     } else if (res.url) {
-      // Rediriger vers le lien de paiement (Lydia, PayPal, etc.)
       window.location.href = res.url;
     } else {
       toast.success(res.status === 'confirmed' ? 'Réservation confirmée !' : 'Ajouté à la liste d\'attente')
@@ -88,8 +88,6 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
     }
   }
 
-  const [isAutoJoining, setIsAutoJoining] = useState(false)
-  
   const handleAutoJoin = async () => {
     setIsAutoJoining(true)
     const { joinStudioAutomaticallyAction } = await import('@/app/actions/members')
@@ -106,291 +104,291 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
     }
   }
 
-  const isFull = cls.bookings.length >= cls.capacity
-
+  // --- VIEW FOR ALREADY BOOKED USER ---
   if (isUserBooked && userBooking) {
     return (
-      <Card className="w-full max-w-lg border-none card-shadow rounded-2xl overflow-hidden">
-        <div className="h-2 w-full" style={{ backgroundColor: org.color_primary || '#4f46e5' }} />
-        <CardHeader className="p-8 pb-4">
-          <div className="flex justify-between items-start">
-            <div className="space-y-1">
-              <CardTitle className="text-2xl font-black tracking-tight">Détails de la séance</CardTitle>
-              <CardDescription className="text-muted-foreground font-bold uppercase tracking-widest text-[9px]">
-                {cls.title} • {org.name}
-              </CardDescription>
+      <div className="max-w-3xl mx-auto pt-12 px-4">
+        <Link href="/dashboard" className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 mb-8 transition-colors">
+          <ChevronLeft className="size-4 mr-1" /> Retour au tableau de bord
+        </Link>
+        
+        <div className="bg-white rounded-[24px] shadow-sm border border-slate-200 overflow-hidden">
+          <div className="p-8 md:p-10 text-center border-b border-slate-100">
+            <div className="mx-auto size-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6">
+              <CheckCircle2 className="size-8" />
             </div>
-            <span className={cn(
-              "px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest",
-              userBooking.status === 'confirmed' ? "bg-green-50 text-green-700 border border-green-100" : "bg-yellow-50 text-yellow-700 border border-yellow-100"
-            )}>
-              {userBooking.status === 'confirmed' ? 'Confirmé' : 'En en attente'}
-            </span>
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">Réservation confirmée</h1>
+            <p className="text-slate-500">Vous êtes inscrit pour ce cours chez {org.name}.</p>
           </div>
-          {cls.org_members && (
-            <div className="mt-4 flex items-center gap-3 p-3 bg-background/50 rounded-xl border border-border/50">
-                <div className="size-8 rounded-lg bg-card border border-border/50 overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-black text-[9px] text-primary uppercase">
-                    {cls.org_members.avatar_url ? (
-                        <img src={cls.org_members.avatar_url} alt="" className="size-full object-cover" />
-                    ) : (
-                        cls.org_members.display_name.charAt(0)
-                    )}
+          
+          <div className="p-8 md:p-10 bg-slate-50">
+            <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm mb-8">
+              <h3 className="text-lg font-bold text-slate-900 mb-1">{cls.title}</h3>
+              <div className="space-y-3 mt-4">
+                <div className="flex items-center text-slate-600">
+                  <Calendar className="size-5 mr-3 text-slate-400" />
+                  {new Date(cls.starts_at).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
                 </div>
-                <div className="flex-1">
-                    <p className="text-[7px] font-black text-muted-foreground uppercase tracking-widest">Coach de la séance</p>
-                    <p className="text-[11px] font-black text-card-foreground uppercase tracking-tight">{cls.org_members.display_name}</p>
+                <div className="flex items-center text-slate-600">
+                  <Clock className="size-5 mr-3 text-slate-400" />
+                  {new Date(cls.starts_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} ({cls.duration_min} min)
                 </div>
-            </div>
-          )}
-        </CardHeader>
-        <CardContent className="px-8 pb-8 space-y-8">
-          <div className="grid grid-cols-1 gap-3 p-5 bg-background rounded-2xl">
-            <p className="text-sm font-bold text-card-foreground flex items-center gap-3">
-              <Calendar className="size-4 text-muted-foreground" />
-              {new Date(cls.starts_at).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
-            </p>
-            <p className="text-sm font-bold text-card-foreground flex items-center gap-3">
-              <Clock className="size-4 text-muted-foreground" />
-              {new Date(cls.starts_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} ({cls.duration_min} min)
-            </p>
-            {cls.location && (
-              <div className="flex flex-col gap-1 pl-7">
-                <div className="text-sm font-bold text-card-foreground flex items-center gap-3 -ml-7">
-                  <MapPin className="size-4 text-muted-foreground" />
-                  {cls.location}
-                </div>
-                {googleMapsUrl && (
-                  <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold text-primary hover:underline flex items-center gap-1">
-                    Ouvrir dans Google Maps <ExternalLink className="size-2.5" />
-                  </a>
+                {cls.location && (
+                  <div className="flex items-start text-slate-600">
+                    <MapPin className="size-5 mr-3 text-slate-400 shrink-0" />
+                    <div>
+                      <p>{cls.location}</p>
+                      {googleMapsUrl && (
+                        <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer" className="text-primary text-sm hover:underline mt-1 block">
+                          Ouvrir dans Google Maps
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 )}
               </div>
-            )}
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Participants ({cls.bookings.length} / {cls.capacity})</h4>
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              {cls.bookings.map((b) => (
-                <div key={b.id} className="flex items-center gap-2.5 p-2 rounded-xl bg-card border border-border/30 card-shadow text-xs font-bold text-foreground/90">
-                  <div className="size-6 rounded-lg border border-border/50 overflow-hidden flex items-center justify-center shrink-0 shadow-sm font-black text-[8px] text-primary uppercase bg-background">
-                    {b.studio_members.avatar_url ? (
-                        <img src={b.studio_members.avatar_url} alt="" className="size-full object-cover" />
-                    ) : (
-                        b.studio_members.full_name.charAt(0)
-                    )}
-                  </div>
-                  <span className="truncate">{b.studio_members.full_name}</span>
-                </div>
-              ))}
+            
+            <div className="flex flex-col gap-3 w-full max-w-sm mx-auto">
+              <div className="h-12 w-full">
+                <CancelBookingButton bookingId={userBooking.id} />
+              </div>
+              <Link href="/dashboard">
+                <Button variant="outline" className="w-full h-12 rounded-xl font-bold text-slate-700 border-slate-200 hover:bg-slate-100 transition-colors">
+                  Retour au dashboard
+                </Button>
+              </Link>
             </div>
           </div>
-
-          <div className="pt-2 flex flex-col gap-2">
-            <Link href="/dashboard">
-              <Button variant="outline" className="w-full h-12 rounded-xl font-black uppercase tracking-widest text-[10px] border-border/50 hover:bg-background transition-all">
-                Retour au tableau de bord
-              </Button>
-            </Link>
-            <div className="h-12 w-full">
-              <CancelBookingButton bookingId={userBooking.id} />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     )
   }
 
+  // --- BOOKING CHECKOUT VIEW ---
   return (
-    <Card className="w-full max-w-lg border-none card-shadow rounded-2xl overflow-hidden">
-      <div className="h-2 w-full" style={{ backgroundColor: org.color_primary || '#4f46e5' }} />
-      <CardHeader className="p-8 pb-4 text-center">
-        <CardTitle className="text-2xl font-black tracking-tight">{isInvite ? 'Invitation' : 'Réserver une séance'}</CardTitle>
-        <div className="mt-3 space-y-1">
-          <CardDescription className="text-muted-foreground font-bold uppercase tracking-widest text-[9px]">
-            {cls.title} • {new Date(cls.starts_at).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })} à {new Date(cls.starts_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-          </CardDescription>
-          {cls.location && (
-            <div className="flex flex-col items-center">
-              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1">
-                <MapPin className="size-3" /> {cls.location}
-              </span>
-              {googleMapsUrl && (
-                <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer" className="text-[9px] font-bold text-primary hover:underline flex items-center gap-1 mt-0.5">
-                  Voir sur Google Maps <ExternalLink className="size-2" />
-                </a>
-              )}
-            </div>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent className="px-8 pb-8">
-        {isInvite && !currentUser && (
-          <div className="mb-6 p-4 bg-primary/5 border border-primary/10 rounded-xl text-[10px] font-bold text-primary flex items-center gap-3">
-            <span className="text-lg">✨</span>
-            Vous avez été invité ! Créez un compte pour suivre vos séances.
+    <div className="max-w-6xl mx-auto pt-8 pb-24 px-4 md:px-8">
+      {/* Top Bar */}
+      <div className="mb-8">
+        <Link href={`/${org.slug}`} className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">
+          <ChevronLeft className="size-4 mr-1" /> Retour au planning
+        </Link>
+      </div>
+
+      <div className="grid lg:grid-cols-[1fr_400px] gap-12 items-start">
+        
+        {/* Left Column: Checkout Form */}
+        <div className="space-y-8">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">Finaliser la réservation</h1>
+            <p className="text-slate-500">Vérifiez vos informations ci-dessous pour confirmer votre place.</p>
           </div>
-        )}
 
-        {currentUser && (
-          <div className="mb-8 p-6 bg-primary rounded-[2rem] text-primary-foreground space-y-4 shadow-xl shadow-primary/20 animate-in zoom-in duration-500">
-            <div className="flex items-center gap-4">
-              <div className="size-10 rounded-full bg-card/10 flex items-center justify-center border border-white/20">
-                <span className="text-lg">✨</span>
+          {currentUser ? (
+            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+              <h3 className="text-lg font-bold text-slate-900 mb-4">Vos informations</h3>
+              <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                <div className="size-12 rounded-full bg-slate-200 flex items-center justify-center text-slate-500">
+                  <UserCircle2 className="size-6" />
+                </div>
+                <div>
+                  <p className="font-bold text-slate-900">{currentUser.user_metadata?.full_name || 'Utilisateur'}</p>
+                  <p className="text-sm text-slate-500">{currentUser.email}</p>
+                </div>
+                <div className="ml-auto">
+                  <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">Connecté</span>
+                </div>
               </div>
-              <div className="flex-1">
-                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Connecté</p>
-                <p className="text-sm font-black truncate">{currentUser.email}</p>
+              
+              <div className="mt-8">
+                <Button 
+                  onClick={handleAutoJoin}
+                  disabled={isAutoJoining}
+                  className="w-full h-14 rounded-xl text-white font-bold text-base shadow-md hover:shadow-lg transition-all"
+                  style={{ backgroundColor: buttonColor }}
+                >
+                  {isAutoJoining ? "Réservation en cours..." : (cls.price && cls.price > 0 && org.payment_link && !hasSubscription ? `Réserver et payer ${cls.price}€` : "Confirmer la réservation")}
+                </Button>
+                {cls.price && cls.price > 0 && org.payment_link && !hasSubscription && (
+                  <p className="text-xs text-slate-500 text-center mt-3">
+                    Vous serez redirigé vers notre plateforme de paiement sécurisée.
+                  </p>
+                )}
               </div>
             </div>
+          ) : (
+            <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+              <h3 className="text-lg font-bold text-slate-900 mb-6">Vos informations</h3>
+              
+              <form action={handleSubmit} className="space-y-5">
+                <input type="hidden" name="classId" value={cls.id} />
+                <input type="hidden" name="organizationId" value={org.id} />
+                
+                <div className="grid sm:grid-cols-2 gap-5">
+                  <div className="space-y-2">
+                    <Label htmlFor="fullName" className="text-sm font-bold text-slate-700">Nom complet</Label>
+                    <Input 
+                      id="fullName" 
+                      name="fullName" 
+                      required 
+                      placeholder="Jean Dupont" 
+                      className="h-12 rounded-xl border-slate-200 bg-slate-50 focus:bg-white"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-sm font-bold text-slate-700">Email</Label>
+                    <Input 
+                      id="email" 
+                      name="email" 
+                      type="email" 
+                      required 
+                      placeholder="jean@email.com" 
+                      className="h-12 rounded-xl border-slate-200 bg-slate-50 focus:bg-white"
+                    />
+                  </div>
+                </div>
 
-            <div className="space-y-3 pt-2">
-              <p className="text-xs font-medium text-primary-foreground/80 leading-relaxed">
-                Vous pouvez rejoindre ce studio en un clic pour suivre vos cours et gérer vos réservations.
-              </p>
+                <div className="pt-2">
+                  <div className="flex items-start space-x-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                    <Checkbox 
+                      id="createAccount" 
+                      checked={createAccount} 
+                      onCheckedChange={(checked) => setCreateAccount(checked === true)} 
+                      className="mt-0.5 border-slate-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                      style={{ backgroundColor: createAccount ? buttonColor : '', borderColor: createAccount ? buttonColor : '' }}
+                    />
+                    <div className="grid gap-1.5 leading-none">
+                      <Label htmlFor="createAccount" className="text-sm font-bold text-slate-700 cursor-pointer">
+                        Créer un compte Fitloww
+                      </Label>
+                      <p className="text-sm text-slate-500">Pour retrouver facilement vos réservations et annuler si besoin.</p>
+                    </div>
+                  </div>
+                </div>
+
+                {createAccount && (
+                  <div className="space-y-2 pt-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <Label htmlFor="password" className="text-sm font-bold text-slate-700">Mot de passe</Label>
+                    <Input id="password" name="password" type="password" required={createAccount} placeholder="••••••••" className="h-12 rounded-xl border-slate-200 bg-slate-50 focus:bg-white" />
+                  </div>
+                )}
+
+                <div className="pt-4 border-t border-slate-100">
+                  <div className="flex items-start space-x-3">
+                    <Checkbox id="terms" name="terms" required className="mt-1 border-slate-300" />
+                    <label htmlFor="terms" className="text-sm text-slate-600 leading-relaxed">
+                      J'accepte les <Link href="/legal" target="_blank" className="text-slate-900 underline hover:text-primary transition-colors">Mentions Légales</Link> et la politique de confidentialité de Fitloww.
+                    </label>
+                  </div>
+                </div>
+                
+                <div className="pt-4">
+                  <Button 
+                    type="submit" 
+                    className="w-full h-14 rounded-xl text-white font-bold text-base shadow-md hover:shadow-lg transition-all" 
+                    disabled={isPending}
+                    style={{ backgroundColor: buttonColor }}
+                  >
+                    {isPending ? 'Réservation en cours...' : (isFull ? 'Rejoindre la liste d\'attente' : (cls.price && cls.price > 0 && org.payment_link && !hasSubscription ? `Réserver et payer ${cls.price}€` : 'Confirmer la réservation'))}
+                  </Button>
+                  
+                  {cls.price && cls.price > 0 && org.payment_link && !hasSubscription && (
+                    <p className="text-xs text-slate-500 text-center mt-3">
+                      Vous serez redirigé vers une page de paiement sécurisée.
+                    </p>
+                  )}
+                </div>
+              </form>
+
+              <div className="relative my-8">
+                <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-slate-200" /></div>
+                <div className="relative flex justify-center text-xs font-bold text-slate-400 uppercase tracking-widest">
+                  <span className="bg-white px-4">Déjà un compte ?</span>
+                </div>
+              </div>
+
               <Button 
-                onClick={handleAutoJoin}
-                disabled={isAutoJoining}
-                className="w-full h-12 rounded-xl bg-card text-foreground font-black uppercase tracking-widest text-[10px] hover:bg-muted transition-all"
+                variant="outline" 
+                className="w-full h-12 rounded-xl font-bold border-slate-200 text-slate-700 hover:bg-slate-50 transition-all flex items-center justify-center gap-3"
+                onClick={() => signInWithGoogleAction()}
               >
-                {isAutoJoining ? "Réservation..." : (cls.price && cls.price > 0 && org.payment_link && !hasSubscription ? `Réserver et payer ${cls.price}€` : "Réserver la séance directement")}
+                <svg className="size-5" viewBox="0 0 24 24">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.16H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.84l3.66-2.75z" fill="#FBBC05"/>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 2.18 7.16l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+                Se connecter avec Google
               </Button>
-              {cls.price && cls.price > 0 && org.payment_link && !hasSubscription && (
-                <p className="text-[10px] text-muted-foreground font-medium text-center italic mt-2">
-                  ⚠️ Pensez à indiquer votre Nom/Prénom en motif de paiement sur la page suivante.
-                </p>
+
+            </div>
+          )}
+        </div>
+
+        {/* Right Column: Order Summary */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden sticky top-8">
+          <div className="h-32 w-full bg-slate-100 relative">
+            <div className="absolute inset-0 bg-gradient-to-tr from-slate-200 to-slate-50" />
+            <div className="absolute bottom-4 left-6">
+              <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-slate-900 text-xs font-bold rounded-lg shadow-sm">
+                {org.name}
+              </span>
+            </div>
+          </div>
+          
+          <div className="p-6">
+            <h2 className="text-xl font-bold text-slate-900 mb-6">{cls.title}</h2>
+            
+            <div className="space-y-4 mb-8">
+              <div className="flex items-start text-slate-600">
+                <Calendar className="size-5 mr-3 text-slate-400 shrink-0" />
+                <div className="leading-snug">
+                  <p className="font-bold text-slate-900">{new Date(cls.starts_at).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+                  <p className="text-sm text-slate-500">{new Date(cls.starts_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} • {cls.duration_min} minutes</p>
+                </div>
+              </div>
+              
+              {cls.location && (
+                <div className="flex items-start text-slate-600">
+                  <MapPin className="size-5 mr-3 text-slate-400 shrink-0" />
+                  <p className="leading-snug">{cls.location}</p>
+                </div>
               )}
             </div>
-          </div>
-        )}
 
-        {isInvite && !currentUser && isFull && (
-          <div className="mb-6 p-4 bg-yellow-50 border border-yellow-100 rounded-xl text-[10px] font-bold text-yellow-800 flex items-center gap-3">
-            <span className="text-lg">⏳</span>
-            Ce cours est complet. Rejoignez la liste d'attente.
-          </div>
-        )}
-
-        {isInvite && !currentUser && (
-          <div className="mb-6">
-            <Button 
-              variant="outline" 
-              className="w-full h-11 rounded-xl font-bold border-border/50 hover:bg-background transition-all flex items-center justify-center gap-3"
-              onClick={() => signInWithGoogleAction()}
-            >
-              <svg className="size-4" viewBox="0 0 24 24">
-                <path
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                  fill="#4285F4"
-                />
-                <path
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                  fill="#34A853"
-                />
-                <path
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.16H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.84l3.66-2.75z"
-                  fill="#FBBC05"
-                />
-                <path
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 2.18 7.16l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                  fill="#EA4335"
-                />
-              </svg>
-              S'enregistrer avec Google
-            </Button>
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-border/50" />
+            {cls.org_members && (
+              <div className="flex items-center gap-3 pt-6 border-t border-slate-100">
+                <div className="size-10 rounded-full bg-slate-100 overflow-hidden flex items-center justify-center border border-slate-200">
+                  {cls.org_members.avatar_url ? (
+                    <img src={cls.org_members.avatar_url} alt="" className="size-full object-cover" />
+                  ) : (
+                    <span className="text-sm font-bold text-slate-400">{cls.org_members.display_name.charAt(0)}</span>
+                  )}
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Coach</p>
+                  <p className="font-bold text-slate-900">{cls.org_members.display_name}</p>
+                </div>
               </div>
-              <div className="relative flex justify-center text-[8px] uppercase tracking-widest font-bold">
-                <span className="bg-card px-3 text-muted-foreground">Ou via email</span>
+            )}
+
+            <div className="mt-8 pt-6 border-t border-slate-100">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-slate-900">Total à payer</span>
+                <span className="text-xl font-black text-slate-900">
+                  {cls.price && cls.price > 0 && !hasSubscription ? `${cls.price}€` : 'Gratuit'}
+                </span>
               </div>
+              {hasSubscription && cls.price && cls.price > 0 && (
+                <p className="text-xs text-green-600 font-bold mt-1 text-right">Inclus dans votre abonnement</p>
+              )}
             </div>
-          </div>
-        )}
-        
-        <form action={handleSubmit} className="space-y-5">
-          <input type="hidden" name="classId" value={cls.id} />
-          <input type="hidden" name="organizationId" value={org.id} />
-          
-          <div className="space-y-1.5">
-            <Label htmlFor="fullName" className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Nom complet</Label>
-            <Input 
-              id="fullName" 
-              name="fullName" 
-              required 
-              placeholder="ex: Jean Dupont" 
-              defaultValue={currentUser?.user_metadata?.full_name || ''} 
-              className="h-11 rounded-xl border-border/50 focus:ring-primary/20"
-            />
-          </div>
-          
-          <div className="space-y-1.5">
-            <Label htmlFor="email" className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Email</Label>
-            <Input 
-              id="email" 
-              name="email" 
-              type="email" 
-              required 
-              placeholder="ex: jean@email.com" 
-              defaultValue={currentUser?.email || ''}
-              readOnly={!!currentUser}
-              className={cn("h-11 rounded-xl border-border/50 focus:ring-primary/20", currentUser ? 'bg-background' : '')}
-            />
-          </div>
 
-          {!currentUser && (
-            <div className="flex items-center space-x-3 py-1 px-1">
-              <Checkbox 
-                id="createAccount" 
-                checked={createAccount} 
-                onCheckedChange={(checked) => setCreateAccount(checked === true)} 
-                className="size-4 rounded-md border-border"
-              />
-              <Label htmlFor="createAccount" className="text-[11px] font-bold text-foreground/80 cursor-pointer">
-                Créer un compte pour suivre mes séances
-              </Label>
-            </div>
-          )}
-
-          {createAccount && !currentUser && (
-            <div className="space-y-1.5 animate-in fade-in slide-in-from-top-2 duration-300">
-              <Label htmlFor="password" title="Mot de passe" className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Mot de passe</Label>
-              <Input id="password" name="password" type="password" required={createAccount} placeholder="••••••••" className="h-11 rounded-xl border-border/50" />
-            </div>
-          )}
-
-          <div className="flex items-start space-x-2 pt-2 px-1">
-            <Checkbox id="terms" name="terms" required className="mt-0.5 border-gray-300" />
-            <label htmlFor="terms" className="text-[10px] font-medium leading-tight text-muted-foreground">
-              J'accepte les <Link href="/legal" target="_blank" className="text-gray-800 underline hover:text-foreground/80">Mentions Légales</Link> et la politique de confidentialité.
-            </label>
           </div>
-          
-          <Button 
-            type="submit" 
-            className="w-full h-12 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-lg transition-all mt-2" 
-            disabled={isPending}
-            style={{ 
-              backgroundColor: org.color_primary || '#4f46e5',
-              boxShadow: `0 8px 24px -6px ${org.color_primary}40`
-            }}
-          >
-            {isPending ? 'Réservation...' : (isFull ? 'Rejoindre la liste d\'attente' : (cls.price && cls.price > 0 && org.payment_link && !hasSubscription ? `Réserver et payer ${cls.price}€` : 'Confirmer la réservation'))}
-          </Button>
-          {cls.price && cls.price > 0 && org.payment_link && !hasSubscription && (
-            <p className="text-[10px] text-muted-foreground font-medium text-center italic mt-2">
-              ⚠️ Pensez à indiquer votre Nom/Prénom en motif de paiement sur la page suivante.
-            </p>
-          )}
-        </form>
-        
-        <div className="mt-6 text-center">
-          <Link href={`/${org.slug}`} className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground/80 transition-colors">Annuler</Link>
         </div>
-      </CardContent>
-    </Card>
+
+      </div>
+    </div>
   )
 }

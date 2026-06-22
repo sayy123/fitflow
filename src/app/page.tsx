@@ -8,15 +8,13 @@ import {
   Activity,
   Calendar,
   Users,
-  Zap,
-  CheckCircle2,
-  ChevronRight,
-  Play,
-  Star,
   ChevronDown,
   CreditCard,
   Smartphone,
   ShieldCheck,
+  CheckCircle2,
+  Menu,
+  X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -24,11 +22,12 @@ export default function LandingPage() {
   const [activeFeature, setActiveFeature] = useState(0);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Handle navbar blur on scroll
+  // Handle navbar shadow on scroll
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      setScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -38,26 +37,23 @@ export default function LandingPage() {
     {
       id: 0,
       title: "Planning intelligent",
-      desc: "Glissez, déposez et gérez vos séances en temps réel. Vos coachs et membres sont notifiés automatiquement.",
+      desc: "Gérez vos séances en toute simplicité. Vos coachs et membres sont notifiés en temps réel.",
       icon: Calendar,
-      image:
-        "https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=1200&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=1200&auto=format&fit=crop",
     },
     {
       id: 1,
-      title: "Paiements sans friction",
-      desc: "Abonnements, carnets de séances ou paiement à la carte. Encaissez vos clients directement depuis l'application.",
+      title: "Paiements automatisés",
+      desc: "Abonnements, carnets de séances ou à la carte. Encaissez vos clients sans friction.",
       icon: CreditCard,
-      image:
-        "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=1200&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=1200&auto=format&fit=crop",
     },
     {
       id: 2,
-      title: "Expérience Membre Premium",
-      desc: "Offrez à vos clients une interface de réservation fluide sur mobile. Finis les appels et les messages WhatsApp.",
+      title: "Expérience premium",
+      desc: "Offrez à vos clients une réservation fluide sur mobile. Fini les messages WhatsApp.",
       icon: Smartphone,
-      image:
-        "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=1200&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=1200&auto=format&fit=crop",
     },
   ];
 
@@ -76,176 +72,148 @@ export default function LandingPage() {
     },
     {
       q: "Fitloww prend-il une commission sur les réservations ?",
-      a: "Non, nous ne prenons aucune commission sur vos ventes. Vous gardez 100% de vos revenus (hors frais standards de votre processeur de paiement comme Stripe).",
+      a: "Non, nous ne prenons aucune commission sur vos ventes. Vous gardez 100% de vos revenus (hors frais standards Stripe).",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary/20 font-sans overflow-hidden">
+    <div className="min-h-screen bg-white text-slate-900 font-sans overflow-hidden">
       {/* Navigation */}
       <nav
         className={cn(
-          "fixed top-0 inset-x-0 z-50 transition-all duration-300 border-b",
-          scrolled
-            ? "bg-card/80 backdrop-blur-xl border-border/50 shadow-sm"
-            : "bg-transparent border-transparent",
+          "fixed top-0 inset-x-0 z-50 transition-all duration-300 bg-white",
+          scrolled ? "shadow-sm border-b border-slate-100 py-3" : "py-5"
         )}
       >
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="font-bold text-lg tracking-tight flex items-center gap-2.5">
-            <div className="size-7 bg-gradient-to-tr from-zinc-900 to-zinc-800 rounded-lg flex items-center justify-center shadow-sm shadow-black/50 ring-1 ring-border/50">
-              <Activity className="size-4 " />
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+          <div className="font-bold text-xl tracking-tight flex items-center gap-2.5">
+            <div className="size-8 bg-primary rounded-lg flex items-center justify-center shadow-sm">
+              <Activity className="size-5 text-white" />
             </div>
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground to-muted-foreground">
+            <span className="text-slate-900">
               Fitloww
             </span>
           </div>
-          <div className="hidden md:flex items-center gap-6">
-            <Link
-              href="/pricing"
-              className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
-            >
+          
+          <div className="hidden md:flex items-center gap-8">
+            <Link href="#features" className="text-[15px] font-medium text-slate-600 hover:text-primary transition-colors">
+              Fonctionnalités
+            </Link>
+            <Link href="/pricing" className="text-[15px] font-medium text-slate-600 hover:text-primary transition-colors">
               Tarifs
             </Link>
-            <Link
-              href="/contact"
-              className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
-            >
+            <Link href="/contact" className="text-[15px] font-medium text-slate-600 hover:text-primary transition-colors">
               Contact
             </Link>
-            <Link
-              href="/login"
-              className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
-            >
+          </div>
+
+          <div className="hidden md:flex items-center gap-4">
+            <Link href="/login" className="text-[15px] font-medium text-slate-600 hover:text-slate-900 transition-colors">
               Connexion
             </Link>
             <Link href="/register">
-              <Button className="bg-primary text-primary-foreground  rounded-full px-5 h-9 text-sm font-semibold hover:bg-primary/90 text-primary-foreground transition-all shadow-md shadow-black/50 ring-1 ring-inset ring-border hover:ring-border hover:scale-105">
-                Commencer
+              <Button className="bg-primary text-white rounded-full px-6 h-10 text-[15px] font-medium hover:bg-primary/90 hover:scale-105 transition-all shadow-sm">
+                Essayer gratuitement
               </Button>
             </Link>
           </div>
           
-          {/* Mobile Nav Button */}
-          <div className="md:hidden flex items-center gap-3">
-             <Link href="/login" className="text-xs font-bold text-foreground px-3 py-2">
-                Connexion
-             </Link>
-             <Link href="/register">
-              <Button className="bg-primary text-primary-foreground  rounded-full px-4 h-8 text-[10px] font-bold hover:bg-primary/90 text-primary-foreground transition-all">
-                S'inscrire
-              </Button>
-            </Link>
-          </div>
+          {/* Mobile Nav Toggle */}
+          <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            {mobileMenuOpen ? <X className="size-6 text-slate-900" /> : <Menu className="size-6 text-slate-900" />}
+          </button>
         </div>
       </nav>
 
       <main>
         {/* Hero Section */}
-        <section className="relative pt-40 pb-20 px-6 max-w-7xl mx-auto">
-          {/* Ambient Background Glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-b from-primary/10 via-primary/5 to-transparent blur-3xl -z-10 rounded-full" />
-
+        <section className="relative pt-32 pb-20 px-6 max-w-7xl mx-auto lg:pt-48 lg:pb-32">
           <div className="text-center max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-card text-foreground text-xs font-semibold mb-8 ring-1 ring-border shadow-sm hover:shadow-md transition-shadow cursor-default hover:-translate-y-0.5 duration-300">
-              <span className="flex size-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse" />
-              La nouvelle norme pour les studios
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 text-slate-700 text-sm font-medium mb-8 border border-slate-200">
+              <span className="flex size-2 rounded-full bg-primary animate-pulse" />
+              La nouvelle norme pour les studios boutique
             </div>
 
-            <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-foreground mb-8 leading-[1.05]">
-              Gérez votre studio.
-              <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-500 to-zinc-400">
-                Sans aucune friction.
-              </span>
+            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-8 leading-[1.1]">
+              Gérez votre studio avec <br className="hidden md:block" />
+              <span className="text-primary">une élégance absolue.</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
-              Fitloww est l'écosystème élégant conçu pour les studios de fitness
-              boutique. Centralisez vos plannings, vos coachs et vos membres
-              dans une interface d'une clarté absolue.
+            <p className="text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+              Le logiciel de réservation conçu pour le Yoga, Pilates et fitness. Centralisez plannings, paiements et clients dans une interface lumineuse et incroyablement simple.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/register?role=manager">
-                <Button className="w-full sm:w-auto bg-primary text-primary-foreground  rounded-full px-8 h-14 text-base font-semibold hover:bg-primary/90 text-primary-foreground hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-black/50 flex items-center gap-2 group ring-1 ring-inset ring-white/10">
+                <Button className="w-full sm:w-auto bg-primary text-white rounded-full px-8 h-14 text-lg font-medium hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md flex items-center gap-2 group">
                   Créer mon studio{" "}
-                  <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="size-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
               <Link href="/register?role=member">
-                <Button
-                  variant="outline"
-                  className="w-full sm:w-auto rounded-full px-8 h-14 text-base font-semibold border-border bg-card text-foreground/90 hover:bg-background hover:text-foreground transition-colors shadow-sm group"
-                >
-                  <Play className="size-4 mr-2 fill-muted-foreground group-hover:fill-foreground transition-colors" />{" "}
-                  Je suis un membre
+                <Button variant="outline" className="w-full sm:w-auto rounded-full px-8 h-14 text-lg font-medium border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
+                  Espace membre
                 </Button>
               </Link>
             </div>
+            <p className="mt-4 text-sm text-slate-500">Aucune carte bancaire requise. Configuration en 5 minutes.</p>
           </div>
 
-          {/* Hero Image Showcase with Parallax-like floating */}
-          <div className="mt-28 relative mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300 fill-mode-both">
-            <div className="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-background/50 opacity-60 blur-2xl -z-10 rounded-[3rem]" />
-            <div className="rounded-[2.5rem] p-2 bg-card/60 backdrop-blur-2xl border border-border/60 shadow-2xl ring-1 ring-border/50 hover:shadow-3xl transition-shadow duration-700 group">
-              <div className="rounded-[2rem] overflow-hidden relative aspect-[16/9] md:aspect-[21/9] bg-muted">
+          {/* Hero Image Showcase */}
+          <div className="mt-20 relative mx-auto max-w-5xl animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300 fill-mode-both">
+            <div className="rounded-[24px] p-3 bg-white border border-slate-100 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)]">
+              <div className="rounded-[16px] overflow-hidden relative aspect-[16/9] bg-slate-100">
                 <img
                   src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?q=80&w=2500&auto=format&fit=crop"
                   alt="Studio de fitness moderne"
-                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-[15s] ease-out"
+                  className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent mix-blend-multiply" />
               </div>
             </div>
           </div>
         </section>
 
-        {/* How it works (Replaces Marquee) */}
-        <section className="py-24 border-y border-border/50 bg-card/50">
+        {/* How it works */}
+        <section className="py-24 bg-slate-50 border-y border-slate-100">
           <div className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-16 max-w-3xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-4">
-                De l'inscription à la première séance en 3 étapes.
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 mb-4">
+                Démarrez en 3 étapes simples.
               </h2>
-              <p className="text-muted-foreground text-lg font-medium">
-                Un processus pensé pour être immédiat. Aucun paramétrage
-                technique complexe n'est requis.
+              <p className="text-slate-600 text-lg">
+                Fini les logiciels complexes et surchargés. Fitloww va à l'essentiel.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-12 relative">
+            <div className="grid md:grid-cols-3 gap-12 relative max-w-5xl mx-auto">
               {/* Connecting line for desktop */}
-              <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-px bg-muted" />
+              <div className="hidden md:block absolute top-8 left-[20%] right-[20%] h-[2px] bg-slate-200" />
 
               {[
                 {
-                  step: "01",
+                  step: "1",
                   title: "Créez votre espace",
-                  desc: "Renseignez le nom de votre studio. Votre dashboard administrateur est généré instantanément, prêt à l'emploi.",
+                  desc: "Configurez votre studio et vos tarifs instantanément.",
                 },
                 {
-                  step: "02",
+                  step: "2",
                   title: "Générez votre planning",
-                  desc: "Ajoutez vos cours de Yoga, Pilates ou HIIT. Définissez les horaires, les capacités et assignez vos coachs.",
+                  desc: "Ajoutez vos cours et assignez vos professeurs.",
                 },
                 {
-                  step: "03",
+                  step: "3",
                   title: "Invitez vos membres",
-                  desc: "Partagez votre lien. Vos clients créent leur compte en 10 secondes et réservent leur place en un clic.",
+                  desc: "Partagez votre lien. Vos clients réservent en un clic.",
                 },
               ].map((item, i) => (
-                <div
-                  key={i}
-                  className="relative flex flex-col items-center text-center group"
-                >
-                  <div className="size-24 rounded-full bg-card border border-border shadow-sm flex items-center justify-center text-2xl font-bold text-foreground mb-6 relative z-10 group-hover:scale-110 group-hover:border-zinc-300 transition-all duration-300">
+                <div key={i} className="relative flex flex-col items-center text-center group">
+                  <div className="size-16 rounded-full bg-white border-2 border-slate-100 shadow-sm flex items-center justify-center text-xl font-bold text-slate-900 mb-6 relative z-10 group-hover:border-primary group-hover:text-primary transition-all duration-300">
                     {item.step}
                   </div>
-                  <h3 className="text-xl font-bold text-foreground mb-3">
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">
                     {item.title}
                   </h3>
-                  <p className="text-muted-foreground font-medium leading-relaxed max-w-sm">
+                  <p className="text-slate-600 leading-relaxed max-w-sm">
                     {item.desc}
                   </p>
                 </div>
@@ -255,148 +223,121 @@ export default function LandingPage() {
         </section>
 
         {/* Interactive Features Showcase */}
-        <section id="features" className="py-32 px-6">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-20 max-w-3xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-6 leading-tight">
-                Une puissance invisible.
-                <br />
-                Une élégance visible.
-              </h2>
-              <p className="text-muted-foreground text-xl font-medium leading-relaxed">
-                Découvrez comment Fitloww simplifie chaque aspect de la gestion
-                de votre studio, de la réservation à l'encaissement.
-              </p>
-            </div>
+        <section id="features" className="py-24 px-6 max-w-7xl mx-auto">
+          <div className="text-center mb-16 max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-slate-900 mb-6">
+              Pensé pour vous faire gagner du temps.
+            </h2>
+            <p className="text-slate-600 text-xl">
+              Automatisez vos réservations et encaissements pour vous concentrer sur vos cours.
+            </p>
+          </div>
 
-            <div className="flex flex-col lg:flex-row gap-12 items-center bg-card rounded-[3rem] p-4 md:p-8 border border-border/60 shadow-xl shadow-black/20">
-              {/* Left: Interactive List */}
-              <div className="w-full lg:w-1/3 flex flex-col gap-2">
-                {interactiveFeatures.map((feat, index) => {
-                  const isActive = activeFeature === index;
-                  const Icon = feat.icon;
-                  return (
-                    <button
-                      key={feat.id}
-                      onClick={() => setActiveFeature(index)}
-                      className={cn(
-                        "text-left p-6 rounded-2xl transition-all duration-300 relative overflow-hidden group",
-                        isActive
-                          ? "bg-background border-border shadow-sm"
-                          : "hover:bg-background/50 border-transparent",
-                      )}
-                    >
-                      {isActive && (
-                        <div className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-primary text-primary-foreground rounded-r-full" />
-                      )}
+          <div className="flex flex-col lg:flex-row gap-12 items-center bg-white rounded-[24px] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
+            {/* Left: Interactive List */}
+            <div className="w-full lg:w-5/12 flex flex-col p-6 md:p-10">
+              {interactiveFeatures.map((feat, index) => {
+                const isActive = activeFeature === index;
+                const Icon = feat.icon;
+                return (
+                  <button
+                    key={feat.id}
+                    onClick={() => setActiveFeature(index)}
+                    className={cn(
+                      "text-left p-6 rounded-2xl transition-all duration-300 relative group",
+                      isActive ? "bg-slate-50" : "hover:bg-slate-50/50"
+                    )}
+                  >
+                    {isActive && (
+                      <div className="absolute left-0 top-1/4 bottom-1/4 w-1.5 bg-primary rounded-r-full" />
+                    )}
+                    <div className="flex items-start gap-4">
                       <div
                         className={cn(
-                          "size-12 rounded-xl flex items-center justify-center mb-4 transition-colors duration-300",
-                          isActive
-                            ? "bg-card shadow-sm text-foreground"
-                            : "bg-muted text-muted-foreground group-hover:bg-card group-hover:text-foreground",
+                          "size-12 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300",
+                          isActive ? "bg-primary text-white shadow-sm" : "bg-slate-100 text-slate-500"
                         )}
                       >
                         <Icon className="size-5" />
                       </div>
-                      <h3
-                        className={cn(
-                          "text-xl font-bold mb-2 transition-colors",
-                          isActive ? "text-foreground" : "text-foreground/80",
-                        )}
-                      >
-                        {feat.title}
-                      </h3>
-                      <p
-                        className={cn(
-                          "text-sm leading-relaxed transition-colors font-medium",
-                          isActive ? "text-foreground/80" : "text-muted-foreground",
-                        )}
-                      >
-                        {feat.desc}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Right: Dynamic Image */}
-              <div className="w-full lg:w-2/3">
-                <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden bg-muted border border-border shadow-inner">
-                  {interactiveFeatures.map((feat, index) => (
-                    <div
-                      key={feat.id}
-                      className={cn(
-                        "absolute inset-0 transition-all duration-700 ease-in-out",
-                        activeFeature === index
-                          ? "opacity-100 scale-100"
-                          : "opacity-0 scale-105 pointer-events-none",
-                      )}
-                    >
-                      <img
-                        src={feat.image}
-                        alt={feat.title}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/30 to-transparent" />
+                      <div>
+                        <h3 className={cn("text-lg font-bold mb-1", isActive ? "text-slate-900" : "text-slate-700")}>
+                          {feat.title}
+                        </h3>
+                        <p className={cn("text-sm leading-relaxed", isActive ? "text-slate-600" : "text-slate-500")}>
+                          {feat.desc}
+                        </p>
+                      </div>
                     </div>
-                  ))}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Right: Dynamic Image */}
+            <div className="w-full lg:w-7/12 h-[400px] lg:h-[600px] relative">
+              {interactiveFeatures.map((feat, index) => (
+                <div
+                  key={feat.id}
+                  className={cn(
+                    "absolute inset-0 transition-all duration-700 ease-in-out",
+                    activeFeature === index ? "opacity-100" : "opacity-0 pointer-events-none"
+                  )}
+                >
+                  <img
+                    src={feat.image}
+                    alt={feat.title}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-              </div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* Real Product Value (Replaces Testimonials) */}
-        <section className="py-24 bg-primary text-primary-foreground  px-6 relative overflow-hidden">
-          <div className="absolute top-0 right-0 -mr-40 -mt-40 size-[500px] bg-card/5 rounded-full blur-[100px] pointer-events-none" />
-          <div className="absolute bottom-0 left-0 -ml-40 -mb-40 size-[500px] bg-card/5 rounded-full blur-[100px] pointer-events-none" />
-
-          <div className="max-w-7xl mx-auto relative z-10">
-            <div className="text-center mb-20 max-w-3xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
-                L'indépendance technologique.
+        {/* Benefits */}
+        <section className="py-24 bg-primary text-white px-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16 max-w-3xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+                Reprenez le contrôle de votre activité.
               </h2>
-              <p className="text-primary-foreground/80 text-xl font-medium">
-                Nous ne sommes pas une marketplace. Fitloww est votre outil,
-                conçu pour mettre en valeur votre marque, pas la nôtre.
+              <p className="text-white/80 text-lg">
+                Fitloww n'est pas une marketplace. Vos clients vous appartiennent.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
                 {
                   title: "Marque Blanche",
-                  desc: "Vos clients restent vos clients. L'interface met en avant votre nom de studio et vos couleurs.",
-                  icon: Star,
-                },
-                {
-                  title: "Contrôle des Données",
-                  desc: "Vous êtes l'unique propriétaire de votre base de données clients. Exportez-la quand vous le souhaitez.",
-                  icon: Users,
-                },
-                {
-                  title: "Autonomie Totale",
-                  desc: "Pas de validation de cours par des modérateurs. Vous publiez, vos clients réservent instantanément.",
+                  desc: "L'interface met en avant votre nom de studio et vos couleurs.",
                   icon: Activity,
                 },
                 {
-                  title: "Sécurité Supabase",
-                  desc: "Vos données sont sécurisées par l'infrastructure Supabase, garantissant performance et fiabilité.",
+                  title: "0 Commission",
+                  desc: "Nous ne prenons aucun pourcentage sur vos ventes.",
+                  icon: CreditCard,
+                },
+                {
+                  title: "Données privées",
+                  desc: "Vous êtes l'unique propriétaire de votre base clients.",
                   icon: ShieldCheck,
                 },
+                {
+                  title: "Sécurisé",
+                  desc: "Infrastructure robuste garantissant performance et fiabilité.",
+                  icon: CheckCircle2,
+                },
               ].map((item, i) => (
-                  <div
-                  key={i}
-                  className="bg-primary-foreground/5 hover:bg-primary-foreground/10 border border-primary-foreground/10 p-8 rounded-[2rem] transition-colors duration-300"
-                >
-                  <div className="size-12 rounded-xl bg-primary-foreground/10 flex items-center justify-center mb-6">
-                    <item.icon className="size-6 text-primary-foreground" />
+                <div key={i} className="bg-white/10 p-8 rounded-[20px] backdrop-blur-sm border border-white/10 hover:bg-white/15 transition-colors">
+                  <div className="size-12 rounded-xl bg-white/20 flex items-center justify-center mb-6">
+                    <item.icon className="size-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3 text-primary-foreground">
+                  <h3 className="text-xl font-bold mb-3 text-white">
                     {item.title}
                   </h3>
-                  <p className="text-primary-foreground/80 font-medium leading-relaxed">
+                  <p className="text-white/80 leading-relaxed text-sm">
                     {item.desc}
                   </p>
                 </div>
@@ -406,14 +347,11 @@ export default function LandingPage() {
         </section>
 
         {/* FAQ Section */}
-        <section className="py-32 px-6 max-w-4xl mx-auto">
+        <section className="py-24 px-6 max-w-3xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold tracking-tight text-foreground mb-4">
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-4">
               Questions fréquentes
             </h2>
-            <p className="text-muted-foreground font-medium text-lg">
-              Tout ce que vous devez savoir avant de vous lancer.
-            </p>
           </div>
 
           <div className="space-y-4">
@@ -423,38 +361,24 @@ export default function LandingPage() {
                 <div
                   key={index}
                   className={cn(
-                    "border border-border/60 rounded-2xl overflow-hidden transition-colors duration-300",
-                    isOpen
-                      ? "bg-card shadow-md shadow-black/20"
-                      : "bg-transparent hover:bg-card/50",
+                    "border border-slate-200 rounded-xl overflow-hidden transition-all duration-300",
+                    isOpen ? "bg-white shadow-sm" : "bg-slate-50 hover:bg-slate-100"
                   )}
                 >
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : index)}
                     className="w-full text-left p-6 flex justify-between items-center focus:outline-none"
                   >
-                    <span className="font-bold text-lg text-foreground">
+                    <span className="font-semibold text-slate-900">
                       {faq.q}
                     </span>
-                    <div
-                      className={cn(
-                        "size-8 rounded-full bg-muted flex items-center justify-center shrink-0 transition-transform duration-300",
-                        isOpen ? "rotate-180" : "",
-                      )}
-                    >
-                      <ChevronDown className="size-4 text-foreground/80" />
+                    <div className={cn("transition-transform duration-300", isOpen ? "rotate-180" : "")}>
+                      <ChevronDown className="size-5 text-slate-500" />
                     </div>
                   </button>
-                  <div
-                    className={cn(
-                      "grid transition-all duration-300 ease-in-out",
-                      isOpen
-                        ? "grid-rows-[1fr] opacity-100"
-                        : "grid-rows-[0fr] opacity-0",
-                    )}
-                  >
+                  <div className={cn("grid transition-all duration-300 ease-in-out", isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
                     <div className="overflow-hidden">
-                      <p className="p-6 pt-0 text-muted-foreground font-medium leading-relaxed">
+                      <p className="p-6 pt-0 text-slate-600 leading-relaxed text-sm">
                         {faq.a}
                       </p>
                     </div>
@@ -466,22 +390,18 @@ export default function LandingPage() {
         </section>
 
         {/* Call to Action */}
-        <section className="pb-32 px-6 relative overflow-hidden">
-          <div className="max-w-5xl mx-auto bg-gradient-to-br from-zinc-900 to-black rounded-[3rem] p-12 md:p-20 text-center  overflow-hidden relative shadow-2xl shadow-black/50">
-            <div className="absolute top-0 right-0 -mr-20 -mt-20 size-[400px] bg-card/5 rounded-full blur-[80px]" />
-            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 size-[400px] bg-card/5 rounded-full blur-[80px]" />
-
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 relative z-10 leading-tight">
-              Prêt à accélérer ?
+        <section className="pb-24 px-6">
+          <div className="max-w-5xl mx-auto bg-slate-900 rounded-[24px] p-12 md:p-20 text-center relative shadow-xl overflow-hidden">
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6 text-white leading-tight">
+              Prêt à moderniser votre studio ?
             </h2>
-            <p className="text-muted-foreground text-xl mb-10 max-w-2xl mx-auto relative z-10 font-medium">
-              Créez votre compte gratuitement. Configuration en 5 minutes.
-              Aucune carte de crédit requise.
+            <p className="text-slate-300 text-lg mb-10 max-w-2xl mx-auto">
+              Créez votre compte gratuitement. Configuration en 5 minutes. Aucune carte de crédit requise.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
+            <div className="flex justify-center">
               <Link href="/register?role=manager">
-                <Button className="w-full sm:w-auto bg-card text-foreground rounded-full px-10 h-14 text-lg font-bold hover:bg-muted hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl">
-                  Créer mon studio maintenant
+                <Button className="bg-primary text-white rounded-full px-10 h-14 text-lg font-medium hover:bg-primary/90 hover:scale-[1.02] transition-all shadow-lg">
+                  Essayer gratuitement
                 </Button>
               </Link>
             </div>
@@ -490,34 +410,25 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border/50 py-16 px-6 bg-card">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="flex flex-col items-center md:items-start gap-3">
-            <div className="flex items-center gap-2.5 font-bold text-xl text-foreground tracking-tight">
-              <div className="size-6 bg-primary text-primary-foreground rounded-md flex items-center justify-center">
-                <Activity className="size-3 " />
+      <footer className="border-t border-slate-200 py-12 px-6 bg-white">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col items-center md:items-start gap-2">
+            <div className="flex items-center gap-2 font-bold text-xl text-slate-900 tracking-tight">
+              <div className="size-6 bg-primary rounded-md flex items-center justify-center">
+                <Activity className="size-3 text-white" />
               </div>
               Fitloww
             </div>
-            <p className="text-muted-foreground text-sm font-medium">
-              L'outil de gestion ultime pour les studios de fitness.
+            <p className="text-slate-500 text-sm">
+              L'outil de gestion pensé pour le bien-être.
             </p>
           </div>
-          <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 text-sm font-semibold text-muted-foreground">
-            <Link href="#features" className="hover:text-foreground transition-colors">
-              Fonctionnalités
-            </Link>
-            <Link href="/pricing" className="hover:text-foreground transition-colors">
-              Tarifs
-            </Link>
-            <Link href="/contact" className="hover:text-foreground transition-colors">
-              Contact
-            </Link>
-            <Link href="/legal" className="hover:text-foreground transition-colors">
-              Légal
-            </Link>
+          <div className="flex gap-8 text-sm font-medium text-slate-500">
+            <Link href="#features" className="hover:text-slate-900 transition-colors">Fonctionnalités</Link>
+            <Link href="/pricing" className="hover:text-slate-900 transition-colors">Tarifs</Link>
+            <Link href="/contact" className="hover:text-slate-900 transition-colors">Contact</Link>
           </div>
-          <p className="text-sm font-medium text-muted-foreground">
+          <p className="text-sm text-slate-400">
             © 2026 Fitloww. Tous droits réservés.
           </p>
         </div>

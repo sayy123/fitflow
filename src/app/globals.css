@@ -9,24 +9,11 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -44,78 +31,63 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) * 1.4);
   --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 :root {
-  --background: oklch(0.20 0.01 260); /* Less dark */
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.24 0.01 260); /* Lighter cards */
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.24 0.01 260);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.8 0.15 150);
-  --primary-foreground: oklch(0.1 0 0);
-  --secondary: oklch(0.30 0.02 260);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.30 0.02 260);
-  --muted-foreground: oklch(0.75 0.02 260);
-  --accent: oklch(0.30 0.02 260);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.6 0.25 25);
-  --border: oklch(0.35 0.02 260);
-  --input: oklch(0.35 0.02 260);
-  --ring: oklch(0.8 0.15 150);
-  --chart-1: oklch(0.8 0.15 150);
-  --chart-2: oklch(0.6 0.2 200);
-  --chart-3: oklch(0.7 0.15 300);
-  --chart-4: oklch(0.8 0.1 50);
-  --chart-5: oklch(0.5 0.2 25);
-  --radius: 1rem;
-  --sidebar: oklch(0.22 0.01 260);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.8 0.15 150);
-  --sidebar-primary-foreground: oklch(0.1 0 0);
-  --sidebar-accent: oklch(0.30 0.02 260);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.35 0.02 260);
-  --sidebar-ring: oklch(0.8 0.15 150);
+  /* Ultra Clean Light Theme - Inspired by Eversports / Boutique Fitness */
+  --background: oklch(1 0 0); /* Pure White */
+  --foreground: oklch(0.2 0.01 250); /* Very Dark Slate */
+  
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2 0.01 250);
+  
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2 0.01 250);
+  
+  /* Primary Green/Teal (Eversports style) */
+  --primary: oklch(0.65 0.15 160); 
+  --primary-foreground: oklch(0.98 0 0);
+  
+  --secondary: oklch(0.96 0.01 250); /* Light Slate Gray */
+  --secondary-foreground: oklch(0.2 0.01 250);
+  
+  --muted: oklch(0.96 0.01 250);
+  --muted-foreground: oklch(0.5 0.02 250);
+  
+  --accent: oklch(0.96 0.01 250);
+  --accent-foreground: oklch(0.2 0.01 250);
+  
+  --destructive: oklch(0.6 0.2 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  
+  --border: oklch(0.9 0.02 250); /* Soft Gray Border */
+  --input: oklch(0.9 0.02 250);
+  --ring: oklch(0.65 0.15 160);
+  
+  --radius: 0.75rem; /* Softer, friendlier corners */
 }
 
+/* Force light mode style to avoid user system preference forcing dark mode and ruining the clean white vibe */
 .dark {
-  /* Dark mode is now default in :root, keep this for completeness */
-  --background: oklch(0.20 0.01 260);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.24 0.01 260);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.24 0.01 260);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.8 0.15 150);
-  --primary-foreground: oklch(0.1 0 0);
-  --secondary: oklch(0.30 0.02 260);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.30 0.02 260);
-  --muted-foreground: oklch(0.75 0.02 260);
-  --accent: oklch(0.30 0.02 260);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.6 0.25 25);
-  --border: oklch(0.35 0.02 260);
-  --input: oklch(0.35 0.02 260);
-  --ring: oklch(0.8 0.15 150);
-  --chart-1: oklch(0.8 0.15 150);
-  --chart-2: oklch(0.6 0.2 200);
-  --chart-3: oklch(0.7 0.15 300);
-  --chart-4: oklch(0.8 0.1 50);
-  --chart-5: oklch(0.5 0.2 25);
-  --sidebar: oklch(0.22 0.01 260);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.8 0.15 150);
-  --sidebar-primary-foreground: oklch(0.1 0 0);
-  --sidebar-accent: oklch(0.30 0.02 260);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.35 0.02 260);
-  --sidebar-ring: oklch(0.8 0.15 150);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.2 0.01 250);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2 0.01 250);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2 0.01 250);
+  --primary: oklch(0.65 0.15 160);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.96 0.01 250);
+  --secondary-foreground: oklch(0.2 0.01 250);
+  --muted: oklch(0.96 0.01 250);
+  --muted-foreground: oklch(0.5 0.02 250);
+  --accent: oklch(0.96 0.01 250);
+  --accent-foreground: oklch(0.2 0.01 250);
+  --destructive: oklch(0.6 0.2 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.9 0.02 250);
+  --input: oklch(0.9 0.02 250);
+  --ring: oklch(0.65 0.15 160);
 }
 
 @layer base {
@@ -131,156 +103,7 @@
 }
 
 @layer utilities {
-  .glass {
-    @apply bg-white/70 backdrop-blur-md border border-white/20;
-  }
-  
-  .card-shadow {
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 2px 4px rgba(0, 0, 0, 0.05), 0 12px 24px rgba(0, 0, 0, 0.05);
-  }
-  
-  .sidebar-item-active {
-    @apply bg-primary/5 text-primary font-semibold;
-  }
-
   .text-balance {
     text-wrap: balance;
   }
-}
-
-/* FULLCALENDAR MODERN OVERRIDES */
-.calendar-container {
-  @apply bg-card rounded-3xl p-4 md:p-6 border border-border;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.3), 0 12px 24px rgba(0, 0, 0, 0.4);
-}
-
-.fc {
-  --fc-border-color: var(--border);
-  --fc-button-bg-color: var(--card);
-  --fc-button-border-color: var(--border);
-  --fc-button-text-color: var(--foreground);
-  --fc-button-hover-bg-color: var(--muted);
-  --fc-button-hover-border-color: var(--border);
-  --fc-button-active-bg-color: var(--primary);
-  --fc-button-active-border-color: var(--primary);
-  --fc-button-active-text-color: var(--primary-foreground);
-  --fc-today-bg-color: var(--muted);
-  --fc-page-bg-color: var(--card);
-  --fc-neutral-bg-color: var(--card);
-  --fc-list-event-hover-bg-color: var(--muted);
-  font-family: inherit;
-}
-
-/* Remove strict grid borders for a cleaner look */
-.fc-theme-standard td, .fc-theme-standard th {
-  border-color: var(--border);
-}
-.fc-scrollgrid {
-  border: none !important;
-}
-.fc-scrollgrid-section > td {
-  border: none !important;
-}
-
-/* Headers */
-.fc-col-header-cell {
-  padding: 12px 0;
-  background: var(--card);
-}
-.fc-col-header-cell-cushion {
-  color: var(--muted-foreground);
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.05em;
-  padding: 8px 12px;
-}
-.fc-day-today .fc-col-header-cell-cushion {
-  color: var(--primary-foreground);
-  background: var(--primary);
-  border-radius: 99px;
-  padding: 8px 16px;
-}
-
-/* Toolbar Buttons */
-.fc-toolbar-title {
-  font-weight: 900 !important;
-  font-size: 1.5rem !important;
-  color: var(--foreground);
-  letter-spacing: -0.02em;
-  text-transform: capitalize;
-}
-.fc .fc-button {
-  border-radius: 99px !important;
-  font-weight: 700 !important;
-  text-transform: uppercase !important;
-  font-size: 0.7rem !important;
-  letter-spacing: 0.05em !important;
-  padding: 8px 16px !important;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
-  transition: all 0.2s ease !important;
-}
-.fc .fc-button-primary:not(:disabled):active,
-.fc .fc-button-primary:not(:disabled).fc-button-active {
-  background-color: var(--primary) !important;
-  border-color: var(--primary) !important;
-  color: var(--primary-foreground) !important;
-}
-.fc .fc-button-primary:disabled {
-  opacity: 0.5 !important;
-}
-
-@media (max-width: 768px) {
-  .fc-header-toolbar {
-    flex-direction: column !important;
-    gap: 12px;
-  }
-  .fc-toolbar-chunk {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
-  .fc-toolbar-title {
-    font-size: 1.25rem !important;
-  }
-  .fc .fc-button {
-    padding: 6px 12px !important;
-    font-size: 0.65rem !important;
-  }
-  .calendar-container {
-    padding: 12px !important;
-  }
-}
-
-/* Events */
-.fc-v-event, .fc-h-event, .fc-daygrid-event {
-  border-radius: 12px !important;
-  border: none !important;
-  overflow: hidden;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  margin: 2px !important;
-}
-.fc-event:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  z-index: 10 !important;
-}
-
-/* Current time indicator */
-.fc-timegrid-now-indicator-line {
-  border-color: #ef4444; /* Red */
-  border-width: 2px;
-}
-.fc-timegrid-now-indicator-arrow {
-  border-color: #ef4444;
-  border-width: 6px;
-  background-color: #ef4444;
-}
-
-/* Slot times */
-.fc-timegrid-slot-label-cushion {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #9ca3af;
 }

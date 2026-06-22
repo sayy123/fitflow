@@ -207,23 +207,30 @@ export default function ClassesClient({
         handleWindowResize={true}
         eventContent={(eventInfo) => {
           const coach = eventInfo.event.extendedProps.coach
+          const durationMin = eventInfo.event.end && eventInfo.event.start 
+            ? (eventInfo.event.end.getTime() - eventInfo.event.start.getTime()) / 60000 
+            : 60;
+          const isShort = durationMin <= 45;
+
           return (
-            <div className="p-1.5 overflow-hidden flex flex-col gap-1">
-              <div className="font-extrabold text-[10px] sm:text-xs uppercase tracking-tight leading-none truncate">
+            <div className={`p-1 w-full h-full overflow-hidden flex ${isShort ? 'flex-row items-center justify-between gap-1' : 'flex-col gap-1'}`}>
+              <div className="font-extrabold text-[9px] sm:text-[10px] uppercase tracking-tight leading-none truncate">
                 {eventInfo.event.title}
               </div>
               {coach && (
-                <div className="flex items-center gap-1.5">
-                  <div className="size-4 rounded-full bg-card/20 overflow-hidden flex items-center justify-center shrink-0 border border-white/20">
+                <div className="flex items-center gap-1 shrink-0">
+                  <div className="size-4 sm:size-5 rounded-full bg-card/20 overflow-hidden flex items-center justify-center shrink-0 border border-white/20">
                     {coach.avatar_url ? (
                       <img src={coach.avatar_url} alt="" className="size-full object-cover" />
                     ) : (
                       <span className="text-[8px] font-black text-primary-foreground uppercase">{coach.display_name?.charAt(0)}</span>
                     )}
                   </div>
-                  <span className="text-[9px] font-bold text-primary-foreground/90 truncate uppercase tracking-tight leading-none">
-                    {coach.display_name || "Coach sans nom"}
-                  </span>
+                  {!isShort && (
+                    <span className="text-[9px] font-bold text-primary-foreground/90 truncate uppercase tracking-tight leading-none">
+                      {coach.display_name || "Coach sans nom"}
+                    </span>
+                  )}
                 </div>
               )}
             </div>
