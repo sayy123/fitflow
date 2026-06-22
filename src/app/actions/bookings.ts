@@ -343,7 +343,10 @@ export async function deleteBookingAction(bookingId: string) {
 
   const booking = await prisma.bookings.findUnique({
     where: { id: bookingId },
-    include: { classes: true }
+    include: { 
+      classes: { include: { organizations: true } },
+      studio_members: true
+    }
   })
 
   if (!booking) throw new Error('Booking not found')
@@ -363,6 +366,15 @@ export async function deleteBookingAction(bookingId: string) {
       cancel_reason: 'removed_by_owner',
       cancelled_at: new Date()
     }
+  })
+
+  const { sendClassCancelledEmail } = await import('@/lib/emails/send')
+  await sendClassCancelledEmail({
+    email: booking.studio_members.email,
+    fullName: booking.studio_members.full_name,
+    className: booking.classes.title,
+    startsAt: booking.classes.starts_at,
+    studioName: booking.classes.organizations.name,
   })
 
   revalidatePath(`/dashboard/classes/${booking.class_id}`)
@@ -419,7 +431,10 @@ export async function confirmBookingPaymentAction(bookingId: string) {
 
   const booking = await prisma.bookings.findUnique({
     where: { id: bookingId },
-    include: { classes: true }
+    include: { 
+      classes: { include: { organizations: true } },
+      studio_members: true
+    }
   })
 
   if (!booking) throw new Error('Booking not found')
@@ -440,6 +455,16 @@ export async function confirmBookingPaymentAction(bookingId: string) {
       status: 'confirmed',
       payment_status: 'paid' 
     }
+  })
+
+  const { sendBookingConfirmationEmail } = await import('@/lib/emails/send')
+  await sendBookingConfirmationEmail({
+    email: booking.studio_members.email,
+    fullName: booking.studio_members.full_name,
+    className: booking.classes.title,
+    startsAt: booking.classes.starts_at,
+    studioName: booking.classes.organizations.name,
+    isNewUser: false,
   })
 
   revalidatePath(`/dashboard/classes/${booking.class_id}`)
