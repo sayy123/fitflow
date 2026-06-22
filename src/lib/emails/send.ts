@@ -16,8 +16,11 @@ async function sendEmailDevOrProd(to: string, subject: string, html: string) {
   const fromEmail = process.env.RESEND_FROM_EMAIL || smtpUser || 'onboarding@resend.dev'
   const sender = `fitflow887 <${fromEmail}>`
 
-  // Priorité absolue à Resend si la clé est présente (même en local)
-  if (apiKey) {
+  // Resend n'autorise pas l'envoi depuis @gmail.com, on l'ignore dans ce cas
+  const canUseResend = apiKey && !fromEmail.endsWith('@gmail.com');
+
+  // Priorité absolue à Resend si la clé est présente et utilisable (même en local)
+  if (canUseResend) {
     const resend = new Resend(apiKey)
     try {
       console.log(`📧 Envoi d'un email via Resend vers ${to}...`)
