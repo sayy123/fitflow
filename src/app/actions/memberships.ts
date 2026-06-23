@@ -72,6 +72,7 @@ export async function createSubscriptionSessionAction(orgId: string, type: 'mont
       success_url: successUrl,
       cancel_url: cancelUrl,
       customer_email: user.email!,
+      allow_promotion_codes: true,
       metadata: {
         type: 'studio_pass',
         passType: type,
