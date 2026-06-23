@@ -70,13 +70,20 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
 
   useEffect(() => {
     const sessionId = searchParams.get('session_id');
+    const canceled = searchParams.get('canceled');
+    
+    if (canceled === 'true') {
+      toast.error('Paiement annulé.');
+    }
+
     if (sessionId) {
       verifyStripeSessionAction(sessionId).then((res) => {
         setIsVerifyingSession(false);
         if (res.success && res.verified) {
           toast.success('Paiement validé avec succès !');
-          // Wait a tiny bit and refresh page or redirect
           setTimeout(() => router.refresh(), 500);
+        } else {
+          toast.error('Le paiement n\'a pas pu être validé. Veuillez réessayer.');
         }
       });
     }
@@ -209,7 +216,7 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
         </div>
         <h1 className="text-3xl font-bold text-slate-900 mb-2">Accès refusé</h1>
         <p className="text-slate-500 mb-8">Vous n'êtes plus autorisé à réserver dans ce studio.</p>
-        <Link href={`/${org.slug}`}>
+        <Link href={currentUser ? "/dashboard" : `/${org.slug}`}>
           <Button variant="outline" className="h-12 px-8 rounded-xl font-bold border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors">
             Retour au planning
           </Button>
@@ -226,7 +233,7 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
         </div>
         <h1 className="text-3xl font-bold text-slate-900 mb-2">Réservation impossible</h1>
         <p className="text-slate-500 mb-8">Vous avez été retiré de ce cours par le gérant et ne pouvez plus le rejoindre.</p>
-        <Link href={`/${org.slug}`}>
+        <Link href={currentUser ? "/dashboard" : `/${org.slug}`}>
           <Button variant="outline" className="h-12 px-8 rounded-xl font-bold border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors">
             Retour au planning
           </Button>
@@ -235,12 +242,14 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
     )
   }
 
+  const backUrl = currentUser ? "/dashboard" : `/${org.slug}`;
+
   // --- BOOKING CHECKOUT VIEW ---
   return (
     <div className="max-w-6xl mx-auto pt-8 pb-24 px-4 md:px-8">
       {/* Top Bar */}
       <div className="mb-8">
-        <Link href={`/${org.slug}`} className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">
+        <Link href={backUrl} className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">
           <ChevronLeft className="size-4 mr-1" /> Retour au planning
         </Link>
       </div>
