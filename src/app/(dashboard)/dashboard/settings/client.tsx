@@ -46,6 +46,7 @@ interface SettingsClientProps {
     plan?: string | null;
     stripe_account_id?: string | null;
     stripe_charges_enabled?: boolean | null;
+    stripe_account_status?: string | null;
     payment_link?: string | null;
   };
   user: {
@@ -486,15 +487,15 @@ export function SettingsClient({
                     <div className="bg-gray-50/50 border border-border rounded-xl p-5 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                       <div>
                         <h5 className="font-semibold text-gray-900 text-sm flex items-center gap-2">
-                          <span className={`w-2.5 h-2.5 rounded-full ${organization.stripe_charges_enabled ? 'bg-green-500' : 'bg-gray-300'}`}></span>
-                          Stripe Connect {organization.stripe_charges_enabled ? <span className="text-green-600 bg-green-50 px-2 py-0.5 rounded text-xs ml-1">Actif</span> : <span className="text-gray-500 bg-gray-100 px-2 py-0.5 rounded text-xs ml-1">Non connecté</span>}
+                          <span className={`w-2.5 h-2.5 rounded-full ${organization.stripe_charges_enabled ? 'bg-green-500' : (organization.stripe_account_status === 'pending_verification' ? 'bg-yellow-400' : 'bg-gray-300')}`}></span>
+                          Stripe Connect {organization.stripe_charges_enabled ? <span className="text-green-600 bg-green-50 px-2 py-0.5 rounded text-xs ml-1">Actif</span> : (organization.stripe_account_status === 'pending_verification' ? <span className="text-yellow-700 bg-yellow-50 px-2 py-0.5 rounded text-xs ml-1 font-medium">Vérification en cours</span> : <span className="text-gray-500 bg-gray-100 px-2 py-0.5 rounded text-xs ml-1">Non connecté</span>)}
                         </h5>
                         <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed max-w-lg">
                           Acceptez les paiements par carte bancaire et Apple Pay automatiquement lors de la réservation. L'argent est versé directement sur votre compte bancaire via Stripe.
                         </p>
                       </div>
                       
-                      {!organization.stripe_charges_enabled ? (
+                      {!organization.stripe_charges_enabled && organization.stripe_account_status !== 'pending_verification' ? (
                         <Button
                           variant="default"
                           className="bg-[#635BFF] hover:bg-[#5851df] text-white font-medium shrink-0 shadow-sm transition-all"
@@ -511,7 +512,6 @@ export function SettingsClient({
                           className="border-gray-200 text-gray-700 font-medium shrink-0 shadow-sm transition-all"
                           onClick={(e) => {
                             e.preventDefault();
-                            // If they are already connected, we could redirect to a stripe dashboard link. For now, re-run connect to access dashboard or settings.
                             window.location.href = `/api/stripe/connect?orgId=${organization.id}`;
                           }}
                         >

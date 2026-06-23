@@ -22,6 +22,8 @@ interface BookingClientProps {
     slug: string
     color_primary?: string | null
     payment_link?: string | null
+    stripe_account_id?: string | null
+    stripe_charges_enabled?: boolean | null
   }
   cls: {
     id: string
@@ -74,6 +76,9 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
 
   const isFull = cls.bookings.length >= cls.capacity
   const buttonColor = org.color_primary || '#10b981'
+  const isStripeActive = org.stripe_account_id && org.stripe_charges_enabled;
+  const hasPaymentMethod = org.payment_link || isStripeActive;
+  const isPaid = cls.price && cls.price > 0 && hasPaymentMethod && !hasSubscription;
 
   async function handleSubmit(formData: FormData) {
     setIsPending(true)
@@ -244,11 +249,11 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
                   className="w-full h-14 rounded-xl text-white font-bold text-base shadow-md hover:shadow-lg transition-all"
                   style={{ backgroundColor: buttonColor }}
                 >
-                  {isAutoJoining ? "Réservation en cours..." : (cls.price && cls.price > 0 && org.payment_link && !hasSubscription ? `Réserver et payer ${cls.price}€` : "Confirmer la réservation")}
+                  {isAutoJoining ? "Réservation en cours..." : (isPaid ? `Réserver et payer ${cls.price}€` : "Confirmer la réservation")}
                 </Button>
-                {cls.price && cls.price > 0 && org.payment_link && !hasSubscription && (
+                {isPaid && (
                   <p className="text-xs text-slate-500 text-center mt-3">
-                    Vous serez redirigé vers notre plateforme de paiement sécurisée.
+                    Vous serez redirigé vers {isStripeActive ? 'notre page de paiement sécurisée' : 'une plateforme de paiement'}.
                   </p>
                 )}
               </div>
@@ -327,12 +332,12 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
                     disabled={isPending}
                     style={{ backgroundColor: buttonColor }}
                   >
-                    {isPending ? 'Réservation en cours...' : (isFull ? 'Rejoindre la liste d\'attente' : (cls.price && cls.price > 0 && org.payment_link && !hasSubscription ? `Réserver et payer ${cls.price}€` : 'Confirmer la réservation'))}
+                    {isPending ? 'Réservation en cours...' : (isFull ? 'Rejoindre la liste d\'attente' : (isPaid ? `Réserver et payer ${cls.price}€` : 'Confirmer la réservation'))}
                   </Button>
                   
-                  {cls.price && cls.price > 0 && org.payment_link && !hasSubscription && (
+                  {isPaid && (
                     <p className="text-xs text-slate-500 text-center mt-3">
-                      Vous serez redirigé vers une page de paiement sécurisée.
+                      Vous serez redirigé vers {isStripeActive ? 'notre page de paiement sécurisée' : 'une plateforme de paiement'}.
                     </p>
                   )}
                 </div>

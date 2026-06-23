@@ -128,10 +128,12 @@ export async function createBookingAction(formData: FormData) {
       if (bookingsCount >= cls.capacity) return { error: 'Ce cours est complet' }
 
       // Créer la réservation
-      const isPaid = cls.price && cls.price > 0 && cls.organizations.payment_link && !member.has_active_subscription;
+      const isStripeActive = cls.organizations.stripe_account_id && cls.organizations.stripe_charges_enabled;
+      const isPaid = cls.price && cls.price > 0 && (cls.organizations.payment_link || isStripeActive) && !member.has_active_subscription;
       
+      let booking;
       if (existing && existing.status === 'cancelled') {
-        await prisma.bookings.update({
+        booking = await prisma.bookings.update({
           where: { id: existing.id },
           data: {
             status: isPaid ? 'pending_payment' : 'confirmed',
@@ -140,7 +142,7 @@ export async function createBookingAction(formData: FormData) {
           }
         })
       } else {
-        await prisma.bookings.create({
+        booking = await prisma.bookings.create({
           data: {
             class_id: classId,
             studio_member_id: member.id,
@@ -153,6 +155,41 @@ export async function createBookingAction(formData: FormData) {
 
       const host = (await headers()).get('host')
       const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
+
+      if (isPaid && isStripeActive) {
+        const Stripe = (await import('stripe')).default;
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2024-06-20' });
+        
+        const session = await stripe.checkout.sessions.create({
+          payment_method_types: ['card', 'link'],
+          line_items: [{
+            price_data: {
+              currency: 'eur',
+              product_data: {
+                name: cls.title,
+                description: `Séance chez ${cls.organizations.name}`,
+              },
+              unit_amount: Math.round(cls.price! * 100),
+            },
+            quantity: 1,
+          }],
+          mode: 'payment',
+          success_url: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true`,
+          cancel_url: `${siteUrl}/${cls.organizations.slug}/book/${classId}?canceled=true`,
+          customer_email: currentUser.email,
+          client_reference_id: booking.id,
+        }, {
+          stripeAccount: cls.organizations.stripe_account_id!,
+        });
+
+        // Ensure we store the checkout session id on the booking if needed later
+        await prisma.bookings.update({
+          where: { id: booking.id },
+          data: { checkout_session_id: session.id }
+        });
+
+        return { url: session.url };
+      }
 
       if (isPaid && cls.organizations.payment_link) {
         return { url: cls.organizations.payment_link };
@@ -286,10 +323,12 @@ export async function createBookingAction(formData: FormData) {
     }
 
     // 3. Créer la réservation
-    const isPaid = cls.price && cls.price > 0 && cls.organizations.payment_link && !member.has_active_subscription;
+    const isStripeActive = cls.organizations.stripe_account_id && cls.organizations.stripe_charges_enabled;
+    const isPaid = cls.price && cls.price > 0 && (cls.organizations.payment_link || isStripeActive) && !member.has_active_subscription;
 
+    let booking;
     if (existing && existing.status === 'cancelled') {
-      await prisma.bookings.update({
+      booking = await prisma.bookings.update({
         where: { id: existing.id },
         data: {
           status: isPaid ? 'pending_payment' : 'confirmed',
@@ -298,7 +337,7 @@ export async function createBookingAction(formData: FormData) {
         }
       })
     } else {
-      await prisma.bookings.create({
+      booking = await prisma.bookings.create({
         data: {
           class_id: classId,
           studio_member_id: member.id,
@@ -311,6 +350,40 @@ export async function createBookingAction(formData: FormData) {
 
     const host = (await headers()).get('host')
     const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
+
+    if (isPaid && isStripeActive) {
+      const Stripe = (await import('stripe')).default;
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2024-06-20' });
+      
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card', 'link'],
+        line_items: [{
+          price_data: {
+            currency: 'eur',
+            product_data: {
+              name: cls.title,
+              description: `Séance chez ${cls.organizations.name}`,
+            },
+            unit_amount: Math.round(cls.price! * 100),
+          },
+          quantity: 1,
+        }],
+        mode: 'payment',
+        success_url: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true`,
+        cancel_url: `${siteUrl}/${cls.organizations.slug}/book/${classId}?canceled=true`,
+        customer_email: email.toLowerCase().trim(),
+        client_reference_id: booking.id,
+      }, {
+        stripeAccount: cls.organizations.stripe_account_id!,
+      });
+
+      await prisma.bookings.update({
+        where: { id: booking.id },
+        data: { checkout_session_id: session.id }
+      });
+
+      return { url: session.url };
+    }
 
     if (isPaid && cls.organizations.payment_link) {
       return { url: cls.organizations.payment_link };

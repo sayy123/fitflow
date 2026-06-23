@@ -46,7 +46,7 @@ export async function GET(request: Request) {
 
     let accountId = org.stripe_account_id;
 
-    if (org.stripe_charges_enabled && accountId) {
+    if ((org.stripe_charges_enabled || org.stripe_account_status === 'pending_verification') && accountId) {
       // Create a magic login link for Express accounts
       const loginLink = await stripe.accounts.createLoginLink(accountId);
       return NextResponse.redirect(loginLink.url);

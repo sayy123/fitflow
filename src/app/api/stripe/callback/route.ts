@@ -34,11 +34,12 @@ export async function GET(request: Request) {
     // Check account status with Stripe
     const account = await stripe.accounts.retrieve(org.stripe_account_id);
 
-    // Update the database based on charges_enabled
+    // Update the database based on charges_enabled and details_submitted
     await prisma.organizations.update({
       where: { id: orgId },
       data: { 
         stripe_charges_enabled: account.charges_enabled,
+        stripe_account_status: account.charges_enabled ? 'active' : (account.details_submitted ? 'pending_verification' : 'pending'),
       }
     });
 

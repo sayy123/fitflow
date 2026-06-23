@@ -42,6 +42,7 @@ export default async function SettingsPage() {
       plan: currentMember.organizations.plan,
       stripe_account_id: currentMember.organizations.stripe_account_id,
       stripe_charges_enabled: currentMember.organizations.stripe_charges_enabled,
+      stripe_account_status: currentMember.organizations.stripe_account_status,
       payment_link: currentMember.organizations.payment_link,
     }} 
     user={{
