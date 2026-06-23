@@ -43,11 +43,12 @@ interface SettingsClientProps {
     name: string;
     address?: string | null;
     phone?: string | null;
-    plan?: string | null;
     stripe_account_id?: string | null;
     stripe_charges_enabled?: boolean | null;
     stripe_account_status?: string | null;
     payment_link?: string | null;
+    member_monthly_price?: number | null;
+    member_yearly_price?: number | null;
   };
   user: {
     email: string;
@@ -66,7 +67,7 @@ export function SettingsClient({
   role,
 }: SettingsClientProps) {
   const [activeTab, setActiveTab] = useState<
-    "profile" | "studio" | "security" | "billing"
+    "profile" | "studio" | "security" | "billing" | "passes"
   >("profile");
 
   // Avatar State
@@ -79,6 +80,8 @@ export function SettingsClient({
   const [orgName, setOrgName] = useState(organization.name);
   const [orgAddress, setOrgAddress] = useState(organization.address || "");
   const [orgPhone, setOrgPhone] = useState(organization.phone || "");
+  const [memberMonthlyPrice, setMemberMonthlyPrice] = useState(organization.member_monthly_price?.toString() || "");
+  const [memberYearlyPrice, setMemberYearlyPrice] = useState(organization.member_yearly_price?.toString() || "");
 
   const [orgLoading, setOrgLoading] = useState(false);
 
@@ -105,7 +108,8 @@ export function SettingsClient({
       name: orgName,
       address: orgAddress,
       phone: orgPhone,
-
+      member_monthly_price: memberMonthlyPrice ? parseFloat(memberMonthlyPrice) : null,
+      member_yearly_price: memberYearlyPrice ? parseFloat(memberYearlyPrice) : null,
     });
     setOrgLoading(false);
     if (result.error) toast.error(result.error);
@@ -204,9 +208,16 @@ export function SettingsClient({
     },
     {
       id: "billing" as const,
-      label: "Abonnement",
+      label: "Abonnement Fitflow",
       icon: CreditCard,
       desc: "Gérer mon forfait et factures",
+      hidden: !isOwner,
+    },
+    {
+      id: "passes" as const,
+      label: "Offres Clients",
+      icon: Zap,
+      desc: "Abonnements pour vos membres",
       hidden: !isOwner,
     },
     {
@@ -526,6 +537,62 @@ export function SettingsClient({
                     className="w-full sm:w-auto h-10 px-6 rounded-lg font-medium text-sm bg-gray-900 hover:bg-gray-800"
                   >
                     {orgLoading ? "Mise à jour..." : "Mettre à jour le studio"}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "passes" && isOwner && (
+              <div className="p-6 sm:p-8 space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+                <div className="pb-4 border-b border-border/50">
+                  <h3 className="text-lg font-semibold text-card-foreground">
+                    Abonnements Clients (Pass Illimité)
+                  </h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Définissez les prix pour que vos clients puissent s'abonner et accéder à tous vos cours gratuitement. Laissez vide pour désactiver.
+                  </p>
+                </div>
+                <div className="space-y-6">
+                  <div className="space-y-1.5">
+                    <Label className="text-sm font-medium text-gray-700">
+                      Prix de l'abonnement Mensuel (1 mois)
+                    </Label>
+                    <div className="relative">
+                      <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">€</div>
+                      <Input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={memberMonthlyPrice}
+                        onChange={(e) => setMemberMonthlyPrice(e.target.value)}
+                        placeholder="Ex: 49.99"
+                        className="rounded-lg border-border h-10 pl-8 text-sm"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-sm font-medium text-gray-700">
+                      Prix de l'abonnement Annuel (1 an)
+                    </Label>
+                    <div className="relative">
+                      <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">€</div>
+                      <Input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={memberYearlyPrice}
+                        onChange={(e) => setMemberYearlyPrice(e.target.value)}
+                        placeholder="Ex: 499.00"
+                        className="rounded-lg border-border h-10 pl-8 text-sm"
+                      />
+                    </div>
+                  </div>
+                  <Button
+                    onClick={handleUpdateOrg}
+                    disabled={orgLoading}
+                    className="w-full sm:w-auto h-10 px-6 rounded-lg font-medium text-sm bg-gray-900 hover:bg-gray-800"
+                  >
+                    {orgLoading ? "Enregistrement..." : "Enregistrer les offres"}
                   </Button>
                 </div>
               </div>

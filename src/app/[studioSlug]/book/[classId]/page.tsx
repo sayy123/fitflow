@@ -75,7 +75,11 @@ export default async function BookingPage({ params }: { params: Promise<{ studio
   return (
     <div className="min-h-screen bg-slate-50">
       <BookingClient 
-        org={org} 
+        org={{
+          ...org,
+          member_monthly_price: org.member_monthly_price,
+          member_yearly_price: org.member_yearly_price
+        }} 
         cls={{
           ...cls,
           org_members: cls.org_members ? {

@@ -5,7 +5,7 @@ import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { headers } from 'next/headers'
 
-export async function updateOrganizationAction(orgId: string, data: { name?: string, address?: string, phone?: string, payment_link?: string }) {
+export async function updateOrganizationAction(orgId: string, data: { name?: string, address?: string, phone?: string, payment_link?: string, member_monthly_price?: number | null, member_yearly_price?: number | null }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Non authentifié' }
@@ -30,7 +30,9 @@ export async function updateOrganizationAction(orgId: string, data: { name?: str
         name: data.name,
         address: data.address,
         phone: data.phone,
-        payment_link: data.payment_link
+        payment_link: data.payment_link,
+        member_monthly_price: data.member_monthly_price,
+        member_yearly_price: data.member_yearly_price
       }
     })
     

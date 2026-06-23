@@ -44,6 +44,8 @@ export default async function SettingsPage() {
       stripe_charges_enabled: currentMember.organizations.stripe_charges_enabled,
       stripe_account_status: currentMember.organizations.stripe_account_status,
       payment_link: currentMember.organizations.payment_link,
+      member_monthly_price: currentMember.organizations.member_monthly_price,
+      member_yearly_price: currentMember.organizations.member_yearly_price,
     }} 
     user={{
       email: user.email || '',

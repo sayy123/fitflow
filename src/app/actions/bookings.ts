@@ -556,10 +556,37 @@ export async function verifyStripeSessionAction(sessionId: string, accountId?: s
       accountId ? { stripeAccount: accountId } : undefined
     );
 
-    if ((session.payment_status === 'paid' || session.payment_status === 'no_payment_required') && session.metadata?.classId && session.metadata?.memberId) {
-      const { classId, memberId, organizationId } = session.metadata;
+    if (session.payment_status === 'paid' || session.payment_status === 'no_payment_required') {
+      if (session.metadata?.type === 'studio_pass') {
+        const { orgId, memberId, passType } = session.metadata;
+        const durationMonths = passType === 'monthly' ? 1 : 12;
+        const expiresAt = new Date();
+        expiresAt.setMonth(expiresAt.getMonth() + durationMonths);
 
-      let booking = await prisma.bookings.findUnique({
+        await prisma.member_subscriptions.create({
+          data: {
+            organization_id: orgId,
+            studio_member_id: memberId,
+            type: passType,
+            expires_at: expiresAt,
+            is_active: true,
+            price_paid: session.amount_total ? session.amount_total / 100 : 0,
+            stripe_payment_id: session.payment_intent as string | undefined,
+          }
+        });
+
+        await prisma.studio_members.update({
+          where: { id: memberId },
+          data: { has_active_subscription: true }
+        });
+
+        return { success: true, verified: true, isPass: true };
+      }
+
+      if (session.metadata?.classId && session.metadata?.memberId) {
+        const { classId, memberId, organizationId } = session.metadata;
+
+        let booking = await prisma.bookings.findUnique({
         where: {
           class_id_studio_member_id: {
             class_id: classId,

@@ -12,7 +12,7 @@ import { toast } from 'sonner'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { MapPin, ExternalLink, Calendar, Clock, ChevronLeft, CheckCircle2, UserCircle2 } from 'lucide-react'
+import { MapPin, ExternalLink, Calendar, Clock, ChevronLeft, CheckCircle2, UserCircle2, Zap } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 interface BookingClientProps {
@@ -24,6 +24,8 @@ interface BookingClientProps {
     payment_link?: string | null
     stripe_account_id?: string | null
     stripe_charges_enabled?: boolean | null
+    member_monthly_price?: number | null
+    member_yearly_price?: number | null
   }
   cls: {
     id: string
@@ -67,6 +69,7 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
   const [createAccount, setCreateAccount] = useState(isInvite && !currentUser)
   const [isAutoJoining, setIsAutoJoining] = useState(false)
   const [isVerifyingSession, setIsVerifyingSession] = useState(!!searchParams.get('session_id'))
+  const [isBuyingPass, setIsBuyingPass] = useState(false)
 
   useEffect(() => {
     const sessionId = searchParams.get('session_id');
@@ -80,8 +83,16 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
       verifyStripeSessionAction(sessionId, org.stripe_account_id).then((res) => {
         setIsVerifyingSession(false);
         if (res.success && res.verified) {
-          toast.success('Paiement validé avec succès !');
-          setTimeout(() => router.refresh(), 500);
+          if (res.isPass) {
+            toast.success('Abonnement activé avec succès ! Vous pouvez maintenant réserver gratuitement.');
+            // Update URL to remove query params
+            window.history.replaceState({}, '', window.location.pathname);
+            // Refresh to update server state
+            router.refresh();
+          } else {
+            toast.success('Paiement validé avec succès !');
+            setTimeout(() => router.refresh(), 500);
+          }
         } else {
           toast.error('Le paiement n\'a pas pu être validé. Veuillez réessayer.');
         }
@@ -132,6 +143,19 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
       router.push('/dashboard')
     }
   }
+
+  const handleBuyPass = async (type: 'monthly' | 'yearly') => {
+    setIsBuyingPass(true);
+    const { createSubscriptionSessionAction } = await import('@/app/actions/memberships');
+    const res = await createSubscriptionSessionAction(org.id, type, cls.id);
+    setIsBuyingPass(false);
+
+    if (res.error) {
+      toast.error(res.error);
+    } else if (res.url) {
+      window.location.href = res.url;
+    }
+  };
 
   // --- VIEW FOR VERIFYING SESSION ---
   if (isVerifyingSession) {
@@ -403,6 +427,59 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
 
             </div>
           )}
+
+          {!hasSubscription && (org.member_monthly_price || org.member_yearly_price) && (
+            <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl border border-indigo-100 p-6 sm:p-8 shadow-sm">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="size-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                  <Zap className="size-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-indigo-950">Offre d'Abonnement</h3>
+                  <p className="text-sm text-indigo-700/80">Profitez de ce cours et de tous les autres gratuitement !</p>
+                </div>
+              </div>
+              
+              <div className="grid sm:grid-cols-2 gap-4 mt-6">
+                {org.member_monthly_price && (
+                  <div className="bg-white rounded-xl border border-indigo-100 p-5 shadow-sm text-center">
+                    <p className="text-sm font-bold text-slate-500 mb-1 uppercase tracking-wider">1 Mois</p>
+                    <p className="text-2xl font-black text-indigo-950 mb-4">{org.member_monthly_price}€</p>
+                    <Button 
+                      variant="outline" 
+                      className="w-full h-10 border-indigo-200 text-indigo-700 hover:bg-indigo-50"
+                      onClick={() => handleBuyPass('monthly')}
+                      disabled={isBuyingPass}
+                    >
+                      Choisir ce pass
+                    </Button>
+                  </div>
+                )}
+                {org.member_yearly_price && (
+                  <div className="bg-white rounded-xl border border-indigo-200 p-5 shadow-md text-center relative overflow-hidden">
+                    <div className="absolute top-0 right-0 bg-indigo-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg">
+                      Populaire
+                    </div>
+                    <p className="text-sm font-bold text-slate-500 mb-1 uppercase tracking-wider">1 An</p>
+                    <p className="text-2xl font-black text-indigo-950 mb-4">{org.member_yearly_price}€</p>
+                    <Button 
+                      className="w-full h-10 bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm"
+                      onClick={() => handleBuyPass('yearly')}
+                      disabled={isBuyingPass}
+                    >
+                      Choisir ce pass
+                    </Button>
+                  </div>
+                )}
+              </div>
+              {!currentUser && (
+                <p className="text-xs text-indigo-600/70 text-center mt-4">
+                  Connectez-vous d'abord pour souscrire à un abonnement.
+                </p>
+              )}
+            </div>
+          )}
+
         </div>
 
         {/* Right Column: Order Summary */}
