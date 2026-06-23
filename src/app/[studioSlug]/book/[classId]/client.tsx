@@ -52,9 +52,11 @@ interface BookingClientProps {
     }
   } | null
   hasSubscription?: boolean
+  isRemovedFromClass?: boolean
+  isInactiveMember?: boolean
 }
 
-export default function BookingClient({ org, cls, currentUser, hasSubscription }: BookingClientProps) {
+export default function BookingClient({ org, cls, currentUser, hasSubscription, isRemovedFromClass, isInactiveMember }: BookingClientProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const isInvite = searchParams.get('invite') === 'true'
@@ -161,6 +163,41 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription }
             </div>
           </div>
         </div>
+      </div>
+    )
+  }
+
+  // --- BLOCKED VIEWS ---
+  if (isInactiveMember) {
+    return (
+      <div className="max-w-3xl mx-auto pt-12 px-4 text-center">
+        <div className="mx-auto size-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-6">
+          <UserCircle2 className="size-8" />
+        </div>
+        <h1 className="text-3xl font-bold text-slate-900 mb-2">Accès refusé</h1>
+        <p className="text-slate-500 mb-8">Vous n'êtes plus autorisé à réserver dans ce studio.</p>
+        <Link href={`/${org.slug}`}>
+          <Button variant="outline" className="h-12 px-8 rounded-xl font-bold border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors">
+            Retour au planning
+          </Button>
+        </Link>
+      </div>
+    )
+  }
+
+  if (isRemovedFromClass) {
+    return (
+      <div className="max-w-3xl mx-auto pt-12 px-4 text-center">
+        <div className="mx-auto size-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-6">
+          <Calendar className="size-8" />
+        </div>
+        <h1 className="text-3xl font-bold text-slate-900 mb-2">Réservation impossible</h1>
+        <p className="text-slate-500 mb-8">Vous avez été retiré de ce cours par le gérant et ne pouvez plus le rejoindre.</p>
+        <Link href={`/${org.slug}`}>
+          <Button variant="outline" className="h-12 px-8 rounded-xl font-bold border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors">
+            Retour au planning
+          </Button>
+        </Link>
       </div>
     )
   }

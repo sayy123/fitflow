@@ -21,6 +21,9 @@ import {
   MapPin,
   Zap,
   LogOut,
+  Users,
+  Ticket,
+  CalendarDays,
 } from "lucide-react";
 import { cookies } from "next/headers";
 
@@ -312,53 +315,90 @@ export default async function DashboardPage(props: {
           )}
         </div>
       ) : (
-        <div className="space-y-8">
-          <div className="flex overflow-x-auto touch-pan-x snap-x snap-mandatory pb-4 md:pb-0 md:grid md:grid-cols-3 gap-4 md:gap-6" style={{ scrollbarWidth: 'none' }}>
-            {[
-              { label: "Membres", value: dashboardData.activeMembersCount, icon: "👥", color: "text-blue-400 bg-blue-500/10 border-blue-500/20" },
-              { label: "Cours", value: dashboardData.classesThisWeekCount, icon: "🗓️", color: "text-purple-400 bg-purple-500/10 border-purple-500/20" },
-              { label: "Réservations", value: dashboardData.totalBookingsCount, icon: "🎟️", color: "text-orange-400 bg-orange-500/10 border-orange-500/20" },
-            ].map((stat) => (
-              <Card key={stat.label} className="border border-border bg-card rounded-2xl shadow-sm overflow-hidden min-w-[240px] md:min-w-0 snap-center shrink-0">
-                <CardContent className="p-5 flex items-center gap-4">
-                  <div className={cn("size-12 rounded-xl flex items-center justify-center text-xl shrink-0 border", stat.color)}>{stat.icon}</div>
-                  <div>
-                    <CardTitle className="text-[10px] font-bold text-muted-foreground mb-1 uppercase tracking-wider">{stat.label}</CardTitle>
-                    <div className="text-3xl font-black text-card-foreground leading-none">{stat.value}</div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+        <div className="space-y-10">
+          <div className="bg-white border border-zinc-200 rounded-2xl shadow-sm overflow-hidden">
+            <div className="grid grid-cols-3 divide-x divide-zinc-200">
+              <div className="p-4 sm:p-8 flex flex-col items-center sm:items-start text-center sm:text-left">
+                <p className="text-[11px] sm:text-sm font-medium text-zinc-500 flex items-center gap-2 mb-1.5 sm:mb-3">
+                  <Users className="hidden sm:block w-4 h-4 text-zinc-400" />
+                  <span className="hidden sm:inline">Membres actifs</span>
+                  <span className="sm:hidden">Membres</span>
+                </p>
+                <h4 className="text-2xl sm:text-4xl font-semibold text-zinc-900 tracking-tight leading-none">{dashboardData.activeMembersCount || 0}</h4>
+              </div>
+              
+              <div className="p-4 sm:p-8 flex flex-col items-center sm:items-start text-center sm:text-left">
+                <p className="text-[11px] sm:text-sm font-medium text-zinc-500 flex items-center gap-2 mb-1.5 sm:mb-3">
+                  <CalendarDays className="hidden sm:block w-4 h-4 text-zinc-400" />
+                  <span className="hidden sm:inline">Cours de la semaine</span>
+                  <span className="sm:hidden">Cours</span>
+                </p>
+                <h4 className="text-2xl sm:text-4xl font-semibold text-zinc-900 tracking-tight leading-none">{dashboardData.classesThisWeekCount || 0}</h4>
+              </div>
+
+              <div className="p-4 sm:p-8 flex flex-col items-center sm:items-start text-center sm:text-left">
+                <p className="text-[11px] sm:text-sm font-medium text-zinc-500 flex items-center gap-2 mb-1.5 sm:mb-3">
+                  <Ticket className="hidden sm:block w-4 h-4 text-zinc-400" />
+                  <span className="hidden sm:inline">Réservations</span>
+                  <span className="sm:hidden">Réserv.</span>
+                </p>
+                <h4 className="text-2xl sm:text-4xl font-semibold text-zinc-900 tracking-tight leading-none">{dashboardData.totalBookingsCount || 0}</h4>
+              </div>
+            </div>
           </div>
 
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-card-foreground flex items-center gap-2">Prochaines séances du studio</h3>
-              <Link href="/dashboard/classes"><Button variant="link" className="text-sm font-medium text-primary hover:text-primary/80">Voir tout le planning &rarr;</Button></Link>
+          <div>
+            <div className="flex items-end justify-between mb-5 sm:mb-6 px-1">
+              <div>
+                <h3 className="text-lg sm:text-xl font-bold text-zinc-900 tracking-tight">Prochaines séances</h3>
+                <p className="text-xs sm:text-sm text-zinc-500 mt-0.5 sm:mt-1">Aperçu de vos cours à venir.</p>
+              </div>
+              <Link href="/dashboard/classes" className="inline-flex items-center text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors shrink-0 mb-0.5 sm:mb-0 ml-2">
+                <span className="hidden sm:inline">Gérer le</span> planning <span aria-hidden="true" className="ml-1">&rarr;</span>
+              </Link>
             </div>
-            <div className="grid grid-cols-1 gap-3">
+            
+            <div className="flex flex-col gap-3">
               {(dashboardData.upcomingStaffClasses?.length || 0) === 0 ? (
-                <Card className="border border-border/50 bg-background/50 rounded-2xl shadow-sm"><CardContent className="py-12 text-center text-muted-foreground text-sm">Aucun cours prévu prochainement.</CardContent></Card>
+                <div className="flex flex-col items-center justify-center p-12 bg-white border border-zinc-200 border-dashed rounded-2xl">
+                  <CalendarDays className="w-8 h-8 text-zinc-300 mb-3" />
+                  <p className="text-sm font-medium text-zinc-500">Aucune séance prévue prochainement.</p>
+                </div>
               ) : (
                 dashboardData.upcomingStaffClasses?.map((cls) => (
-                  <Card key={cls.id} className="border border-border bg-card rounded-xl shadow-sm hover:shadow-md transition-shadow group">
-                    <CardContent className="p-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-                      <div className="flex items-center gap-4">
-                        <div className="size-12 rounded-xl bg-background border border-border/50 flex flex-col items-center justify-center shrink-0">
-                          <span className="text-[10px] font-bold text-muted-foreground uppercase">{new Date(cls.starts_at).toLocaleDateString("fr-FR", { month: "short" })}</span>
-                          <span className="text-lg font-bold text-card-foreground leading-none">{new Date(cls.starts_at).getDate()}</span>
-                        </div>
-                        <div className="space-y-1">
-                          <h4 className="text-base font-semibold text-card-foreground">{cls.title}</h4>
-                          <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground">
-                            <span className="flex items-center gap-1.5"><Clock className="size-3.5" /> {new Date(cls.starts_at).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}</span>
-                            {cls.location && <span className="flex items-center gap-1.5"><MapPin className="size-3.5" /> {cls.location}</span>}
+                  <div key={cls.id} className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 bg-white border border-zinc-200 rounded-2xl shadow-sm hover:border-emerald-500/40 hover:shadow-md transition-all duration-200">
+                    <div className="flex items-center gap-5">
+                      <div className="flex flex-col justify-center items-center w-14 h-14 rounded-xl bg-zinc-50 border border-zinc-100 shrink-0 text-center">
+                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{new Date(cls.starts_at).toLocaleDateString("fr-FR", { month: "short" }).replace('.', '')}</span>
+                        <span className="text-lg font-bold text-zinc-900 leading-none mt-0.5">{new Date(cls.starts_at).getDate()}</span>
+                      </div>
+                      
+                      <div>
+                        <h4 className="text-base font-semibold text-zinc-900 group-hover:text-emerald-700 transition-colors">{cls.title}</h4>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5">
+                          <div className="flex items-center gap-1.5 text-[13px] font-medium text-zinc-500">
+                            <Clock className="w-3.5 h-3.5 text-zinc-400" />
+                            {new Date(cls.starts_at).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
                           </div>
+                          {cls.location && (
+                            <>
+                              <span className="hidden sm:block w-1 h-1 rounded-full bg-zinc-300"></span>
+                              <div className="flex items-center gap-1.5 text-[13px] font-medium text-zinc-500">
+                                <MapPin className="w-3.5 h-3.5 text-zinc-400" />
+                                {cls.location}
+                              </div>
+                            </>
+                          )}
                         </div>
                       </div>
-                      <Link href={`/dashboard/classes/${cls.id}`} className="w-full sm:w-auto h-9 px-4 flex items-center justify-center rounded-lg font-bold text-[10px] uppercase tracking-widest border border-border text-foreground/90 hover:bg-muted hover:text-foreground transition-colors">Gérer le cours</Link>
-                    </CardContent>
-                  </Card>
+                    </div>
+                    
+                    <div className="mt-4 sm:mt-0 shrink-0">
+                      <Link href={`/dashboard/classes/${cls.id}`} className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-2.5 text-sm font-semibold text-zinc-700 bg-white border border-zinc-200 rounded-xl hover:bg-zinc-50 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors">
+                        Gérer la séance
+                      </Link>
+                    </div>
+                  </div>
                 ))
               )}
             </div>

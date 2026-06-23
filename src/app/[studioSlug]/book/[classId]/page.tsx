@@ -39,6 +39,9 @@ export default async function BookingPage({ params }: { params: Promise<{ studio
   if (!cls) notFound()
 
   let hasSubscription = false;
+  let isRemovedFromClass = false;
+  let isInactiveMember = false;
+
   if (user && user.email) {
     const member = await prisma.studio_members.findUnique({
       where: {
@@ -48,7 +51,25 @@ export default async function BookingPage({ params }: { params: Promise<{ studio
         }
       }
     });
-    hasSubscription = member?.has_active_subscription || false;
+    
+    if (member) {
+      hasSubscription = member.has_active_subscription || false;
+      isInactiveMember = member.is_active === false;
+
+      if (!isInactiveMember) {
+        const cancelledBooking = await prisma.bookings.findUnique({
+          where: {
+            class_id_studio_member_id: {
+              class_id: classId,
+              studio_member_id: member.id
+            }
+          }
+        });
+        if (cancelledBooking?.status === 'cancelled' && cancelledBooking?.cancel_reason === 'removed_by_owner') {
+          isRemovedFromClass = true;
+        }
+      }
+    }
   }
 
   return (
@@ -67,6 +88,8 @@ export default async function BookingPage({ params }: { params: Promise<{ studio
           email: user.email || ''
         } : null} 
         hasSubscription={hasSubscription}
+        isRemovedFromClass={isRemovedFromClass}
+        isInactiveMember={isInactiveMember}
       />
     </div>
   )
