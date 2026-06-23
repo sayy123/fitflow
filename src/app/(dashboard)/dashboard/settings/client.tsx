@@ -78,7 +78,7 @@ export function SettingsClient({
   const [orgName, setOrgName] = useState(organization.name);
   const [orgAddress, setOrgAddress] = useState(organization.address || "");
   const [orgPhone, setOrgPhone] = useState(organization.phone || "");
-  const [orgPaymentLink, setOrgPaymentLink] = useState(organization.payment_link || "");
+
   const [orgLoading, setOrgLoading] = useState(false);
 
   // Profile State
@@ -104,7 +104,7 @@ export function SettingsClient({
       name: orgName,
       address: orgAddress,
       phone: orgPhone,
-      payment_link: orgPaymentLink,
+
     });
     setOrgLoading(false);
     if (result.error) toast.error(result.error);
@@ -481,23 +481,44 @@ export function SettingsClient({
                       />
                     </div>
                   </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-sm font-medium text-gray-700">
-                      Lien de paiement universel
-                    </Label>
-                    <div className="relative">
-                      <CreditCard className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                      <Input
-                        value={orgPaymentLink}
-                        onChange={(e) => setOrgPaymentLink(e.target.value)}
-                        placeholder="Ex: https://revolut.me/tonnom, lydia-app.com/..., paypal.me/..."
-                        className="rounded-lg border-border h-10 pl-10 text-sm"
-                      />
+                  <div className="pt-4 mt-6 border-t border-border/50">
+                    <h4 className="text-[15px] font-bold text-gray-900 mb-3">Paiements en ligne</h4>
+                    <div className="bg-gray-50/50 border border-border rounded-xl p-5 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                      <div>
+                        <h5 className="font-semibold text-gray-900 text-sm flex items-center gap-2">
+                          <span className={`w-2.5 h-2.5 rounded-full ${organization.stripe_charges_enabled ? 'bg-green-500' : 'bg-gray-300'}`}></span>
+                          Stripe Connect {organization.stripe_charges_enabled ? <span className="text-green-600 bg-green-50 px-2 py-0.5 rounded text-xs ml-1">Actif</span> : <span className="text-gray-500 bg-gray-100 px-2 py-0.5 rounded text-xs ml-1">Non connecté</span>}
+                        </h5>
+                        <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed max-w-lg">
+                          Acceptez les paiements par carte bancaire et Apple Pay automatiquement lors de la réservation. L'argent est versé directement sur votre compte bancaire via Stripe.
+                        </p>
+                      </div>
+                      
+                      {!organization.stripe_charges_enabled ? (
+                        <Button
+                          variant="default"
+                          className="bg-[#635BFF] hover:bg-[#5851df] text-white font-medium shrink-0 shadow-sm transition-all"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            window.location.href = `/api/stripe/connect?orgId=${organization.id}`;
+                          }}
+                        >
+                          Connecter mon compte Stripe
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          className="border-gray-200 text-gray-700 font-medium shrink-0 shadow-sm transition-all"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            // If they are already connected, we could redirect to a stripe dashboard link. For now, re-run connect to access dashboard or settings.
+                            window.location.href = `/api/stripe/connect?orgId=${organization.id}`;
+                          }}
+                        >
+                          Gérer mon compte Stripe
+                        </Button>
+                      )}
                     </div>
-                    <p className="text-xs text-muted-foreground leading-relaxed mt-1">
-                      Vos membres seront redirigés vers ce lien pour régler leurs séances payantes. <br/>
-                      <span className="font-semibold text-gray-700">Compatible avec :</span> Revolut, PayPal, Lydia, Paylib, SumUp, Stripe Payment Links, ou toute autre cagnotte.
-                    </p>
                   </div>
                   <Button
                     onClick={handleUpdateOrg}
