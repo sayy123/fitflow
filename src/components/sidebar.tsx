@@ -68,6 +68,7 @@ export function Sidebar({
     { name: "Nous contacter", href: "/contact", icon: HelpCircle },
   ];
 
+  const isStaff = ["owner", "admin"].includes(role);
   const staffItems = [
     { name: "Coachs", href: "/dashboard/coaches", icon: Users },
     { name: "Membres", href: "/dashboard/members", icon: Users },
@@ -77,13 +78,12 @@ export function Sidebar({
     staffItems.push({ name: "Mes Salles", href: "/dashboard/studios", icon: Building2 });
   }
 
-  if (isOwner) {
+  if (isStaff) {
     staffItems.push({ name: "Abonnements", href: "/dashboard/passes", icon: Zap });
   }
 
   staffItems.push({ name: "Paramètres", href: "/dashboard/settings", icon: Settings });
 
-  const isStaff = ["owner", "admin"].includes(role);
   const showOrgName = ["owner", "admin", "coach"].includes(role);
 
   return (
