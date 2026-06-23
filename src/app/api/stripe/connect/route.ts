@@ -46,17 +46,22 @@ export async function GET(request: Request) {
 
     let accountId = org.stripe_account_id;
 
-    if (org.stripe_charges_enabled) {
-      // The account is fully set up. Standard accounts manage their money directly on Stripe's dashboard.
-      return NextResponse.redirect('https://dashboard.stripe.com/');
+    if (org.stripe_charges_enabled && accountId) {
+      // Create a magic login link for Express accounts
+      const loginLink = await stripe.accounts.createLoginLink(accountId);
+      return NextResponse.redirect(loginLink.url);
     }
 
     if (!accountId) {
-      // Create a Standard Connect account
+      // Create an Express Connect account (supports magic login links)
       const account = await stripe.accounts.create({
-        type: 'standard',
+        type: 'express',
         country: 'FR',
         email: user.email,
+        capabilities: {
+          card_payments: { requested: true },
+          transfers: { requested: true },
+        },
         business_profile: {
           name: org.name,
         },
