@@ -46,6 +46,11 @@ export async function GET(request: Request) {
 
     let accountId = org.stripe_account_id;
 
+    if (org.stripe_charges_enabled) {
+      // The account is fully set up. Standard accounts manage their money directly on Stripe's dashboard.
+      return NextResponse.redirect('https://dashboard.stripe.com/');
+    }
+
     if (!accountId) {
       // Create a Standard Connect account
       const account = await stripe.accounts.create({
