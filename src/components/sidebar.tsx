@@ -78,7 +78,7 @@ export function Sidebar({
   }
 
   if (isOwner) {
-    staffItems.push({ name: "Offres Clients", href: "/dashboard/passes", icon: Zap });
+    staffItems.push({ name: "Abonnements", href: "/dashboard/passes", icon: Zap });
   }
 
   staffItems.push({ name: "Paramètres", href: "/dashboard/settings", icon: Settings });
