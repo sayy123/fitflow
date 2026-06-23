@@ -126,6 +126,19 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
     }
   }
 
+  // --- VIEW FOR VERIFYING SESSION ---
+  if (isVerifyingSession) {
+    return (
+      <div className="max-w-3xl mx-auto pt-12 px-4 h-[60vh] flex flex-col items-center justify-center">
+        <div className="bg-white rounded-[24px] shadow-sm border border-slate-200 p-12 text-center max-w-md w-full">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500 mx-auto mb-6"></div>
+          <h1 className="text-2xl font-bold text-slate-900 mb-2">Validation du paiement</h1>
+          <p className="text-slate-500">Veuillez patienter quelques secondes. Ne quittez pas cette page.</p>
+        </div>
+      </div>
+    );
+  }
+
   // --- VIEW FOR ALREADY BOOKED USER ---
   if (isUserBooked && userBooking) {
     return (
