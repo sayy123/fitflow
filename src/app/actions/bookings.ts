@@ -160,7 +160,7 @@ export async function createBookingAction(formData: FormData) {
 
       if (isPaid && isStripeActive) {
         const Stripe = (await import('stripe')).default;
-        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2024-06-20' });
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2026-05-27.dahlia' });
         
         const session = await stripe.checkout.sessions.create({
           line_items: [{
@@ -355,7 +355,7 @@ export async function createBookingAction(formData: FormData) {
 
     if (isPaid && isStripeActive) {
       const Stripe = (await import('stripe')).default;
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2024-06-20' });
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2026-05-27.dahlia' });
       
       const session = await stripe.checkout.sessions.create({
         line_items: [{
@@ -549,7 +549,7 @@ export async function confirmBookingPaymentAction(bookingId: string) {
 export async function verifyStripeSessionAction(sessionId: string, accountId?: string | null) {
   try {
     const Stripe = (await import('stripe')).default;
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2024-06-20' });
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2026-05-27.dahlia' });
     const session = await stripe.checkout.sessions.retrieve(
       sessionId,
       undefined,

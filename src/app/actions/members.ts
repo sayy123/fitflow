@@ -109,7 +109,7 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
 
           if (isPaid && isStripeActive) {
             const Stripe = (await import('stripe')).default;
-            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2024-06-20' });
+            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2026-05-27.dahlia' });
             
             const session = await stripe.checkout.sessions.create({
               line_items: [{
@@ -188,7 +188,7 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
 
           if (isPaid && isStripeActive) {
             const Stripe = (await import('stripe')).default;
-            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2024-06-20' });
+            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2026-05-27.dahlia' });
             
             const session = await stripe.checkout.sessions.create({
               line_items: [{

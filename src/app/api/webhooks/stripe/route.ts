@@ -5,7 +5,7 @@ import { sendBookingConfirmationEmail } from '@/lib/emails/send';
 import { headers } from 'next/headers';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: '2024-06-20',
+  apiVersion: '2026-05-27.dahlia',
 });
 
 export async function POST(req: Request) {
@@ -133,8 +133,14 @@ export async function POST(req: Request) {
   // 2. Paiement réussi ou abonnement mis à jour
   if (event.type === "invoice.payment_succeeded") {
     try {
-      const invoice = event.data.object as Stripe.Invoice;
+      const invoice = event.data.object as any;
+
       if (invoice.subscription) {
+        await prisma.organizations.update({
+          where: { stripe_subscription_id: invoice.subscription as string },
+          data: {},
+        });
+
         const subscription = await stripe.subscriptions.retrieve(
           invoice.subscription as string
         );
