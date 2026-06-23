@@ -110,7 +110,7 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
             const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2024-06-20' });
             
             const session = await stripe.checkout.sessions.create({
-              payment_method_types: ['card', 'link'],
+              payment_method_types: ['card'],
               line_items: [{
                 price_data: {
                   currency: 'eur',
@@ -182,7 +182,7 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
             const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2024-06-20' });
             
             const session = await stripe.checkout.sessions.create({
-              payment_method_types: ['card', 'link'],
+              payment_method_types: ['card'],
               line_items: [{
                 price_data: {
                   currency: 'eur',
