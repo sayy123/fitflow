@@ -182,12 +182,6 @@ export async function createBookingAction(formData: FormData) {
           stripeAccount: cls.organizations.stripe_account_id!,
         });
 
-        // Ensure we store the checkout session id on the booking if needed later
-        await prisma.bookings.update({
-          where: { id: booking.id },
-          data: { checkout_session_id: session.id }
-        });
-
         return { url: session.url };
       }
 
@@ -375,11 +369,6 @@ export async function createBookingAction(formData: FormData) {
         client_reference_id: booking.id,
       }, {
         stripeAccount: cls.organizations.stripe_account_id!,
-      });
-
-      await prisma.bookings.update({
-        where: { id: booking.id },
-        data: { checkout_session_id: session.id }
       });
 
       return { url: session.url };

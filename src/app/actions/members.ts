@@ -131,11 +131,6 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
               stripeAccount: org.stripe_account_id!,
             });
 
-            await prisma.bookings.update({
-              where: { id: booking.id },
-              data: { checkout_session_id: session.id }
-            });
-
             return { url: session.url };
           }
 
@@ -206,11 +201,6 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
               client_reference_id: booking.id,
             }, {
               stripeAccount: org.stripe_account_id!,
-            });
-
-            await prisma.bookings.update({
-              where: { id: booking.id },
-              data: { checkout_session_id: session.id }
             });
 
             return { url: session.url };
