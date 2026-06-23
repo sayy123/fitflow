@@ -47,20 +47,20 @@ export async function GET(request: Request) {
     let accountId = org.stripe_account_id;
 
     if ((org.stripe_charges_enabled || org.stripe_account_status === 'pending_verification') && accountId) {
+      const accountInfo = await stripe.accounts.retrieve(accountId);
+      if (accountInfo.type === 'standard') {
+        return NextResponse.redirect('https://dashboard.stripe.com/');
+      }
       // Create a magic login link for Express accounts
       const loginLink = await stripe.accounts.createLoginLink(accountId);
       return NextResponse.redirect(loginLink.url);
     }
 
     if (!accountId) {
-      // Create an Express Connect account (supports magic login links)
+      // Create a Standard Connect account
       const account = await stripe.accounts.create({
-        type: 'express',
+        type: 'standard',
         email: user.email,
-        capabilities: {
-          card_payments: { requested: true },
-          transfers: { requested: true },
-        },
         business_profile: {
           name: org.name,
         },
