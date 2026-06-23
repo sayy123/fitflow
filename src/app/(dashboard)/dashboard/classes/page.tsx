@@ -157,6 +157,7 @@ export default async function ClassesPage(props: {
             coaches={coaches}
             organizations={[org]}
             userRole={membershipHere.role} // Pass the actual role ('coach' or 'member')
+            studioName={org.name}
             studioSlug={org.slug}
             currentMemberId={membershipHere.id}
           />

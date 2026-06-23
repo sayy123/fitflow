@@ -294,7 +294,7 @@ export function SettingsClient({
                     </p>
                   </div>
                   <div className="bg-muted px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-foreground/80 border border-border">
-                    Plan {organization.plan || "Starter"}
+                    Plan Starter
                   </div>
                 </div>
 

@@ -39,7 +39,6 @@ export default async function SettingsPage() {
       name: currentMember.organizations.name,
       address: currentMember.organizations.address,
       phone: currentMember.organizations.phone,
-      plan: currentMember.organizations.plan,
       stripe_account_id: currentMember.organizations.stripe_account_id,
       stripe_charges_enabled: currentMember.organizations.stripe_charges_enabled,
       stripe_account_status: currentMember.organizations.stripe_account_status,
