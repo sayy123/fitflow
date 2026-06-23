@@ -178,6 +178,7 @@ export async function createBookingAction(formData: FormData) {
           success_url: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true&session_id={CHECKOUT_SESSION_ID}`,
           cancel_url: `${siteUrl}/${cls.organizations.slug}/book/${classId}?canceled=true`,
           customer_email: currentUser.email,
+          allow_promotion_codes: true,
           metadata: {
             classId: classId,
             memberId: member.id,
@@ -372,6 +373,7 @@ export async function createBookingAction(formData: FormData) {
         success_url: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true&session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${siteUrl}/${cls.organizations.slug}/book/${classId}?canceled=true`,
         customer_email: email.toLowerCase().trim(),
+        allow_promotion_codes: true,
         metadata: {
           classId: classId,
           memberId: member.id,

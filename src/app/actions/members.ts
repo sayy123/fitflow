@@ -127,6 +127,7 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
               success_url: `${siteUrl}/${org.slug}/book/${classId}?success=true&session_id={CHECKOUT_SESSION_ID}`,
               cancel_url: `${siteUrl}/${org.slug}/book/${classId}?canceled=true`,
               customer_email: user.email,
+              allow_promotion_codes: true,
               metadata: {
                 classId: classId,
                 memberId: member.id,
@@ -205,6 +206,7 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
               success_url: `${siteUrl}/${org.slug}/book/${classId}?success=true&session_id={CHECKOUT_SESSION_ID}`,
               cancel_url: `${siteUrl}/${org.slug}/book/${classId}?canceled=true`,
               customer_email: user.email,
+              allow_promotion_codes: true,
               metadata: {
                 classId: classId,
                 memberId: member.id,
