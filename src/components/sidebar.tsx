@@ -77,6 +77,10 @@ export function Sidebar({
     staffItems.push({ name: "Mes Salles", href: "/dashboard/studios", icon: Building2 });
   }
 
+  if (isOwner) {
+    staffItems.push({ name: "Offres Clients", href: "/dashboard/passes", icon: Zap });
+  }
+
   staffItems.push({ name: "Paramètres", href: "/dashboard/settings", icon: Settings });
 
   const isStaff = ["owner", "admin"].includes(role);

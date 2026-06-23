@@ -1,0 +1,7 @@
+--- prisma/schema.prisma
++++ prisma/schema.prisma
+@@ -558,2 +558,4 @@
+   website                String?
++  member_monthly_price   Float?
++  member_yearly_price    Float?
+   created_at             DateTime?               @default(now()) @db.Timestamptz(6)
