@@ -29,19 +29,57 @@ export async function POST(req: Request) {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
     
-    // The client_reference_id contains our booking.id
-    if (session.client_reference_id) {
+    // We now use metadata to defer booking creation
+    if (session.metadata?.classId && session.metadata?.memberId && session.metadata?.organizationId) {
+      const { classId, memberId, organizationId } = session.metadata;
+
       try {
-        const booking = await prisma.bookings.findUnique({
-          where: { id: session.client_reference_id },
+        let booking = await prisma.bookings.findUnique({
+          where: {
+            class_id_studio_member_id: {
+              class_id: classId,
+              studio_member_id: memberId
+            }
+          },
           include: {
             classes: { include: { organizations: true } },
             studio_members: true
           }
         });
 
-        if (booking && booking.status === 'pending_payment') {
-          // Mark booking as confirmed and paid
+        if (booking && booking.status === 'cancelled') {
+          // Re-activate a cancelled booking
+          booking = await prisma.bookings.update({
+            where: { id: booking.id },
+            data: {
+              status: 'confirmed',
+              payment_status: 'paid',
+              cancelled_at: null
+            },
+            include: {
+              classes: { include: { organizations: true } },
+              studio_members: true
+            }
+          });
+        } else if (!booking) {
+          // Create the new confirmed booking
+          booking = await prisma.bookings.create({
+            data: {
+              class_id: classId,
+              studio_member_id: memberId,
+              organization_id: organizationId,
+              status: 'confirmed',
+              payment_status: 'paid',
+            },
+            include: {
+              classes: { include: { organizations: true } },
+              studio_members: true
+            }
+          });
+        }
+
+        // Ensure we handle case where they might have paid but booking is already confirmed (duplicate webhook)
+        if (booking && booking.status !== 'cancelled') {
           await prisma.bookings.update({
             where: { id: booking.id },
             data: {
@@ -50,7 +88,7 @@ export async function POST(req: Request) {
             }
           });
 
-          // Send confirmation email now that they have paid
+          // Send confirmation email
           const host = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
           await sendBookingConfirmationEmail({
             email: booking.studio_members.email,
@@ -58,12 +96,12 @@ export async function POST(req: Request) {
             className: booking.classes.title,
             startsAt: booking.classes.starts_at,
             studioName: booking.classes.organizations.name,
-            isNewUser: false, // Could be true if we wanted, but false is fine
+            isNewUser: false,
             baseUrl: host
           });
         }
       } catch (e) {
-        console.error('Error processing checkout session:', e);
+        console.error('Error processing checkout session metadata:', e);
         return new NextResponse('Internal Error', { status: 500 });
       }
     }

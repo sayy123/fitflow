@@ -89,17 +89,19 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
           const isStripeActive = org.stripe_account_id && org.stripe_charges_enabled;
           const isPaid = cls.price && cls.price > 0 && (org.payment_link || isStripeActive) && !member.has_active_subscription;
 
-          // Créer la réservation
-          const booking = await prisma.bookings.create({
-            data: {
-              class_id: classId,
-              studio_member_id: member.id,
-              organization_id: organizationId,
-              status: isPaid ? 'pending_payment' : 'confirmed',
-              payment_status: isPaid ? 'unpaid' : 'free',
-            }
-          })
-          bookingCreated = true;
+          let booking;
+          if (!(isPaid && isStripeActive)) {
+            booking = await prisma.bookings.create({
+              data: {
+                class_id: classId,
+                studio_member_id: member.id,
+                organization_id: organizationId,
+                status: isPaid ? 'pending_payment' : 'confirmed',
+                payment_status: isPaid ? 'unpaid' : 'free',
+              }
+            })
+            bookingCreated = true;
+          }
 
           const { headers } = await import('next/headers');
           const host = (await headers()).get('host');
@@ -110,7 +112,6 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
             const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2024-06-20' });
             
             const session = await stripe.checkout.sessions.create({
-              payment_method_types: ['card'],
               line_items: [{
                 price_data: {
                   currency: 'eur',
@@ -126,7 +127,11 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
               success_url: `${siteUrl}/${org.slug}/book/${classId}?success=true`,
               cancel_url: `${siteUrl}/${org.slug}/book/${classId}?canceled=true`,
               customer_email: user.email,
-              client_reference_id: booking.id,
+              metadata: {
+                classId: classId,
+                memberId: member.id,
+                organizationId: organizationId,
+              }
             }, {
               stripeAccount: org.stripe_account_id!,
             });
@@ -163,15 +168,18 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
           const isStripeActive = org.stripe_account_id && org.stripe_charges_enabled;
           const isPaid = cls.price && cls.price > 0 && (org.payment_link || isStripeActive) && !member.has_active_subscription;
 
-          const booking = await prisma.bookings.update({
-            where: { id: existing.id },
-            data: {
-              status: isPaid ? 'pending_payment' : 'confirmed',
-              payment_status: isPaid ? 'unpaid' : 'free',
-              cancelled_at: null
-            }
-          });
-          bookingCreated = true;
+          let booking;
+          if (!(isPaid && isStripeActive)) {
+            booking = await prisma.bookings.update({
+              where: { id: existing.id },
+              data: {
+                status: isPaid ? 'pending_payment' : 'confirmed',
+                payment_status: isPaid ? 'unpaid' : 'free',
+                cancelled_at: null
+              }
+            });
+            bookingCreated = true;
+          }
 
           const { headers } = await import('next/headers');
           const host = (await headers()).get('host');
@@ -182,7 +190,6 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
             const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2024-06-20' });
             
             const session = await stripe.checkout.sessions.create({
-              payment_method_types: ['card'],
               line_items: [{
                 price_data: {
                   currency: 'eur',
@@ -198,7 +205,11 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
               success_url: `${siteUrl}/${org.slug}/book/${classId}?success=true`,
               cancel_url: `${siteUrl}/${org.slug}/book/${classId}?canceled=true`,
               customer_email: user.email,
-              client_reference_id: booking.id,
+              metadata: {
+                classId: classId,
+                memberId: member.id,
+                organizationId: organizationId,
+              }
             }, {
               stripeAccount: org.stripe_account_id!,
             });
