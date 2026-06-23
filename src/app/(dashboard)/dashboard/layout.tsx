@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
-import { DevTools } from "@/components/dev-tools";
 import { Sidebar } from "@/components/sidebar";
 import { TrialBlockedWrapper } from "./trial-blocked-wrapper";
 import { cookies } from "next/headers";
@@ -42,9 +41,6 @@ export default async function DashboardLayout({
           <main className="flex-1 p-4 md:p-12 max-w-5xl mx-auto w-full">
             {children}
           </main>
-          <div className="fixed bottom-4 left-4 z-50">
-            <DevTools />
-          </div>
         </div>
       </div>
     );

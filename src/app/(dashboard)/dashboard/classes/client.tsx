@@ -227,7 +227,7 @@ export default function ClassesClient({
                           {format(classDate, 'HH:mm')} • {c.duration_min} min
                         </div>
                         
-                        <div className={`text-[13px] font-bold leading-[1.1] mb-1 line-clamp-2 ${c.is_cancelled ? 'line-through opacity-70' : ''}`}>
+                        <div className={`text-[13px] font-bold leading-[1.1] mb-1 truncate ${c.is_cancelled ? 'line-through opacity-70' : ''}`}>
                           {c.title}
                         </div>
 
