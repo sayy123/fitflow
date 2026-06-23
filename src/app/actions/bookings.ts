@@ -544,11 +544,14 @@ export async function confirmBookingPaymentAction(bookingId: string) {
 }
 
 
-export async function verifyStripeSessionAction(sessionId: string) {
+export async function verifyStripeSessionAction(sessionId: string, accountId?: string | null) {
   try {
     const Stripe = (await import('stripe')).default;
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2024-06-20' });
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const session = await stripe.checkout.sessions.retrieve(
+      sessionId,
+      accountId ? { stripeAccount: accountId } : undefined
+    );
 
     if (session.payment_status === 'paid' && session.metadata?.classId && session.metadata?.memberId) {
       const { classId, memberId, organizationId } = session.metadata;

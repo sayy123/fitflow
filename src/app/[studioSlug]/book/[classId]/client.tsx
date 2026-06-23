@@ -77,7 +77,7 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
     }
 
     if (sessionId) {
-      verifyStripeSessionAction(sessionId).then((res) => {
+      verifyStripeSessionAction(sessionId, org.stripe_account_id).then((res) => {
         setIsVerifyingSession(false);
         if (res.success && res.verified) {
           toast.success('Paiement validé avec succès !');
