@@ -199,12 +199,8 @@ export async function createStripeConnectAccountAction(orgId: string) {
 
     if (!accountId) {
       const account = await stripe.accounts.create({
-        type: 'express',
+        type: 'standard',
         email: user.email || undefined,
-        capabilities: {
-          transfers: { requested: true },
-          card_payments: { requested: true },
-        },
         metadata: {
           orgId: orgId
         }
@@ -249,6 +245,10 @@ export async function createStripeConnectLoginLinkAction(orgId: string) {
   if (!member || !member.organizations.stripe_account_id) return { error: "Compte Stripe introuvable" };
 
   try {
+    const account = await stripe.accounts.retrieve(member.organizations.stripe_account_id);
+    if (account.type === 'standard') {
+      return { url: 'https://dashboard.stripe.com/' };
+    }
     const loginLink = await stripe.accounts.createLoginLink(member.organizations.stripe_account_id);
     return { url: loginLink.url };
   } catch (error: any) {
