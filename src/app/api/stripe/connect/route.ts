@@ -56,7 +56,6 @@ export async function GET(request: Request) {
       // Create an Express Connect account (supports magic login links)
       const account = await stripe.accounts.create({
         type: 'express',
-        country: 'FR',
         email: user.email,
         capabilities: {
           card_payments: { requested: true },
