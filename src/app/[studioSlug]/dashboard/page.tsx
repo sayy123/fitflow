@@ -8,7 +8,7 @@ import Link from 'next/link'
 export default async function MemberDashboardPage({ 
   params 
 }: { 
-  params: { studioSlug: string }
+  params: Promise<{ studioSlug: string }>
 }) {
   const { studioSlug } = await params
   const supabase = await createClient()
