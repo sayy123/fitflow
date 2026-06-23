@@ -175,7 +175,7 @@ export async function createBookingAction(formData: FormData) {
             quantity: 1,
           }],
           mode: 'payment',
-          success_url: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true`,
+          success_url: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true&session_id={CHECKOUT_SESSION_ID}`,
           cancel_url: `${siteUrl}/${cls.organizations.slug}/book/${classId}?canceled=true`,
           customer_email: currentUser.email,
           metadata: {
@@ -369,7 +369,7 @@ export async function createBookingAction(formData: FormData) {
           quantity: 1,
         }],
         mode: 'payment',
-        success_url: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true`,
+        success_url: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true&session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${siteUrl}/${cls.organizations.slug}/book/${classId}?canceled=true`,
         customer_email: email.toLowerCase().trim(),
         metadata: {
@@ -543,3 +543,100 @@ export async function confirmBookingPaymentAction(bookingId: string) {
   return { success: true }
 }
 
+
+export async function verifyStripeSessionAction(sessionId: string) {
+  try {
+    const Stripe = (await import('stripe')).default;
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2024-06-20' });
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    if (session.payment_status === 'paid' && session.metadata?.classId && session.metadata?.memberId) {
+      const { classId, memberId, organizationId } = session.metadata;
+
+      let booking = await prisma.bookings.findUnique({
+        where: {
+          class_id_studio_member_id: {
+            class_id: classId,
+            studio_member_id: memberId
+          }
+        },
+        include: {
+          classes: { include: { organizations: true } },
+          studio_members: true
+        }
+      });
+
+      if (!booking) {
+        booking = await prisma.bookings.create({
+          data: {
+            class_id: classId,
+            studio_member_id: memberId,
+            organization_id: organizationId!,
+            status: 'confirmed',
+            payment_status: 'paid',
+          },
+          include: {
+            classes: { include: { organizations: true } },
+            studio_members: true
+          }
+        });
+
+        const { sendBookingConfirmationEmail } = await import('@/lib/emails/send');
+        const { headers } = await import('next/headers');
+        const host = (await headers()).get('host');
+        const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : 'http://localhost:3000');
+        
+        await sendBookingConfirmationEmail({
+          email: booking.studio_members.email,
+          fullName: booking.studio_members.full_name,
+          className: booking.classes.title,
+          startsAt: booking.classes.starts_at,
+          studioName: booking.classes.organizations.name,
+          isNewUser: false,
+          baseUrl: siteUrl
+        });
+
+        const { revalidatePath } = await import('next/cache');
+        revalidatePath(`/${booking.classes.organizations.slug}/book/${classId}`, 'page');
+        return { success: true, verified: true };
+      } else if (booking.status === 'cancelled') {
+        booking = await prisma.bookings.update({
+          where: { id: booking.id },
+          data: {
+            status: 'confirmed',
+            payment_status: 'paid',
+            cancelled_at: null
+          },
+          include: {
+            classes: { include: { organizations: true } },
+            studio_members: true
+          }
+        });
+        
+        const { sendBookingConfirmationEmail } = await import('@/lib/emails/send');
+        const { headers } = await import('next/headers');
+        const host = (await headers()).get('host');
+        const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : 'http://localhost:3000');
+        
+        await sendBookingConfirmationEmail({
+          email: booking.studio_members.email,
+          fullName: booking.studio_members.full_name,
+          className: booking.classes.title,
+          startsAt: booking.classes.starts_at,
+          studioName: booking.classes.organizations.name,
+          isNewUser: false,
+          baseUrl: siteUrl
+        });
+
+        const { revalidatePath } = await import('next/cache');
+        revalidatePath(`/${booking.classes.organizations.slug}/book/${classId}`, 'page');
+        return { success: true, verified: true };
+      }
+      
+      return { success: true, verified: false, message: 'Already confirmed' };
+    }
+  } catch (e) {
+    console.error('Session verify error:', e);
+  }
+  return { success: false };
+}

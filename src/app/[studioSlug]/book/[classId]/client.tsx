@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
-import { createBookingAction } from '@/app/actions/bookings'
+import { createBookingAction, verifyStripeSessionAction } from '@/app/actions/bookings'
 import { signInWithGoogleAction } from '@/app/actions/auth'
 import { CancelBookingButton } from '@/components/cancel-booking-button'
 import { toast } from 'sonner'
@@ -66,6 +66,21 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
   const [isPending, setIsPending] = useState(false)
   const [createAccount, setCreateAccount] = useState(isInvite && !currentUser)
   const [isAutoJoining, setIsAutoJoining] = useState(false)
+  const [isVerifyingSession, setIsVerifyingSession] = useState(!!searchParams.get('session_id'))
+
+  useEffect(() => {
+    const sessionId = searchParams.get('session_id');
+    if (sessionId) {
+      verifyStripeSessionAction(sessionId).then((res) => {
+        setIsVerifyingSession(false);
+        if (res.success && res.verified) {
+          toast.success('Paiement validé avec succès !');
+          // Wait a tiny bit and refresh page or redirect
+          setTimeout(() => router.refresh(), 500);
+        }
+      });
+    }
+  }, [searchParams, router]);
 
   const isUserBooked = currentUser && cls.bookings.some((b) => b.studio_members.email === currentUser.email)
   const userBooking = isUserBooked ? cls.bookings.find((b) => b.studio_members.email === currentUser.email) : null
