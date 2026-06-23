@@ -556,7 +556,7 @@ export async function verifyStripeSessionAction(sessionId: string, accountId?: s
       accountId ? { stripeAccount: accountId } : undefined
     );
 
-    if (session.payment_status === 'paid' && session.metadata?.classId && session.metadata?.memberId) {
+    if ((session.payment_status === 'paid' || session.payment_status === 'no_payment_required') && session.metadata?.classId && session.metadata?.memberId) {
       const { classId, memberId, organizationId } = session.metadata;
 
       let booking = await prisma.bookings.findUnique({
