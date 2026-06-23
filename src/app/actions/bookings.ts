@@ -667,6 +667,7 @@ export async function verifyStripeSessionAction(sessionId: string, accountId?: s
       }
       
       return { success: true, verified: false, message: 'Already confirmed' };
+      }
     }
   } catch (e) {
     console.error('Session verify error:', e);
