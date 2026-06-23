@@ -26,10 +26,10 @@ export async function POST(req: Request) {
     return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
   }
 
+  const session = event.data.object as Stripe.Checkout.Session;
+
   if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.Checkout.Session;
-    
-    // We now use metadata to defer booking creation
+    // A) BOOKINGS LOGIC
     if (session.metadata?.classId && session.metadata?.memberId && session.metadata?.organizationId) {
       const { classId, memberId, organizationId } = session.metadata;
 
@@ -48,7 +48,6 @@ export async function POST(req: Request) {
         });
 
         if (booking && booking.status === 'cancelled') {
-          // Re-activate a cancelled booking
           booking = await prisma.bookings.update({
             where: { id: booking.id },
             data: {
@@ -62,7 +61,6 @@ export async function POST(req: Request) {
             }
           });
         } else if (!booking) {
-          // Create the new confirmed booking
           booking = await prisma.bookings.create({
             data: {
               class_id: classId,
@@ -78,7 +76,6 @@ export async function POST(req: Request) {
           });
         }
 
-        // Ensure we handle case where they might have paid but booking is already confirmed (duplicate webhook)
         if (booking && booking.status !== 'cancelled') {
           await prisma.bookings.update({
             where: { id: booking.id },
@@ -88,7 +85,6 @@ export async function POST(req: Request) {
             }
           });
 
-          // Send confirmation email
           const host = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
           await sendBookingConfirmationEmail({
             email: booking.studio_members.email,
@@ -102,9 +98,75 @@ export async function POST(req: Request) {
         }
       } catch (e) {
         console.error('Error processing checkout session metadata:', e);
-        return new NextResponse('Internal Error', { status: 500 });
+      }
+    } 
+    // B) SUBSCRIPTIONS LOGIC
+    else if (session.subscription) {
+      try {
+        const subscription = await stripe.subscriptions.retrieve(
+          session.subscription as string
+        );
+
+        const userId = session?.metadata?.userId;
+        const plan = session?.metadata?.plan;
+
+        if (userId) {
+          await prisma.user_profiles.update({
+            where: { user_id: userId },
+            data: {
+              stripe_subscription_id: subscription.id,
+              stripe_customer_id: subscription.customer as string,
+              stripe_price_id: subscription.items.data[0].price.id,
+              subscription_status: subscription.status,
+              plan: plan,
+              trial_ends_at: null,
+            },
+          });
+          console.log(`[Stripe Webhook] Successfully updated user ${userId} to ${plan}`);
+        }
+      } catch (dbError: any) {
+        console.error(`[Stripe Webhook] Database update failed: ${dbError.message}`);
       }
     }
+  }
+
+  // 2. Paiement réussi ou abonnement mis à jour
+  if (event.type === "invoice.payment_succeeded") {
+    try {
+      const invoice = event.data.object as Stripe.Invoice;
+      if (invoice.subscription) {
+        const subscription = await stripe.subscriptions.retrieve(
+          invoice.subscription as string
+        );
+
+        await prisma.user_profiles.updateMany({
+          where: {
+            stripe_subscription_id: subscription.id,
+          },
+          data: {
+            subscription_status: subscription.status,
+            stripe_price_id: subscription.items.data[0].price.id,
+          },
+        });
+      }
+    } catch(e) {}
+  }
+
+  // 3. Abonnement annulé ou expiré
+  if (event.type === "customer.subscription.deleted") {
+    try {
+      const subscription = event.data.object as Stripe.Subscription;
+
+      await prisma.user_profiles.updateMany({
+        where: {
+          stripe_subscription_id: subscription.id,
+        },
+        data: {
+          subscription_status: subscription.status,
+          // On garde le plan actuel mais le statut bloquera l'accès
+        },
+      });
+    } catch(e) {}
   }
 
   return new NextResponse('OK', { status: 200 });
