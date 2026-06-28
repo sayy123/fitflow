@@ -91,12 +91,44 @@ export async function GET(request: Request) {
 
     // Create Account Link for onboarding
     const host = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    const accountLink = await stripe.accountLinks.create({
-      account: accountId,
-      refresh_url: `${host}/dashboard/settings?tab=general`, // If they drop off, just return to settings
-      return_url: `${host}/api/stripe/callback?orgId=${orgId}`,
-      type: 'account_onboarding',
-    });
+    let accountLink;
+    
+    try {
+      accountLink = await stripe.accountLinks.create({
+        account: accountId,
+        refresh_url: `${host}/dashboard/settings?tab=general`,
+        return_url: `${host}/api/stripe/callback?orgId=${orgId}`,
+        type: 'account_onboarding',
+      });
+    } catch (e: any) {
+      if (e.type === 'StripeInvalidRequestError') {
+        // The account was disconnected or is completely invalid
+        // Create a brand new one
+        const account = await stripe.accounts.create({
+          type: 'standard',
+          email: user.email,
+          business_profile: {
+            name: org.name,
+          },
+        });
+        accountId = account.id;
+
+        await prisma.organizations.update({
+          where: { id: orgId },
+          data: { stripe_account_id: accountId, stripe_charges_enabled: false }
+        });
+
+        // Try creating the link again with the new account
+        accountLink = await stripe.accountLinks.create({
+          account: accountId,
+          refresh_url: `${host}/dashboard/settings?tab=general`,
+          return_url: `${host}/api/stripe/callback?orgId=${orgId}`,
+          type: 'account_onboarding',
+        });
+      } else {
+        throw e;
+      }
+    }
 
     return NextResponse.redirect(accountLink.url);
   } catch (error) {
