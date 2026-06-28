@@ -46,14 +46,30 @@ export async function GET(request: Request) {
 
     let accountId = org.stripe_account_id;
 
-    if ((org.stripe_charges_enabled || org.stripe_account_status === 'pending_verification') && accountId) {
-      const accountInfo = await stripe.accounts.retrieve(accountId);
-      if (accountInfo.type === 'standard') {
-        return NextResponse.redirect('https://dashboard.stripe.com/');
+    if (accountId) {
+      try {
+        const accountInfo = await stripe.accounts.retrieve(accountId);
+        if (accountInfo.deleted) {
+          accountId = null;
+        } else if (org.stripe_charges_enabled || org.stripe_account_status === 'pending_verification') {
+          if (accountInfo.type === 'standard') {
+            return NextResponse.redirect('https://dashboard.stripe.com/');
+          }
+          // Create a magic login link for Express accounts
+          const loginLink = await stripe.accounts.createLoginLink(accountId);
+          return NextResponse.redirect(loginLink.url);
+        }
+      } catch (e: any) {
+        if (e.code === 'resource_missing' || e.code === 'account_invalid') {
+          accountId = null;
+          await prisma.organizations.update({
+            where: { id: orgId },
+            data: { stripe_account_id: null, stripe_charges_enabled: false }
+          });
+        } else {
+          throw e;
+        }
       }
-      // Create a magic login link for Express accounts
-      const loginLink = await stripe.accounts.createLoginLink(accountId);
-      return NextResponse.redirect(loginLink.url);
     }
 
     if (!accountId) {
