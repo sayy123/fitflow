@@ -128,11 +128,12 @@ export async function createBookingAction(formData: FormData) {
       if (bookingsCount >= cls.capacity) return { error: 'Ce cours est complet' }
 
       // Créer la réservation
-      const isStripeActive = cls.organizations.stripe_account_id && cls.organizations.stripe_charges_enabled;
-      const isPaid = cls.price && cls.price > 0 && (cls.organizations.payment_link || isStripeActive) && !member.has_active_subscription;
+      const isStripeActive = cls.organizations.stripe_account_id && (cls.organizations.stripe_charges_enabled || cls.organizations.stripe_account_status === 'pending_verification');
+      const isPaid = cls.price && cls.price > 0 && !member.has_active_subscription;
+      const canPayOnline = cls.organizations.payment_link || isStripeActive;
       
       let booking;
-      if (!(isPaid && isStripeActive)) {
+      if (!(isPaid && canPayOnline)) {
         if (existing && existing.status === 'cancelled') {
           booking = await prisma.bookings.update({
             where: { id: existing.id },
@@ -323,11 +324,12 @@ export async function createBookingAction(formData: FormData) {
     }
 
     // 3. Créer la réservation
-    const isStripeActive = cls.organizations.stripe_account_id && cls.organizations.stripe_charges_enabled;
-    const isPaid = cls.price && cls.price > 0 && (cls.organizations.payment_link || isStripeActive) && !member.has_active_subscription;
+    const isStripeActive = cls.organizations.stripe_account_id && (cls.organizations.stripe_charges_enabled || cls.organizations.stripe_account_status === 'pending_verification');
+    const isPaid = cls.price && cls.price > 0 && !member.has_active_subscription;
+    const canPayOnline = cls.organizations.payment_link || isStripeActive;
 
     let booking;
-    if (!(isPaid && isStripeActive)) {
+    if (!(isPaid && canPayOnline)) {
       if (existing && existing.status === 'cancelled') {
         booking = await prisma.bookings.update({
           where: { id: existing.id },
