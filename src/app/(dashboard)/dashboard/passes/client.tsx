@@ -13,6 +13,7 @@ interface Organization {
   member_monthly_price?: number | null;
   member_yearly_price?: number | null;
   stripe_charges_enabled?: boolean | null;
+  stripe_account_status?: string | null;
 }
 
 export function PassesClient({
@@ -43,7 +44,7 @@ export function PassesClient({
     else toast.success("Offres mises à jour avec succès");
   };
 
-  const isStripeConnected = organization.stripe_charges_enabled;
+  const isStripeConnected = organization.stripe_charges_enabled || organization.stripe_account_status === 'pending_verification';
 
   if (!isStripeConnected) {
     return (
