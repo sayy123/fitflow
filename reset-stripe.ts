@@ -1,9 +1,9 @@
 import { config } from 'dotenv';
-config();
-
-import prisma from './src/lib/prisma';
+config({ path: '.env' });
 
 async function main() {
+  const { default: prisma } = await import('./src/lib/prisma');
+  
   await prisma.organizations.updateMany({
     data: {
       stripe_account_id: null,
@@ -11,8 +11,8 @@ async function main() {
     },
   });
   console.log('Stripe accounts reset');
+  
+  await prisma.$disconnect();
 }
 
-main()
-  .catch(console.error)
-  .finally(() => prisma.$disconnect());
+main().catch(console.error);
