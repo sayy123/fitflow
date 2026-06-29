@@ -295,6 +295,13 @@ export async function createBookingAction(formData: FormData) {
               display_name: fullName
             }
           });
+
+          // Connecter l'utilisateur automatiquement pour qu'il soit reconnu au retour de Stripe
+          const supabase = await createClient();
+          await supabase.auth.signInWithPassword({
+            email: email.toLowerCase().trim(),
+            password: password
+          });
         }
       }
 

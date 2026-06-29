@@ -428,7 +428,7 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
             </div>
           )}
 
-          {!hasSubscription && (org.member_monthly_price || org.member_yearly_price) && (
+          {currentUser && !hasSubscription && (org.member_monthly_price || org.member_yearly_price) && (
             <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl border border-indigo-100 p-6 sm:p-8 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
                 <div className="size-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
@@ -472,11 +472,6 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
                   </div>
                 )}
               </div>
-              {!currentUser && (
-                <p className="text-xs text-indigo-600/70 text-center mt-4">
-                  Connectez-vous d'abord pour souscrire à un abonnement.
-                </p>
-              )}
             </div>
           )}
 

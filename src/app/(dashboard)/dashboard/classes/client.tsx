@@ -105,9 +105,16 @@ export default function ClassesClient({
     ? Math.min(...weekClasses.map(c => getHours(typeof c.starts_at === 'string' ? parseISO(c.starts_at) : c.starts_at)))
     : 8;
 
+  const maxClassEndHour = weekClasses.length > 0 
+    ? Math.max(...weekClasses.map(c => {
+        const classDate = typeof c.starts_at === 'string' ? parseISO(c.starts_at) : c.starts_at;
+        return getHours(classDate) + Math.ceil((getMinutes(classDate) + c.duration_min) / 60);
+      }))
+    : 22;
+
   const PIXELS_PER_HOUR = 40 // 1 hour = 40px
   const MIN_HOUR = Math.max(0, earliestHour - 1) // Start 1 hour before the earliest class
-  const MAX_HOUR = 23 // End late enough
+  const MAX_HOUR = Math.max(23, maxClassEndHour + 1) // Ensure we have enough space for the latest class
   const TOTAL_HOURS = MAX_HOUR - MIN_HOUR
   const GRID_HEIGHT = TOTAL_HOURS * PIXELS_PER_HOUR
 
