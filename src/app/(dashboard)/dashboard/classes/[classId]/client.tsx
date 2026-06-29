@@ -196,9 +196,15 @@ export default function ClassDetailClient({
                       <Label htmlFor="location" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Adresse / Lieu</Label>
                       <Input id="location" name="location" defaultValue={cls.location || ''} placeholder="ex: 12 rue du sport, Paris" className="rounded-xl h-11" />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="capacity" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Capacité max</Label>
-                      <Input id="capacity" name="capacity" type="number" defaultValue={cls.capacity} className="rounded-xl h-11" required />
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="capacity" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Capacité max</Label>
+                        <Input id="capacity" name="capacity" type="number" defaultValue={cls.capacity} className="rounded-xl h-11" required />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="price" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Prix (€) - Optionnel</Label>
+                        <Input id="price" name="price" type="number" step="0.50" min="0" defaultValue={cls.price ?? ''} placeholder="0 = Gratuit" className="rounded-xl h-11" />
+                      </div>
                     </div>
                     <DialogFooter className="pt-4">
                       <Button type="submit" className="w-full rounded-xl h-11 font-black uppercase tracking-widest text-[10px]">Enregistrer les modifications</Button>
