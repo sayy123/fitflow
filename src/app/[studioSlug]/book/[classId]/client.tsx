@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
-import { createBookingAction, verifyStripeSessionAction } from '@/app/actions/bookings'
+import { createBookingAction, verifyMollieSessionAction } from '@/app/actions/bookings'
 import { signInWithGoogleAction } from '@/app/actions/auth'
 import { CancelBookingButton } from '@/components/cancel-booking-button'
 import { toast } from 'sonner'
@@ -22,8 +22,8 @@ interface BookingClientProps {
     slug: string
     color_primary?: string | null
     payment_link?: string | null
-    stripe_account_id?: string | null
-    stripe_charges_enabled?: boolean | null
+    mollie_account_id?: string | null
+    mollie_charges_enabled?: boolean | null
     member_monthly_price?: number | null
     member_yearly_price?: number | null
   }
@@ -80,7 +80,7 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
     }
 
     if (sessionId) {
-      verifyStripeSessionAction(sessionId, org.stripe_account_id).then((res) => {
+      verifyMollieSessionAction(sessionId, org.mollie_account_id).then((res) => {
         setIsVerifyingSession(false);
         if (res.success && res.verified) {
           if (res.isPass) {
@@ -109,8 +109,8 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
 
   const isFull = cls.bookings.length >= cls.capacity
   const buttonColor = org.color_primary || '#10b981'
-  const isStripeActive = org.stripe_account_id && org.stripe_charges_enabled;
-  const hasPaymentMethod = org.payment_link || isStripeActive;
+  const isMollieActive = org.mollie_account_id && org.mollie_charges_enabled;
+  const hasPaymentMethod = org.payment_link || isMollieActive;
   const isPaid = cls.price && cls.price > 0 && hasPaymentMethod && !hasSubscription;
 
   async function handleSubmit(formData: FormData) {
@@ -314,7 +314,7 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
                 </Button>
                 {isPaid && (
                   <p className="text-xs text-slate-500 text-center mt-3">
-                    Vous serez redirigé vers {isStripeActive ? 'notre page de paiement sécurisée' : 'une plateforme de paiement'}.
+                    Vous serez redirigé vers {isMollieActive ? 'notre page de paiement sécurisée' : 'une plateforme de paiement'}.
                   </p>
                 )}
               </div>
@@ -398,7 +398,7 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
                   
                   {isPaid && (
                     <p className="text-xs text-slate-500 text-center mt-3">
-                      Vous serez redirigé vers {isStripeActive ? 'notre page de paiement sécurisée' : 'une plateforme de paiement'}.
+                      Vous serez redirigé vers {isMollieActive ? 'notre page de paiement sécurisée' : 'une plateforme de paiement'}.
                     </p>
                   )}
                 </div>

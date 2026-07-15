@@ -86,11 +86,11 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
         });
         
         if (cls) {
-          const isStripeActive = org.stripe_account_id && org.stripe_charges_enabled;
-          const isPaid = cls.price && cls.price > 0 && (org.payment_link || isStripeActive) && !member.has_active_subscription;
+          const isMollieActive = org.mollie_account_id && org.mollie_charges_enabled;
+          const isPaid = cls.price && cls.price > 0 && (org.payment_link || isMollieActive) && !member.has_active_subscription;
 
           let booking;
-          if (!(isPaid && isStripeActive)) {
+          if (!(isPaid && isMollieActive)) {
             booking = await prisma.bookings.create({
               data: {
                 class_id: classId,
@@ -107,37 +107,26 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
           const host = (await headers()).get('host');
           const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
 
-          if (isPaid && isStripeActive) {
-            const Stripe = (await import('stripe')).default;
-            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2026-05-27.dahlia' });
+          if (isPaid && isMollieActive) {
             
-            const session = await stripe.checkout.sessions.create({
-              line_items: [{
-                price_data: {
-                  currency: 'eur',
-                  product_data: {
-                    name: cls.title,
-                    description: `Séance chez ${org.name}`,
-                  },
-                  unit_amount: Math.round(cls.price! * 100),
-                },
-                quantity: 1,
-              }],
-              mode: 'payment',
-              success_url: `${siteUrl}/${org.slug}/book/${classId}?success=true&session_id={CHECKOUT_SESSION_ID}`,
-              cancel_url: `${siteUrl}/${org.slug}/book/${classId}?canceled=true`,
-              customer_email: user.email,
-              allow_promotion_codes: true,
+            const { createMollieClient } = await import('@mollie/api-client');
+            const mollie = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
+            
+            const session = await mollie.payments.create({
+              amount: { currency: "EUR", value: cls.price!.toFixed(2) },
+              description: `Séance chez ${org.name}: ${cls.title}`,
+              redirectUrl: `${siteUrl}/${org.slug}/book/${classId}?success=true`,
+              webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie`,
               metadata: {
                 classId: classId,
                 memberId: member.id,
                 organizationId: organizationId,
-              }
-            }, {
-              stripeAccount: org.stripe_account_id!,
+              },
+              profileId: org.mollie_account_id!
             });
 
-            return { url: session.url };
+
+            return { url: session.getCheckoutUrl() };
           }
 
           if (isPaid && org.payment_link) {
@@ -166,11 +155,11 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
         });
 
         if (cls) {
-          const isStripeActive = org.stripe_account_id && org.stripe_charges_enabled;
-          const isPaid = cls.price && cls.price > 0 && (org.payment_link || isStripeActive) && !member.has_active_subscription;
+          const isMollieActive = org.mollie_account_id && org.mollie_charges_enabled;
+          const isPaid = cls.price && cls.price > 0 && (org.payment_link || isMollieActive) && !member.has_active_subscription;
 
           let booking;
-          if (!(isPaid && isStripeActive)) {
+          if (!(isPaid && isMollieActive)) {
             booking = await prisma.bookings.update({
               where: { id: existing.id },
               data: {
@@ -186,37 +175,26 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
           const host = (await headers()).get('host');
           const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
 
-          if (isPaid && isStripeActive) {
-            const Stripe = (await import('stripe')).default;
-            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2026-05-27.dahlia' });
+          if (isPaid && isMollieActive) {
             
-            const session = await stripe.checkout.sessions.create({
-              line_items: [{
-                price_data: {
-                  currency: 'eur',
-                  product_data: {
-                    name: cls.title,
-                    description: `Séance chez ${org.name}`,
-                  },
-                  unit_amount: Math.round(cls.price! * 100),
-                },
-                quantity: 1,
-              }],
-              mode: 'payment',
-              success_url: `${siteUrl}/${org.slug}/book/${classId}?success=true&session_id={CHECKOUT_SESSION_ID}`,
-              cancel_url: `${siteUrl}/${org.slug}/book/${classId}?canceled=true`,
-              customer_email: user.email,
-              allow_promotion_codes: true,
+            const { createMollieClient } = await import('@mollie/api-client');
+            const mollie = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
+            
+            const session = await mollie.payments.create({
+              amount: { currency: "EUR", value: cls.price!.toFixed(2) },
+              description: `Séance chez ${org.name}: ${cls.title}`,
+              redirectUrl: `${siteUrl}/${org.slug}/book/${classId}?success=true`,
+              webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie`,
               metadata: {
                 classId: classId,
                 memberId: member.id,
                 organizationId: organizationId,
-              }
-            }, {
-              stripeAccount: org.stripe_account_id!,
+              },
+              profileId: org.mollie_account_id!
             });
 
-            return { url: session.url };
+
+            return { url: session.getCheckoutUrl() };
           }
 
           if (isPaid && org.payment_link) {

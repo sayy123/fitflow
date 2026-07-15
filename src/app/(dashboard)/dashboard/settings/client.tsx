@@ -43,9 +43,9 @@ interface SettingsClientProps {
     name: string;
     address?: string | null;
     phone?: string | null;
-    stripe_account_id?: string | null;
-    stripe_charges_enabled?: boolean | null;
-    stripe_account_status?: string | null;
+    mollie_account_id?: string | null;
+    mollie_charges_enabled?: boolean | null;
+    mollie_account_status?: string | null;
     payment_link?: string | null;
     member_monthly_price?: number | null;
     member_yearly_price?: number | null;
@@ -491,24 +491,24 @@ export function SettingsClient({
                     <div className="bg-gray-50/50 border border-border rounded-xl p-5 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                       <div>
                         <h5 className="font-semibold text-gray-900 text-sm flex items-center gap-2">
-                          <span className={`w-2.5 h-2.5 rounded-full ${organization.stripe_charges_enabled ? 'bg-green-500' : (organization.stripe_account_status === 'pending_verification' ? 'bg-yellow-400' : 'bg-gray-300')}`}></span>
-                          Stripe Connect {organization.stripe_charges_enabled ? <span className="text-green-600 bg-green-50 px-2 py-0.5 rounded text-xs ml-1">Actif</span> : (organization.stripe_account_status === 'pending_verification' ? <span className="text-yellow-700 bg-yellow-50 px-2 py-0.5 rounded text-xs ml-1 font-medium">Vérification en cours</span> : <span className="text-gray-500 bg-gray-100 px-2 py-0.5 rounded text-xs ml-1">Non connecté</span>)}
+                          <span className={`w-2.5 h-2.5 rounded-full ${organization.mollie_charges_enabled ? 'bg-green-500' : (organization.mollie_account_status === 'pending_verification' ? 'bg-yellow-400' : 'bg-gray-300')}`}></span>
+                          Mollie Connect {organization.mollie_charges_enabled ? <span className="text-green-600 bg-green-50 px-2 py-0.5 rounded text-xs ml-1">Actif</span> : (organization.mollie_account_status === 'pending_verification' ? <span className="text-yellow-700 bg-yellow-50 px-2 py-0.5 rounded text-xs ml-1 font-medium">Vérification en cours</span> : <span className="text-gray-500 bg-gray-100 px-2 py-0.5 rounded text-xs ml-1">Non connecté</span>)}
                         </h5>
                         <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed max-w-lg">
-                          Acceptez les paiements par carte bancaire et Apple Pay automatiquement lors de la réservation. L'argent est versé directement sur votre compte bancaire via Stripe.
+                          Acceptez les paiements par carte bancaire et Apple Pay automatiquement lors de la réservation. L'argent est versé directement sur votre compte bancaire via Mollie.
                         </p>
                       </div>
                       
-                      {!organization.stripe_charges_enabled && organization.stripe_account_status !== 'pending_verification' ? (
+                      {!organization.mollie_charges_enabled && organization.mollie_account_status !== 'pending_verification' ? (
                         <Button
                           variant="default"
                           className="bg-[#635BFF] hover:bg-[#5851df] text-white font-medium shrink-0 shadow-sm transition-all"
                           onClick={(e) => {
                             e.preventDefault();
-                            window.location.href = `/api/stripe/connect?orgId=${organization.id}`;
+                            window.location.href = `/api/mollie/connect?orgId=${organization.id}`;
                           }}
                         >
-                          Connecter mon compte Stripe
+                          Connecter mon compte Mollie
                         </Button>
                       ) : (
                         <Button
@@ -516,10 +516,10 @@ export function SettingsClient({
                           className="border-gray-200 text-gray-700 font-medium shrink-0 shadow-sm transition-all"
                           onClick={(e) => {
                             e.preventDefault();
-                            window.location.href = `/api/stripe/connect?orgId=${organization.id}`;
+                            window.location.href = `/api/mollie/connect?orgId=${organization.id}`;
                           }}
                         >
-                          Gérer mon compte Stripe
+                          Gérer mon compte Mollie
                         </Button>
                       )}
                     </div>

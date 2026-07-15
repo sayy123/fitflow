@@ -4,8 +4,8 @@ import { updateSession } from '@/lib/supabase/middleware'
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   
-  // Skip Stripe webhooks
-  if (pathname.startsWith('/api/webhooks/stripe')) {
+  // Skip Mollie webhooks
+  if (pathname.startsWith('/api/webhooks/mollie')) {
     return NextResponse.next();
   }
 

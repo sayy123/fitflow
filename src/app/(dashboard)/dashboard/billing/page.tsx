@@ -200,7 +200,7 @@ export default async function BillingPage() {
 
       <div className="bg-muted/50 rounded-2xl p-6 text-center border border-border/50">
         <p className="text-sm font-medium text-muted-foreground italic">
-          Sécurisé par Stripe. Vous serez redirigé vers leur plateforme de paiement.
+          Sécurisé par Mollie. Vous serez redirigé vers leur plateforme de paiement.
         </p>
       </div>
 

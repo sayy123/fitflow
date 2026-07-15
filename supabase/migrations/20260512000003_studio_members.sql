@@ -5,7 +5,7 @@ create table public.studio_members (
   full_name       text not null,
   phone           text,
   notes           text,
-  stripe_customer_id text,
+  mollie_customer_id text,
   is_active       boolean default true,
   created_at      timestamptz default now(),
   updated_at      timestamptz default now(),

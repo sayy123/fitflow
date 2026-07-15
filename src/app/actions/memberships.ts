@@ -2,7 +2,7 @@
 
 import prisma from '@/lib/prisma'
 import { createClient } from '@/lib/supabase/server'
-import { stripe } from '@/lib/stripe'
+import { mollie } from '@/lib/mollie'
 import { headers } from 'next/headers'
 
 export async function createSubscriptionSessionAction(orgId: string, type: 'monthly' | 'yearly', classIdToReturn?: string) {
@@ -13,7 +13,7 @@ export async function createSubscriptionSessionAction(orgId: string, type: 'mont
   const org = await prisma.organizations.findUnique({
     where: { id: orgId }
   })
-  if (!org || !org.stripe_account_id) return { error: 'Ce studio ne peut pas recevoir de paiements.' }
+  if (!org || !org.mollie_account_id) return { error: 'Ce studio ne peut pas recevoir de paiements.' }
 
   const member = await prisma.studio_members.findUnique({
     where: {
@@ -53,39 +53,25 @@ export async function createSubscriptionSessionAction(orgId: string, type: 'mont
     : `${domain}/dashboard`;
 
   try {
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'eur',
-            product_data: {
-              name: `Pass Illimité ${type === 'monthly' ? '1 Mois' : '1 An'} - ${org.name}`,
-              description: `Accès illimité à tous les cours pendant ${type === 'monthly' ? '1 mois' : '1 an'}.`,
-            },
-            unit_amount: Math.round(price * 100),
-          },
-          quantity: 1,
-        },
-      ],
-      mode: 'payment',
-      success_url: successUrl,
-      cancel_url: cancelUrl,
-      customer_email: user.email!,
-      allow_promotion_codes: true,
+    
+    const session = await mollie.payments.create({
+      amount: { currency: "EUR", value: price.toFixed(2) },
+      description: `Pass Illimité ${type === 'monthly' ? '1 Mois' : '1 An'} - ${org.name}`,
+      redirectUrl: successUrl.replace('{CHECKOUT_SESSION_ID}', 'success'),
+      webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie`,
       metadata: {
         type: 'studio_pass',
         passType: type,
         orgId: org.id,
-        memberId: memberId!,
-      }
-    }, {
-      stripeAccount: org.stripe_account_id
-    })
+        memberId: memberId!
+      },
+      profileId: org.mollie_account_id!
+    });
 
-    return { url: session.url }
+
+    return { url: session.getCheckoutUrl() }
   } catch (err: any) {
     console.error(err);
-    return { error: err.message || 'Erreur lors de la création de la session Stripe.' }
+    return { error: err.message || 'Erreur lors de la création de la session Mollie.' }
   }
 }

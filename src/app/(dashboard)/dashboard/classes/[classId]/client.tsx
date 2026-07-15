@@ -47,8 +47,8 @@ type ClassWithDetails = {
   } | null;
   organizations: {
     name: string;
-    stripe_account_id: string | null;
-    stripe_charges_enabled: boolean | null;
+    mollie_account_id: string | null;
+    mollie_charges_enabled: boolean | null;
   };
 }
 
@@ -316,7 +316,7 @@ export default function ClassDetailClient({
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground font-bold">{new Date(booking.created_at!).toLocaleDateString('fr-FR')}</TableCell>
                       <TableCell className="px-8 text-right flex items-center justify-end gap-2">
-                        {booking.status === 'pending_payment' && isManagementAllowed && !cls.organizations.stripe_charges_enabled && (
+                        {booking.status === 'pending_payment' && isManagementAllowed && !cls.organizations.mollie_charges_enabled && (
                           <Button
                             variant="outline"
                             size="sm"

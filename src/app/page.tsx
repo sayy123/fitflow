@@ -72,7 +72,7 @@ export default function LandingPage() {
     },
     {
       q: "Fitloww prend-il une commission sur les réservations ?",
-      a: "Non, nous ne prenons aucune commission sur vos ventes. Vous gardez 100% de vos revenus (hors frais standards Stripe).",
+      a: "Non, nous ne prenons aucune commission sur vos ventes. Vous gardez 100% de vos revenus (hors frais standards Mollie).",
     },
   ];
 

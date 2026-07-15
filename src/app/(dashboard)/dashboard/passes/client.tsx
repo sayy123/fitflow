@@ -12,8 +12,8 @@ interface Organization {
   id: string;
   member_monthly_price?: number | null;
   member_yearly_price?: number | null;
-  stripe_charges_enabled?: boolean | null;
-  stripe_account_status?: string | null;
+  mollie_charges_enabled?: boolean | null;
+  mollie_account_status?: string | null;
 }
 
 export function PassesClient({
@@ -44,27 +44,27 @@ export function PassesClient({
     else toast.success("Offres mises à jour avec succès");
   };
 
-  const isStripeConnected = organization.stripe_charges_enabled || organization.stripe_account_status === 'pending_verification';
+  const isMollieConnected = organization.mollie_charges_enabled || organization.mollie_account_status === 'pending_verification';
 
-  if (!isStripeConnected) {
+  if (!isMollieConnected) {
     return (
       <div className="p-8 sm:p-12 border border-border/50 bg-card rounded-2xl flex flex-col items-center justify-center text-center max-w-2xl mx-auto shadow-sm mt-8">
         <div className="size-16 bg-yellow-50 text-yellow-500 rounded-full flex items-center justify-center mb-6">
           <AlertCircle className="size-8" />
         </div>
         <h3 className="text-2xl font-bold text-card-foreground mb-3">
-          Compte Stripe requis
+          Compte Mollie requis
         </h3>
         <p className="text-muted-foreground mb-8">
-          Pour pouvoir proposer des abonnements à vos clients, vous devez d&apos;abord connecter votre compte Stripe afin de recevoir les paiements en toute sécurité.
+          Pour pouvoir proposer des abonnements à vos clients, vous devez d&apos;abord connecter votre compte Mollie afin de recevoir les paiements en toute sécurité.
         </p>
         <Button
           onClick={() => {
-            window.location.href = `/api/stripe/connect?orgId=${organization.id}`;
+            window.location.href = `/api/mollie/connect?orgId=${organization.id}`;
           }}
           className="h-12 px-8 rounded-xl font-bold text-[13px] uppercase tracking-wider bg-[#635BFF] hover:bg-[#5851df] text-white shadow-md hover:shadow-lg transition-all"
         >
-          <CreditCard className="size-4 mr-2" /> Connecter mon compte Stripe
+          <CreditCard className="size-4 mr-2" /> Connecter mon compte Mollie
         </Button>
       </div>
     );

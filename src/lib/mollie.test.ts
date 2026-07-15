@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-describe('stripe module', () => {
+describe('mollie module', () => {
   it('loads without crashing', () => {
     expect(true).toBe(true)
   })

@@ -6,7 +6,7 @@ create table public.member_subscriptions (
   sessions_left       int,
   price_paid          numeric(10,2),
   currency            text default 'eur',
-  stripe_payment_id   text,
+  mollie_payment_id   text,
   starts_at           timestamptz default now(),
   expires_at          timestamptz,
   is_active           boolean default true,

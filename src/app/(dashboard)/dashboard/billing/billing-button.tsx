@@ -37,7 +37,7 @@ export function BillingButton({
           window.location.href = result.url;
         }
       } catch (error) {
-        toast.error("Erreur lors de l'accès au portail Stripe.", { id: toastId });
+        toast.error("Erreur lors de l'accès au portail Mollie.", { id: toastId });
       } finally {
         setLoading(false);
       }
@@ -52,11 +52,11 @@ export function BillingButton({
       if (result?.error) {
         toast.error(result.error, { id: toastId });
       } else if (result?.url) {
-        toast.loading("Redirection vers Stripe...", { id: toastId });
+        toast.loading("Redirection vers Mollie...", { id: toastId });
         window.location.href = result.url;
       }
     } catch (error) {
-      toast.error("Une erreur est survenue lors de la connexion à Stripe.", { id: toastId });
+      toast.error("Une erreur est survenue lors de la connexion à Mollie.", { id: toastId });
     } finally {
       setLoading(false);
     }

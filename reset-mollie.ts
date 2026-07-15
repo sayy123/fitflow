@@ -6,11 +6,11 @@ async function main() {
   
   await prisma.organizations.updateMany({
     data: {
-      stripe_account_id: null,
-      stripe_charges_enabled: false,
+      mollie_account_id: null,
+      mollie_charges_enabled: false,
     },
   });
-  console.log('Stripe accounts reset');
+  console.log('Mollie accounts reset');
   
   await prisma.$disconnect();
 }

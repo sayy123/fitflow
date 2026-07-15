@@ -128,9 +128,9 @@ export async function createBookingAction(formData: FormData) {
       if (bookingsCount >= cls.capacity) return { error: 'Ce cours est complet' }
 
       // Créer la réservation
-      const isStripeActive = cls.organizations.stripe_account_id && (cls.organizations.stripe_charges_enabled || cls.organizations.stripe_account_status === 'pending_verification');
+      const isMollieActive = cls.organizations.mollie_account_id && (cls.organizations.mollie_charges_enabled || cls.organizations.mollie_account_status === 'pending_verification');
       const isPaid = cls.price && cls.price > 0 && !member.has_active_subscription;
-      const canPayOnline = cls.organizations.payment_link || isStripeActive;
+      const canPayOnline = cls.organizations.payment_link || isMollieActive;
       
       let booking;
       if (!(isPaid && canPayOnline)) {
@@ -159,37 +159,27 @@ export async function createBookingAction(formData: FormData) {
       const host = (await headers()).get('host')
       const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
 
-      if (isPaid && isStripeActive) {
-        const Stripe = (await import('stripe')).default;
-        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2026-05-27.dahlia' });
+      if (isPaid && cls.organizations.mollie_account_status === 'active') {
+        const { createMollieClient } = await import('@mollie/api-client');
+        const mollie = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
         
-        const session = await stripe.checkout.sessions.create({
-          line_items: [{
-            price_data: {
-              currency: 'eur',
-              product_data: {
-                name: cls.title,
-                description: `Séance chez ${cls.organizations.name}`,
-              },
-              unit_amount: Math.round(cls.price! * 100),
-            },
-            quantity: 1,
-          }],
-          mode: 'payment',
-          success_url: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true&session_id={CHECKOUT_SESSION_ID}`,
-          cancel_url: `${siteUrl}/${cls.organizations.slug}/book/${classId}?canceled=true`,
-          customer_email: currentUser.email,
-          allow_promotion_codes: true,
+        const session = await mollie.payments.create({
+          amount: {
+            currency: 'EUR',
+            value: cls.price!.toFixed(2),
+          },
+          description: `Séance chez ${cls.organizations.name}: ${cls.title}`,
+          redirectUrl: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true`,
+          webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie`,
           metadata: {
             classId: classId,
             memberId: member.id,
             organizationId: organizationId,
-          }
-        }, {
-          stripeAccount: cls.organizations.stripe_account_id!,
+          },
+          profileId: cls.organizations.mollie_account_id!, // If using Mollie Connect
         });
 
-        return { url: session.url };
+        return { url: session.getCheckoutUrl() };
       }
 
       if (isPaid && cls.organizations.payment_link) {
@@ -296,7 +286,7 @@ export async function createBookingAction(formData: FormData) {
             }
           });
 
-          // Connecter l'utilisateur automatiquement pour qu'il soit reconnu au retour de Stripe
+          // Connecter l'utilisateur automatiquement pour qu'il soit reconnu au retour de Mollie
           const supabase = await createClient();
           await supabase.auth.signInWithPassword({
             email: email.toLowerCase().trim(),
@@ -331,9 +321,9 @@ export async function createBookingAction(formData: FormData) {
     }
 
     // 3. Créer la réservation
-    const isStripeActive = cls.organizations.stripe_account_id && (cls.organizations.stripe_charges_enabled || cls.organizations.stripe_account_status === 'pending_verification');
+    const isMollieActive = cls.organizations.mollie_account_id && (cls.organizations.mollie_charges_enabled || cls.organizations.mollie_account_status === 'pending_verification');
     const isPaid = cls.price && cls.price > 0 && !member.has_active_subscription;
-    const canPayOnline = cls.organizations.payment_link || isStripeActive;
+    const canPayOnline = cls.organizations.payment_link || isMollieActive;
 
     let booking;
     if (!(isPaid && canPayOnline)) {
@@ -362,37 +352,27 @@ export async function createBookingAction(formData: FormData) {
     const host = (await headers()).get('host')
     const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
 
-    if (isPaid && isStripeActive) {
-      const Stripe = (await import('stripe')).default;
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2026-05-27.dahlia' });
+    if (isPaid && cls.organizations.mollie_account_status === 'active') {
+      const { createMollieClient } = await import('@mollie/api-client');
+      const mollie = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
       
-      const session = await stripe.checkout.sessions.create({
-        line_items: [{
-          price_data: {
-            currency: 'eur',
-            product_data: {
-              name: cls.title,
-              description: `Séance chez ${cls.organizations.name}`,
-            },
-            unit_amount: Math.round(cls.price! * 100),
-          },
-          quantity: 1,
-        }],
-        mode: 'payment',
-        success_url: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${siteUrl}/${cls.organizations.slug}/book/${classId}?canceled=true`,
-        customer_email: email.toLowerCase().trim(),
-        allow_promotion_codes: true,
+      const session = await mollie.payments.create({
+        amount: {
+          currency: 'EUR',
+          value: cls.price!.toFixed(2),
+        },
+        description: `Séance chez ${cls.organizations.name}: ${cls.title}`,
+        redirectUrl: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true`,
+        webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie`,
         metadata: {
           classId: classId,
           memberId: member.id,
           organizationId: organizationId,
-        }
-      }, {
-        stripeAccount: cls.organizations.stripe_account_id!,
+        },
+        profileId: cls.organizations.mollie_account_id!, // If using Mollie Connect
       });
 
-      return { url: session.url };
+      return { url: session.getCheckoutUrl() };
     }
 
     if (isPaid && cls.organizations.payment_link) {
@@ -555,19 +535,16 @@ export async function confirmBookingPaymentAction(bookingId: string) {
 }
 
 
-export async function verifyStripeSessionAction(sessionId: string, accountId?: string | null) {
+export async function verifyMollieSessionAction(sessionId: string, accountId?: string | null) {
   try {
-    const Stripe = (await import('stripe')).default;
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2026-05-27.dahlia' });
-    const session = await stripe.checkout.sessions.retrieve(
-      sessionId,
-      undefined,
-      accountId ? { stripeAccount: accountId } : undefined
-    );
+    const { createMollieClient } = await import('@mollie/api-client');
+    const mollie = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
+    const session = await mollie.payments.get(sessionId, { profileId: accountId || undefined });
 
-    if (session.payment_status === 'paid' || session.payment_status === 'no_payment_required') {
-      if (session.metadata?.type === 'studio_pass') {
-        const { orgId, memberId, passType } = session.metadata;
+    if (session.status === 'paid' || session.status === 'authorized') {
+      const metadata = session.metadata as any;
+      if (metadata?.type === 'studio_pass') {
+        const { orgId, memberId, passType } = metadata;
         const durationMonths = passType === 'monthly' ? 1 : 12;
         const expiresAt = new Date();
         expiresAt.setMonth(expiresAt.getMonth() + durationMonths);
@@ -579,8 +556,8 @@ export async function verifyStripeSessionAction(sessionId: string, accountId?: s
             type: passType,
             expires_at: expiresAt,
             is_active: true,
-            price_paid: session.amount_total ? session.amount_total / 100 : 0,
-            stripe_payment_id: session.payment_intent as string | undefined,
+            price_paid: parseFloat(session.amount.value),
+            mollie_payment_id: session.id as string | undefined,
           }
         });
 
@@ -592,8 +569,8 @@ export async function verifyStripeSessionAction(sessionId: string, accountId?: s
         return { success: true, verified: true, isPass: true };
       }
 
-      if (session.metadata?.classId && session.metadata?.memberId) {
-        const { classId, memberId, organizationId } = session.metadata;
+      if (metadata?.classId && metadata?.memberId) {
+        const { classId, memberId, organizationId } = metadata;
 
         let booking = await prisma.bookings.findUnique({
         where: {
