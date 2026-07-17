@@ -136,7 +136,7 @@ export async function cancelSubscriptionAction() {
 
     await prisma.user_profiles.update({
       where: { user_id: user.id },
-      data: { subscription_status: "canceled" }
+      data: { subscription_status: "canceled", plan: "none" }
     });
 
     return { success: true };
