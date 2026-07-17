@@ -138,7 +138,9 @@ export function Sidebar({
                       ? '🎁 Essai' 
                       : plan === 'premium' 
                         ? '✨ Premium' 
-                        : '🌱 Starter'}
+                        : plan === 'none'
+                          ? '🛑 Expiré'
+                          : '🌱 Starter'}
                   </div>
                 </Link>
               )}
