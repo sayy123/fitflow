@@ -95,7 +95,7 @@ export async function subscribeAction(plan: "starter" | "premium") {
       amount: { currency: "EUR", value: amountValue },
       description: `Abonnement Fitflow ${plan === "starter" ? "Starter" : "Premium"}`,
       redirectUrl: `${siteUrl}/dashboard/billing?success=true`,
-      webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie`,
+      webhookUrl: `${siteUrl}/api/webhooks/mollie`,
       sequenceType: "first",
       customerId: customerId,
       metadata: { userId: user.id, plan: plan, priceId: priceId || plan, isSubscription: true }
