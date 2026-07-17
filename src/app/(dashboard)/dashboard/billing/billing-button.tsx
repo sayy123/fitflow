@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { subscribeAction, createCustomerPortalAction } from "@/app/actions/billing";
+import { subscribeAction, cancelSubscriptionAction } from "@/app/actions/billing";
 import { toast } from "sonner";
 
 interface BillingButtonProps {
@@ -25,25 +25,28 @@ export function BillingButton({
   const [loading, setLoading] = useState(false);
 
   const handleAction = async () => {
-    setLoading(true);
-
     if (isCurrentPlan) {
-      const toastId = toast.loading("Ouverture de votre espace client...");
+      if (!window.confirm("Voulez-vous vraiment annuler votre abonnement ? Cette action est immédiate.")) return;
+      
+      setLoading(true);
+      const toastId = toast.loading("Annulation en cours...");
       try {
-        const result = await createCustomerPortalAction();
+        const result = await cancelSubscriptionAction();
         if (result?.error) {
           toast.error(result.error, { id: toastId });
-        } else if (result?.url) {
-          window.location.href = result.url;
+        } else {
+          toast.success("Abonnement annulé avec succès.", { id: toastId });
+          window.location.reload();
         }
       } catch (error) {
-        toast.error("Erreur lors de l'accès au portail Mollie.", { id: toastId });
+        toast.error("Erreur lors de l'annulation.", { id: toastId });
       } finally {
         setLoading(false);
       }
       return;
     }
 
+    setLoading(true);
     const toastId = toast.loading("Préparation du paiement...");
     
     try {

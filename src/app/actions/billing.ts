@@ -118,7 +118,7 @@ export async function subscribeAction(plan: "starter" | "premium") {
   }
 }
 
-export async function createCustomerPortalAction() {
+export async function cancelSubscriptionAction() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "Non authentifié" };
@@ -127,23 +127,22 @@ export async function createCustomerPortalAction() {
     where: { user_id: user.id },
   });
 
-  if (!userProfile?.mollie_customer_id) {
-    return { error: "Aucun historique de paiement trouvé." };
+  if (!userProfile?.mollie_customer_id || !userProfile?.mollie_subscription_id) {
+    return { error: "Aucun abonnement actif trouvé." };
   }
 
   try {
-    const host = (await headers()).get("host");
-    const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
-    const returnUrl = `${siteUrl.replace(/\/$/, "")}/dashboard/billing`;
+    await mollie.customers_subscriptions.cancel(userProfile.mollie_customer_id, userProfile.mollie_subscription_id);
 
-    
-    const session = { url: `${siteUrl}/dashboard/billing` };
+    await prisma.user_profiles.update({
+      where: { user_id: user.id },
+      data: { subscription_status: "canceled" }
+    });
 
-
-    return { url: session.url };
+    return { success: true };
   } catch (error: unknown) {
-    console.error("Mollie Portal Error:", error);
-    return { error: "Erreur lors de l'ouverture du portail de gestion." };
+    console.error("Mollie Cancel Error:", error);
+    return { error: "Erreur lors de l'annulation de l'abonnement." };
   }
 }
 

@@ -128,7 +128,7 @@ export default async function BillingPage() {
               disabled={plan === "premium" && subscription_status === "active"}
             >
               {plan === "starter" && subscription_status === "active"
-                ? "Gérer mon abonnement"
+                ? "Annuler l'abonnement"
                 : plan === "premium" && subscription_status === "active"
                   ? "Indisponible en Premium"
                   : "Activer Starter"}
@@ -136,7 +136,7 @@ export default async function BillingPage() {
 
             {plan === "premium" && subscription_status === "active" && (
               <p className="text-[10px] text-muted-foreground text-center font-medium">
-                Pour passer au plan Starter, annulez d'abord votre abonnement actuel depuis le bouton "Gérer mon abonnement" Premium.
+                Pour passer au plan Starter, annulez d'abord votre abonnement actuel depuis le bouton "Annuler l'abonnement" Premium.
               </p>
             )}
           </CardContent>
@@ -190,7 +190,7 @@ export default async function BillingPage() {
               isCurrentPlan={plan === "premium" && subscription_status === "active"}
             >
               {plan === "premium" && subscription_status === "active"
-                ? "Gérer mon abonnement"
+                ? "Annuler l'abonnement"
                 : "Activer Premium"}
             </BillingButton>
           </CardContent>
