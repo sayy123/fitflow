@@ -132,7 +132,7 @@ export async function cancelSubscriptionAction() {
   }
 
   try {
-    await mollie.customers_subscriptions.cancel(userProfile.mollie_subscription_id, { customerId: userProfile.mollie_customer_id });
+    await mollie.customerSubscriptions.cancel(userProfile.mollie_subscription_id, { customerId: userProfile.mollie_customer_id });
 
     await prisma.user_profiles.update({
       where: { user_id: user.id },

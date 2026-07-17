@@ -41,7 +41,7 @@ export async function POST(req: Request) {
                 status: 'confirmed',
                 payment_status: 'paid',
                 cancelled_at: null,
-                mollie_payment_id: payment.id,
+                mollie_session_id: payment.id,
               },
               include: {
                 classes: { include: { organizations: true } },
@@ -56,7 +56,7 @@ export async function POST(req: Request) {
                 organization_id: organizationId,
                 status: 'confirmed',
                 payment_status: 'paid',
-                mollie_payment_id: payment.id,
+                mollie_session_id: payment.id,
               },
               include: {
                 classes: { include: { organizations: true } },
@@ -69,7 +69,7 @@ export async function POST(req: Request) {
               data: {
                 status: 'confirmed',
                 payment_status: 'paid',
-                mollie_payment_id: payment.id,
+                mollie_session_id: payment.id,
               }
             });
           }
@@ -105,11 +105,11 @@ export async function POST(req: Request) {
              let subscriptionId = payment.subscriptionId;
              if (!subscriptionId && metadata?.isSubscription) {
                 // If it's the first payment, we need to create the subscription now
-                const subscription = await mollie.customers_subscriptions.create({
+                const subscription = await mollie.customerSubscriptions.create({
                    customerId,
                    amount: payment.amount,
-                   interval: "1 month",
-                   description: `Subscription ${plan}`
+                   interval: "1 months",
+                   description: `Subscription ${plan} (${payment.id})`
                 });
                 subscriptionId = subscription.id;
              }
