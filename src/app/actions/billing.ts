@@ -100,13 +100,15 @@ export async function subscribeAction(plan: "starter" | "premium") {
     });
 
 
-    if (!session.url) {
-      console.error("Mollie Session URL is missing");
+    const checkoutUrl = session.getCheckoutUrl();
+
+    if (!checkoutUrl) {
+      console.error("Mollie Session URL is missing", session);
       return { error: "Impossible de générer la session de paiement" };
     }
 
-    console.log(`[subscribeAction] Redirecting user to: ${session.url}`);
-    return { url: session.url };
+    console.log(`[subscribeAction] Redirecting user to: ${checkoutUrl}`);
+    return { url: checkoutUrl };
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "inconnue";
     console.error("Mollie Checkout Error:", message);
