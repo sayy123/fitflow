@@ -39,7 +39,7 @@ export async function GET(request: Request) {
       return new NextResponse('Organization not found', { status: 404 });
     }
 
-    const host = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const host = (process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(/\/$/, "");
     const redirectUri = `${host}/api/mollie/callback`;
     const clientId = process.env.MOLLIE_CLIENT_ID || 'app_dummy';
     

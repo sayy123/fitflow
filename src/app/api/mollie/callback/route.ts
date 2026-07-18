@@ -12,7 +12,7 @@ export async function GET(request: Request) {
       return new NextResponse('Missing parameters', { status: 400 });
     }
 
-    const host = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const host = (process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(/\/$/, "");
     
     // Exchange code for token
     const tokenResponse = await fetch('https://api.mollie.com/oauth2/tokens', {
@@ -52,7 +52,7 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${host}/dashboard/settings?mollie_connect_success=true`);
   } catch (error) {
     console.error('[MOLLIE_CALLBACK]', error);
-    const host = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const host = (process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(/\/$/, "");
     return NextResponse.redirect(`${host}/dashboard/settings?mollie_connect_error=true`);
   }
 }
