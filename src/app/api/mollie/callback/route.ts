@@ -37,7 +37,7 @@ export async function GET(request: Request) {
 
     // Initialize client with OAuth token to get the profile ID
     const oauthMollie = createMollieClient({ accessToken: tokenData.access_token });
-    const profile = await oauthMollie.profiles.get('me');
+    const profile = await oauthMollie.profiles.getCurrent();
 
     // Update organization with Mollie Profile ID (which is used for routing payments)
     await prisma.organizations.update({
