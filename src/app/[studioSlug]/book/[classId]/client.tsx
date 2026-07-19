@@ -65,15 +65,19 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
   const searchParams = useSearchParams()
   const isInvite = searchParams.get('invite') === 'true'
   
+  const isUserBooked = currentUser && cls.bookings.some((b) => b.studio_members.email === currentUser.email)
+  const userBooking = isUserBooked ? cls.bookings.find((b) => b.studio_members.email === currentUser.email) : null
+
   const [isPending, setIsPending] = useState(false)
   const [createAccount, setCreateAccount] = useState(isInvite && !currentUser)
   const [isAutoJoining, setIsAutoJoining] = useState(false)
-  const [isVerifyingSession, setIsVerifyingSession] = useState(!!searchParams.get('session_id'))
+  const [isVerifyingSession, setIsVerifyingSession] = useState(!!searchParams.get('session_id') || (searchParams.get('success') === 'true' && !isUserBooked))
   const [isBuyingPass, setIsBuyingPass] = useState(false)
 
   useEffect(() => {
     const sessionId = searchParams.get('session_id');
     const canceled = searchParams.get('canceled');
+    const success = searchParams.get('success');
     
     if (canceled === 'true') {
       toast.error('Paiement annulé.');
@@ -97,11 +101,27 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
           toast.error('Le paiement n\'a pas pu être validé. Veuillez réessayer.');
         }
       });
-    }
-  }, [searchParams, router]);
+    } else if (success === 'true' && !isUserBooked) {
+      const interval = setInterval(() => {
+        router.refresh();
+      }, 2000);
 
-  const isUserBooked = currentUser && cls.bookings.some((b) => b.studio_members.email === currentUser.email)
-  const userBooking = isUserBooked ? cls.bookings.find((b) => b.studio_members.email === currentUser.email) : null
+      const timeout = setTimeout(() => {
+        clearInterval(interval);
+        setIsVerifyingSession(false);
+        toast.error('La validation prend plus de temps que prévu. Actualisez la page dans quelques instants.');
+      }, 30000);
+
+      return () => {
+        clearInterval(interval);
+        clearTimeout(timeout);
+      };
+    } else if (success === 'true' && isUserBooked) {
+       setIsVerifyingSession(false);
+       toast.success('Paiement validé avec succès !');
+       window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, [searchParams, router, isUserBooked, org.mollie_account_id]);
 
   const googleMapsUrl = cls.location 
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(cls.location)}`

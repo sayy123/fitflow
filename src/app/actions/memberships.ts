@@ -61,6 +61,7 @@ export async function createSubscriptionSessionAction(orgId: string, type: 'mont
       description: `Pass Illimité ${type === 'monthly' ? '1 Mois' : '1 An'} - ${org.name}`,
       redirectUrl: successUrl.replace('{CHECKOUT_SESSION_ID}', 'success'),
       webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie`,
+      profileId: org.mollie_account_id,
       metadata: {
         type: 'studio_pass',
         passType: type,

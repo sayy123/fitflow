@@ -174,6 +174,7 @@ export async function createBookingAction(formData: FormData) {
           description: `Séance chez ${cls.organizations.name}: ${cls.title}`,
           redirectUrl: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true`,
           webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie`,
+          profileId: cls.organizations.mollie_account_id,
           metadata: {
             classId: classId,
             memberId: member.id,
@@ -369,6 +370,7 @@ export async function createBookingAction(formData: FormData) {
         description: `Séance chez ${cls.organizations.name}: ${cls.title}`,
         redirectUrl: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true`,
         webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie`,
+        profileId: cls.organizations.mollie_account_id,
         metadata: {
           classId: classId,
           memberId: member.id,
