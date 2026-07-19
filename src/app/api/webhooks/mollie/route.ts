@@ -27,7 +27,16 @@ export async function POST(req: Request) {
       return new NextResponse('Configuration Error: Missing access token', { status: 500 });
     }
 
-    const payment = await mollieClient.payments.get(id);
+    let payment;
+    try {
+      payment = await mollieClient.payments.get(id);
+    } catch (error: any) {
+      if (error.message?.includes('No payment exists')) {
+        payment = await mollieClient.payments.get(id, { testmode: true });
+      } else {
+        throw error;
+      }
+    }
     const metadata = payment.metadata as any;
 
     if (payment.status === 'paid') {
