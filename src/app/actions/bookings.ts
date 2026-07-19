@@ -550,12 +550,33 @@ export async function confirmBookingPaymentAction(bookingId: string) {
 
 export async function verifyMollieSessionAction(sessionId: string, accountId?: string | null) {
   try {
-    if (!process.env.MOLLIE_API_KEY) {
-      return { success: false, message: 'Missing MOLLIE_API_KEY' };
-    }
     const { createMollieClient } = await import('@mollie/api-client');
-    const mollie = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
-    const session = await mollie.payments.get(sessionId);
+    let mollieClient;
+    
+    if (accountId) {
+      const org = await prisma.organizations.findFirst({ where: { mollie_account_id: accountId } });
+      if (org?.mollie_access_token) {
+        mollieClient = createMollieClient({ accessToken: org.mollie_access_token });
+      }
+    }
+    
+    if (!mollieClient) {
+      if (!process.env.MOLLIE_API_KEY) {
+        return { success: false, message: 'Missing MOLLIE_API_KEY' };
+      }
+      mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
+    }
+
+    let session;
+    try {
+      session = await mollieClient.payments.get(sessionId);
+    } catch (e: any) {
+      if (e.message?.includes('No payment exists')) {
+        session = await mollieClient.payments.get(sessionId, { testmode: true });
+      } else {
+        throw e;
+      }
+    }
 
     if (session.status === 'paid' || session.status === 'authorized') {
       const metadata = session.metadata as any;

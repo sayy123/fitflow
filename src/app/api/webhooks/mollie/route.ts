@@ -20,11 +20,17 @@ export async function POST(req: Request) {
       const org = await prisma.organizations.findUnique({ where: { id: orgId } });
       if (org?.mollie_access_token) {
         mollieClient = createMollieClient({ accessToken: org.mollie_access_token });
+      } else {
+        console.error(`[Mollie Webhook] Organization ${orgId} missing access token`);
       }
     }
     
     if (!mollieClient) {
-      return new NextResponse('Configuration Error: Missing access token', { status: 500 });
+      if (process.env.MOLLIE_API_KEY) {
+        mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
+      } else {
+        return new NextResponse('Configuration Error: Missing access token and API Key', { status: 500 });
+      }
     }
 
     let payment;
