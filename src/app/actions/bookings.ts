@@ -178,8 +178,7 @@ export async function createBookingAction(formData: FormData) {
             classId: classId,
             memberId: member.id,
             organizationId: organizationId,
-          },
-          profileId: cls.organizations.mollie_account_id!, // If using Mollie Connect
+          }
         });
 
         return { url: session.getCheckoutUrl() };
@@ -374,8 +373,7 @@ export async function createBookingAction(formData: FormData) {
           classId: classId,
           memberId: member.id,
           organizationId: organizationId,
-        },
-        profileId: cls.organizations.mollie_account_id!, // If using Mollie Connect
+        }
       });
 
       return { url: session.getCheckoutUrl() };
@@ -548,7 +546,7 @@ export async function verifyMollieSessionAction(sessionId: string, accountId?: s
     }
     const { createMollieClient } = await import('@mollie/api-client');
     const mollie = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
-    const session = await mollie.payments.get(sessionId, { profileId: accountId || undefined });
+    const session = await mollie.payments.get(sessionId);
 
     if (session.status === 'paid' || session.status === 'authorized') {
       const metadata = session.metadata as any;

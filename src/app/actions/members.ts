@@ -124,8 +124,7 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
                 classId: classId,
                 memberId: member.id,
                 organizationId: organizationId,
-              },
-              profileId: org.mollie_account_id!
+              }
             });
 
 
@@ -195,8 +194,7 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
                 classId: classId,
                 memberId: member.id,
                 organizationId: organizationId,
-              },
-              profileId: org.mollie_account_id!
+              }
             });
 
 

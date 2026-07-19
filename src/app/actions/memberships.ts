@@ -66,8 +66,7 @@ export async function createSubscriptionSessionAction(orgId: string, type: 'mont
         passType: type,
         orgId: org.id,
         memberId: memberId!
-      },
-      profileId: org.mollie_account_id!
+      }
     });
 
 
