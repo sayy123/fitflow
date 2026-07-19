@@ -123,7 +123,7 @@ export async function POST(req: Request) {
              let subscriptionId = payment.subscriptionId;
              if (!subscriptionId && metadata?.isSubscription) {
                 // If it's the first payment, we need to create the subscription now
-                const subscription = await mollie.customerSubscriptions.create({
+                const subscription = await mollieClient.customerSubscriptions.create({
                    customerId,
                    amount: payment.amount,
                    interval: "1 months",
