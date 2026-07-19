@@ -128,8 +128,24 @@ export async function createBookingAction(formData: FormData) {
       if (bookingsCount >= cls.capacity) return { error: 'Ce cours est complet' }
 
       // Créer la réservation
+      let hasActiveSub = member.has_active_subscription || false;
+      if (hasActiveSub) {
+        const activeSub = await prisma.member_subscriptions.findFirst({
+          where: {
+            studio_member_id: member.id,
+            is_active: true,
+            expires_at: { gt: new Date() }
+          }
+        });
+        if (!activeSub) {
+          hasActiveSub = false;
+          // Sync database
+          await prisma.studio_members.update({ where: { id: member.id }, data: { has_active_subscription: false } });
+        }
+      }
+
       const isMollieActive = cls.organizations.mollie_account_id && (cls.organizations.mollie_charges_enabled || cls.organizations.mollie_account_status === 'pending_verification');
-      const isPaid = cls.price && cls.price > 0 && !member.has_active_subscription;
+      const isPaid = cls.price && cls.price > 0 && !hasActiveSub;
       const canPayOnline = cls.organizations.payment_link || isMollieActive;
       
       let booking;

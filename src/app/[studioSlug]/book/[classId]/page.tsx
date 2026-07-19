@@ -53,7 +53,22 @@ export default async function BookingPage({ params }: { params: Promise<{ studio
     });
     
     if (member) {
-      hasSubscription = member.has_active_subscription || false;
+      let isSubActive = member.has_active_subscription || false;
+      if (isSubActive) {
+         const activeSub = await prisma.member_subscriptions.findFirst({
+            where: {
+               studio_member_id: member.id,
+               is_active: true,
+               expires_at: { gt: new Date() }
+            }
+         });
+         if (!activeSub) {
+            isSubActive = false;
+            // Sync database
+            await prisma.studio_members.update({ where: { id: member.id }, data: { has_active_subscription: false } });
+         }
+      }
+      hasSubscription = isSubActive;
       isInactiveMember = member.is_active === false;
 
       if (!isInactiveMember) {
