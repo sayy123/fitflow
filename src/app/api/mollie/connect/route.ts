@@ -50,7 +50,7 @@ export async function GET(request: Request) {
     url.searchParams.set('state', orgId);
     url.searchParams.set('scope', 'payments.read payments.write customers.read customers.write profiles.read profiles.write');
     url.searchParams.set('response_type', 'code');
-    url.searchParams.set('approval_prompt', 'auto');
+    url.searchParams.set('approval_prompt', 'force');
 
     return NextResponse.redirect(url.toString());
   } catch (error) {
