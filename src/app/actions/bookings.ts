@@ -160,6 +160,9 @@ export async function createBookingAction(formData: FormData) {
       const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
 
       if (isPaid && cls.organizations.mollie_account_status === 'active') {
+        if (!process.env.MOLLIE_API_KEY) {
+          return { error: 'Erreur de configuration : la clé API Mollie de la plateforme est manquante.' };
+        }
         const { createMollieClient } = await import('@mollie/api-client');
         const mollie = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
         
@@ -353,6 +356,9 @@ export async function createBookingAction(formData: FormData) {
     const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
 
     if (isPaid && cls.organizations.mollie_account_status === 'active') {
+      if (!process.env.MOLLIE_API_KEY) {
+        return { error: 'Erreur de configuration : la clé API Mollie de la plateforme est manquante.' };
+      }
       const { createMollieClient } = await import('@mollie/api-client');
       const mollie = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
       
@@ -537,6 +543,9 @@ export async function confirmBookingPaymentAction(bookingId: string) {
 
 export async function verifyMollieSessionAction(sessionId: string, accountId?: string | null) {
   try {
+    if (!process.env.MOLLIE_API_KEY) {
+      return { success: false, message: 'Missing MOLLIE_API_KEY' };
+    }
     const { createMollieClient } = await import('@mollie/api-client');
     const mollie = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
     const session = await mollie.payments.get(sessionId, { profileId: accountId || undefined });

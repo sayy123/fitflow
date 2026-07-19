@@ -53,7 +53,9 @@ export async function createSubscriptionSessionAction(orgId: string, type: 'mont
     : `${domain}/dashboard`;
 
   try {
-    
+    if (!process.env.MOLLIE_API_KEY) {
+      return { error: 'Erreur de configuration : la clé API Mollie de la plateforme est manquante.' };
+    }
     const session = await mollie.payments.create({
       amount: { currency: "EUR", value: price.toFixed(2) },
       description: `Pass Illimité ${type === 'monthly' ? '1 Mois' : '1 An'} - ${org.name}`,

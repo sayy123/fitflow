@@ -109,6 +109,9 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
 
           if (isPaid && isMollieActive) {
             
+            if (!process.env.MOLLIE_API_KEY) {
+              return { error: 'Erreur de configuration : la clé API Mollie de la plateforme est manquante.' };
+            }
             const { createMollieClient } = await import('@mollie/api-client');
             const mollie = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
             
@@ -177,6 +180,9 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
 
           if (isPaid && isMollieActive) {
             
+            if (!process.env.MOLLIE_API_KEY) {
+              return { error: 'Erreur de configuration : la clé API Mollie de la plateforme est manquante.' };
+            }
             const { createMollieClient } = await import('@mollie/api-client');
             const mollie = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
             
