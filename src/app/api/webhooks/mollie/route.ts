@@ -24,10 +24,7 @@ export async function POST(req: Request) {
     }
     
     if (!mollieClient) {
-      if (!process.env.MOLLIE_API_KEY) {
-        return new NextResponse('Configuration Error', { status: 500 });
-      }
-      mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
+      return new NextResponse('Configuration Error: Missing access token', { status: 500 });
     }
 
     const payment = await mollieClient.payments.get(id);

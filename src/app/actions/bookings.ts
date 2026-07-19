@@ -165,10 +165,8 @@ export async function createBookingAction(formData: FormData) {
         
         if (cls.organizations.mollie_access_token) {
            mollieClient = createMollieClient({ accessToken: cls.organizations.mollie_access_token as string });
-        } else if (process.env.MOLLIE_API_KEY) {
-           mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
         } else {
-           return { error: 'Erreur de configuration : la clé API Mollie de la plateforme est manquante.' };
+           return { error: 'Erreur de configuration : le compte Mollie de ce studio est mal configuré (token manquant).' };
         }
         
         const session = await mollieClient.payments.create({
@@ -366,10 +364,8 @@ export async function createBookingAction(formData: FormData) {
       
       if (cls.organizations.mollie_access_token) {
          mollieClient = createMollieClient({ accessToken: cls.organizations.mollie_access_token as string });
-      } else if (process.env.MOLLIE_API_KEY) {
-         mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
       } else {
-         return { error: 'Erreur de configuration : la clé API Mollie de la plateforme est manquante.' };
+         return { error: 'Erreur de configuration : le compte Mollie de ce studio est mal configuré (token manquant).' };
       }
       
       const session = await mollieClient.payments.create({
