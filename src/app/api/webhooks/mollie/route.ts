@@ -122,13 +122,38 @@ export async function POST(req: Request) {
       }
       
       // C) STUDIO PASS LOGIC
-      if (metadata?.type === 'studio_pass' && metadata?.memberId) {
+      if (metadata?.type === 'studio_pass' && metadata?.memberId && metadata?.orgId) {
         try {
+           const passType = metadata.passType as 'monthly' | 'yearly';
+           
+           // Calculate expiration date
+           const expiresAt = new Date();
+           if (passType === 'yearly') {
+             expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+           } else {
+             expiresAt.setMonth(expiresAt.getMonth() + 1);
+           }
+
+           // Ensure transaction or multiple awaits
            await prisma.studio_members.update({
              where: { id: metadata.memberId },
              data: { has_active_subscription: true }
            });
-           console.log(`[Mollie Webhook] Activated studio pass for member ${metadata.memberId}`);
+           
+           await prisma.member_subscriptions.create({
+             data: {
+               organization_id: metadata.orgId,
+               studio_member_id: metadata.memberId,
+               type: passType,
+               price_paid: payment.amount.value,
+               currency: payment.amount.currency,
+               mollie_payment_id: payment.id,
+               expires_at: expiresAt,
+               is_active: true
+             }
+           });
+
+           console.log(`[Mollie Webhook] Activated studio pass (${passType}) for member ${metadata.memberId}, expires at ${expiresAt.toISOString()}`);
         } catch (e) {
            console.error('[Mollie Webhook] Error activating studio pass:', e);
         }
