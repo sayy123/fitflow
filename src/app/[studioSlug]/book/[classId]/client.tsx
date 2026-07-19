@@ -121,7 +121,7 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
        toast.success(hasSubscription ? 'Abonnement activé avec succès ! Vous pouvez maintenant réserver gratuitement.' : 'Paiement validé avec succès !');
        window.history.replaceState({}, '', window.location.pathname);
     }
-  }, [searchParams, router, isUserBooked, org.mollie_account_id]);
+  }, [searchParams, router, isUserBooked, org.mollie_account_id, hasSubscription]);
 
   const googleMapsUrl = cls.location 
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(cls.location)}`
