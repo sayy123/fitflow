@@ -108,23 +108,26 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
           const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
 
           if (isPaid && isMollieActive) {
-            
-            if (!process.env.MOLLIE_API_KEY) {
-              return { error: 'Erreur de configuration : la clé API Mollie de la plateforme est manquante.' };
-            }
             const { createMollieClient } = await import('@mollie/api-client');
-            const mollie = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
+            let mollieClient;
+            if (org.mollie_access_token) {
+               mollieClient = createMollieClient({ accessToken: org.mollie_access_token as string });
+            } else {
+               return { error: 'Erreur de configuration : le compte Mollie de ce studio est mal configuré (token manquant).' };
+            }
             
-            const session = await mollie.payments.create({
+            const session = await mollieClient.payments.create({
               amount: { currency: "EUR", value: cls.price!.toFixed(2) },
               description: `Séance chez ${org.name}: ${cls.title}`,
               redirectUrl: `${siteUrl}/${org.slug}/book/${classId}?success=true`,
-              webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie`,
+              webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie?orgId=${org.id}`,
+              profileId: org.mollie_account_id,
               metadata: {
                 classId: classId,
                 memberId: member.id,
                 organizationId: organizationId,
-              }
+              },
+              testmode: process.env.NEXT_PUBLIC_APP_URL?.includes('localhost') || process.env.NEXT_PUBLIC_APP_URL?.includes('vercel.app') || process.env.NEXT_PUBLIC_MOLLIE_TESTMODE === 'true' ? true : undefined
             });
 
 
@@ -178,23 +181,26 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
           const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
 
           if (isPaid && isMollieActive) {
-            
-            if (!process.env.MOLLIE_API_KEY) {
-              return { error: 'Erreur de configuration : la clé API Mollie de la plateforme est manquante.' };
-            }
             const { createMollieClient } = await import('@mollie/api-client');
-            const mollie = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
+            let mollieClient;
+            if (org.mollie_access_token) {
+               mollieClient = createMollieClient({ accessToken: org.mollie_access_token as string });
+            } else {
+               return { error: 'Erreur de configuration : le compte Mollie de ce studio est mal configuré (token manquant).' };
+            }
             
-            const session = await mollie.payments.create({
+            const session = await mollieClient.payments.create({
               amount: { currency: "EUR", value: cls.price!.toFixed(2) },
               description: `Séance chez ${org.name}: ${cls.title}`,
               redirectUrl: `${siteUrl}/${org.slug}/book/${classId}?success=true`,
-              webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie`,
+              webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie?orgId=${org.id}`,
+              profileId: org.mollie_account_id,
               metadata: {
                 classId: classId,
                 memberId: member.id,
                 organizationId: organizationId,
-              }
+              },
+              testmode: process.env.NEXT_PUBLIC_APP_URL?.includes('localhost') || process.env.NEXT_PUBLIC_APP_URL?.includes('vercel.app') || process.env.NEXT_PUBLIC_MOLLIE_TESTMODE === 'true' ? true : undefined
             });
 
 
