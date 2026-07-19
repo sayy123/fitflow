@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
-import { mollie } from '@/lib/mollie';
+import { createMollieClient } from '@mollie/api-client';
 import prisma from '@/lib/prisma';
 import { sendBookingConfirmationEmail } from '@/lib/emails/send';
 
 export async function POST(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const orgId = searchParams.get('orgId');
+
     const formData = await req.formData();
     const id = formData.get('id') as string;
 
@@ -12,7 +15,22 @@ export async function POST(req: Request) {
       return new NextResponse('Missing ID', { status: 400 });
     }
 
-    const payment = await mollie.payments.get(id);
+    let mollieClient;
+    if (orgId) {
+      const org = await prisma.organizations.findUnique({ where: { id: orgId } });
+      if (org?.mollie_access_token) {
+        mollieClient = createMollieClient({ accessToken: org.mollie_access_token });
+      }
+    }
+    
+    if (!mollieClient) {
+      if (!process.env.MOLLIE_API_KEY) {
+        return new NextResponse('Configuration Error', { status: 500 });
+      }
+      mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
+    }
+
+    const payment = await mollieClient.payments.get(id);
     const metadata = payment.metadata as any;
 
     if (payment.status === 'paid') {

@@ -551,6 +551,8 @@ model organizations {
   mollie_account_id      String?                 @unique
   mollie_charges_enabled Boolean?                @default(false)
   mollie_account_status  String?                 @default("pending")
+  mollie_access_token    String?
+  mollie_refresh_token   String?
   payment_link           String?
   logo_url               String?
   color_primary          String?                 @default("#4f46e5")

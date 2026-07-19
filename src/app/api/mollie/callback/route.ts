@@ -43,11 +43,13 @@ export async function GET(request: Request) {
     }
     const profile = profiles[0];
 
-    // Update organization with Mollie Profile ID (which is used for routing payments)
+    // Update organization with Mollie Profile ID and Tokens
     await prisma.organizations.update({
       where: { id: orgId },
       data: {
         mollie_account_id: profile.id, // Using Profile ID instead of Account ID
+        mollie_access_token: tokenData.access_token,
+        mollie_refresh_token: tokenData.refresh_token,
         mollie_charges_enabled: true,
         mollie_account_status: 'active'
       }

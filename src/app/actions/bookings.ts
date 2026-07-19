@@ -160,20 +160,25 @@ export async function createBookingAction(formData: FormData) {
       const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
 
       if (isPaid && cls.organizations.mollie_account_status === 'active') {
-        if (!process.env.MOLLIE_API_KEY) {
-          return { error: 'Erreur de configuration : la clé API Mollie de la plateforme est manquante.' };
-        }
+        let mollieClient;
         const { createMollieClient } = await import('@mollie/api-client');
-        const mollie = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
         
-        const session = await mollie.payments.create({
+        if (cls.organizations.mollie_access_token) {
+           mollieClient = createMollieClient({ accessToken: cls.organizations.mollie_access_token as string });
+        } else if (process.env.MOLLIE_API_KEY) {
+           mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
+        } else {
+           return { error: 'Erreur de configuration : la clé API Mollie de la plateforme est manquante.' };
+        }
+        
+        const session = await mollieClient.payments.create({
           amount: {
             currency: 'EUR',
             value: cls.price!.toFixed(2),
           },
           description: `Séance chez ${cls.organizations.name}: ${cls.title}`,
           redirectUrl: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true`,
-          webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie`,
+          webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie?orgId=${cls.organizations.id}`,
           profileId: cls.organizations.mollie_account_id,
           metadata: {
             classId: classId,
@@ -356,20 +361,25 @@ export async function createBookingAction(formData: FormData) {
     const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
 
     if (isPaid && cls.organizations.mollie_account_status === 'active') {
-      if (!process.env.MOLLIE_API_KEY) {
-        return { error: 'Erreur de configuration : la clé API Mollie de la plateforme est manquante.' };
-      }
+      let mollieClient;
       const { createMollieClient } = await import('@mollie/api-client');
-      const mollie = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
       
-      const session = await mollie.payments.create({
+      if (cls.organizations.mollie_access_token) {
+         mollieClient = createMollieClient({ accessToken: cls.organizations.mollie_access_token as string });
+      } else if (process.env.MOLLIE_API_KEY) {
+         mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
+      } else {
+         return { error: 'Erreur de configuration : la clé API Mollie de la plateforme est manquante.' };
+      }
+      
+      const session = await mollieClient.payments.create({
         amount: {
           currency: 'EUR',
           value: cls.price!.toFixed(2),
         },
         description: `Séance chez ${cls.organizations.name}: ${cls.title}`,
         redirectUrl: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true`,
-        webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie`,
+        webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie?orgId=${cls.organizations.id}`,
         profileId: cls.organizations.mollie_account_id,
         metadata: {
           classId: classId,
