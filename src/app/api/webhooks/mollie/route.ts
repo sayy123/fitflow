@@ -121,6 +121,19 @@ export async function POST(req: Request) {
         }
       }
       
+      // C) STUDIO PASS LOGIC
+      if (metadata?.type === 'studio_pass' && metadata?.memberId) {
+        try {
+           await prisma.studio_members.update({
+             where: { id: metadata.memberId },
+             data: { has_active_subscription: true }
+           });
+           console.log(`[Mollie Webhook] Activated studio pass for member ${metadata.memberId}`);
+        } catch (e) {
+           console.error('[Mollie Webhook] Error activating studio pass:', e);
+        }
+      }
+      
       // B) SUBSCRIPTIONS LOGIC
       // If it's the first payment of a subscription (usually has a mandate)
       // or a recurring payment.
