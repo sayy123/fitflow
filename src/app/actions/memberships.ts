@@ -45,8 +45,8 @@ export async function createSubscriptionSessionAction(orgId: string, type: 'mont
   const domain = `${protocol}://${host}`
   
   const successUrl = classIdToReturn 
-    ? `${domain}/${org.slug}/book/${classIdToReturn}?session_id={CHECKOUT_SESSION_ID}&type=pass`
-    : `${domain}/dashboard?session_id={CHECKOUT_SESSION_ID}&type=pass`;
+    ? `${domain}/${org.slug}/book/${classIdToReturn}?success=true&type=pass`
+    : `${domain}/dashboard?success=true&type=pass`;
     
   const cancelUrl = classIdToReturn
     ? `${domain}/${org.slug}/book/${classIdToReturn}?canceled=true`
@@ -65,7 +65,7 @@ export async function createSubscriptionSessionAction(orgId: string, type: 'mont
     const session = await mollieClient.payments.create({
       amount: { currency: "EUR", value: price.toFixed(2) },
       description: `Pass Illimité ${type === 'monthly' ? '1 Mois' : '1 An'} - ${org.name}`,
-      redirectUrl: successUrl.replace('{CHECKOUT_SESSION_ID}', 'success'),
+      redirectUrl: successUrl,
       webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie?orgId=${org.id}`,
       profileId: org.mollie_account_id,
       metadata: {

@@ -101,7 +101,7 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
           toast.error('Le paiement n\'a pas pu être validé. Veuillez réessayer.');
         }
       });
-    } else if (success === 'true' && !isUserBooked) {
+    } else if (success === 'true' && !isUserBooked && !hasSubscription) {
       const interval = setInterval(() => {
         router.refresh();
       }, 2000);
@@ -116,9 +116,9 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
         clearInterval(interval);
         clearTimeout(timeout);
       };
-    } else if (success === 'true' && isUserBooked) {
+    } else if (success === 'true' && (isUserBooked || hasSubscription)) {
        setIsVerifyingSession(false);
-       toast.success('Paiement validé avec succès !');
+       toast.success(hasSubscription ? 'Abonnement activé avec succès ! Vous pouvez maintenant réserver gratuitement.' : 'Paiement validé avec succès !');
        window.history.replaceState({}, '', window.location.pathname);
     }
   }, [searchParams, router, isUserBooked, org.mollie_account_id]);
