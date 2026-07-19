@@ -182,7 +182,8 @@ export async function createBookingAction(formData: FormData) {
             classId: classId,
             memberId: member.id,
             organizationId: organizationId,
-          }
+          },
+          testmode: process.env.NEXT_PUBLIC_APP_URL?.includes('localhost') || process.env.NEXT_PUBLIC_APP_URL?.includes('vercel.app') ? true : undefined
         });
 
         return { url: session.getCheckoutUrl() };

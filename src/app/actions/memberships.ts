@@ -73,7 +73,8 @@ export async function createSubscriptionSessionAction(orgId: string, type: 'mont
         passType: type,
         orgId: org.id,
         memberId: memberId!
-      }
+      },
+      testmode: process.env.NEXT_PUBLIC_APP_URL?.includes('localhost') || process.env.NEXT_PUBLIC_APP_URL?.includes('vercel.app') ? true : undefined
     });
 
 
