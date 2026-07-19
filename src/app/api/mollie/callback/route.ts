@@ -37,7 +37,11 @@ export async function GET(request: Request) {
 
     // Initialize client with OAuth token to get the profile ID
     const oauthMollie = createMollieClient({ accessToken: tokenData.access_token });
-    const profile = await oauthMollie.profiles.getCurrent();
+    const profiles = await oauthMollie.profiles.page();
+    if (!profiles || profiles.length === 0) {
+      throw new Error('Aucun profil de site web trouvé sur ce compte Mollie.');
+    }
+    const profile = profiles[0];
 
     // Update organization with Mollie Profile ID (which is used for routing payments)
     await prisma.organizations.update({
