@@ -571,7 +571,7 @@ export async function verifyMollieSessionAction(sessionId: string, accountId?: s
     try {
       session = await mollieClient.payments.get(sessionId);
     } catch (e: any) {
-      if (e.message?.includes('No payment exists')) {
+      if (e.message?.includes('No payment exists') || e.message?.includes('wrong mode')) {
         session = await mollieClient.payments.get(sessionId, { testmode: true });
       } else {
         throw e;

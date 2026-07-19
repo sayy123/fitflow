@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     try {
       payment = await mollieClient.payments.get(id);
     } catch (error: any) {
-      if (error.message?.includes('No payment exists')) {
+      if (error.message?.includes('No payment exists') || error.message?.includes('wrong mode')) {
         payment = await mollieClient.payments.get(id, { testmode: true });
       } else {
         throw error;
