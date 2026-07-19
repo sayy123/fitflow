@@ -516,7 +516,7 @@ export function SettingsClient({
                           className="border-gray-200 text-gray-700 font-medium shrink-0 shadow-sm transition-all"
                           onClick={(e) => {
                             e.preventDefault();
-                            window.location.href = `/api/mollie/connect?orgId=${organization.id}`;
+                            window.open('https://my.mollie.com/dashboard/', '_blank');
                           }}
                         >
                           Gérer mon compte Mollie
