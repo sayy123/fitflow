@@ -16,12 +16,14 @@ export async function POST(req: Request) {
     }
 
     let payment: any;
+    let activeMollieClient: any;
     const { withMollieClient } = await import('@/lib/mollie-oauth');
 
     if (orgId) {
       const org = await prisma.organizations.findUnique({ where: { id: orgId } });
       if (org?.mollie_access_token) {
         payment = await withMollieClient(org.id, async (mollieClient) => {
+          activeMollieClient = mollieClient;
           try {
             return await mollieClient.payments.get(id);
           } catch (error: any) {
@@ -39,6 +41,7 @@ export async function POST(req: Request) {
     if (!payment) {
       if (process.env.MOLLIE_API_KEY) {
         const fallbackClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
+        activeMollieClient = fallbackClient;
         try {
           payment = await fallbackClient.payments.get(id);
         } catch (error: any) {
@@ -182,7 +185,7 @@ export async function POST(req: Request) {
              let subscriptionId = payment.subscriptionId;
              if (!subscriptionId && metadata?.isSubscription) {
                 // If it's the first payment, we need to create the subscription now
-                const subscription = await mollieClient.customerSubscriptions.create({
+                const subscription = await activeMollieClient.customerSubscriptions.create({
                    customerId,
                    amount: payment.amount,
                    interval: "1 months",
