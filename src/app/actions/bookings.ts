@@ -176,33 +176,32 @@ export async function createBookingAction(formData: FormData) {
       const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
 
       if (isPaid && cls.organizations.mollie_account_status === 'active') {
-        let mollieClient;
-        const { createMollieClient } = await import('@mollie/api-client');
+        const { withMollieClient } = await import('@/lib/mollie-oauth');
         
-        if (cls.organizations.mollie_access_token) {
-           mollieClient = createMollieClient({ accessToken: cls.organizations.mollie_access_token as string });
-        } else {
-           return { error: 'Erreur de configuration : le compte Mollie de ce studio est mal configuré (token manquant).' };
+        try {
+          const sessionUrl = await withMollieClient(cls.organizations.id, async (mollieClient) => {
+            const session = await mollieClient.payments.create({
+              amount: {
+                currency: 'EUR',
+                value: cls.price!.toFixed(2),
+              },
+              description: `Séance chez ${cls.organizations.name}: ${cls.title}`,
+              redirectUrl: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true`,
+              webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie?orgId=${cls.organizations.id}`,
+              profileId: cls.organizations.mollie_account_id,
+              metadata: {
+                classId: classId,
+                memberId: member.id,
+                organizationId: organizationId,
+              },
+              testmode: process.env.NEXT_PUBLIC_APP_URL?.includes('localhost') || process.env.NEXT_PUBLIC_APP_URL?.includes('vercel.app') || process.env.NEXT_PUBLIC_MOLLIE_TESTMODE === 'true' ? true : undefined
+            });
+            return session.getCheckoutUrl();
+          });
+          return { url: sessionUrl };
+        } catch (err: any) {
+          return { error: 'Erreur lors de la création du paiement: ' + (err.message || 'Erreur inconnue') };
         }
-        
-        const session = await mollieClient.payments.create({
-          amount: {
-            currency: 'EUR',
-            value: cls.price!.toFixed(2),
-          },
-          description: `Séance chez ${cls.organizations.name}: ${cls.title}`,
-          redirectUrl: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true`,
-          webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie?orgId=${cls.organizations.id}`,
-          profileId: cls.organizations.mollie_account_id,
-          metadata: {
-            classId: classId,
-            memberId: member.id,
-            organizationId: organizationId,
-          },
-          testmode: process.env.NEXT_PUBLIC_APP_URL?.includes('localhost') || process.env.NEXT_PUBLIC_APP_URL?.includes('vercel.app') || process.env.NEXT_PUBLIC_MOLLIE_TESTMODE === 'true' ? true : undefined
-        });
-
-        return { url: session.getCheckoutUrl() };
       }
 
       if (isPaid && cls.organizations.payment_link) {
@@ -376,32 +375,31 @@ export async function createBookingAction(formData: FormData) {
     const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
 
     if (isPaid && cls.organizations.mollie_account_status === 'active') {
-      let mollieClient;
-      const { createMollieClient } = await import('@mollie/api-client');
+      const { withMollieClient } = await import('@/lib/mollie-oauth');
       
-      if (cls.organizations.mollie_access_token) {
-         mollieClient = createMollieClient({ accessToken: cls.organizations.mollie_access_token as string });
-      } else {
-         return { error: 'Erreur de configuration : le compte Mollie de ce studio est mal configuré (token manquant).' };
+      try {
+        const sessionUrl = await withMollieClient(cls.organizations.id, async (mollieClient) => {
+          const session = await mollieClient.payments.create({
+            amount: {
+              currency: 'EUR',
+              value: cls.price!.toFixed(2),
+            },
+            description: `Séance chez ${cls.organizations.name}: ${cls.title}`,
+            redirectUrl: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true`,
+            webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie?orgId=${cls.organizations.id}`,
+            profileId: cls.organizations.mollie_account_id,
+            metadata: {
+              classId: classId,
+              memberId: member.id,
+              organizationId: organizationId,
+            }
+          });
+          return session.getCheckoutUrl();
+        });
+        return { url: sessionUrl };
+      } catch (err: any) {
+        return { error: 'Erreur lors de la création du paiement: ' + (err.message || 'Erreur inconnue') };
       }
-      
-      const session = await mollieClient.payments.create({
-        amount: {
-          currency: 'EUR',
-          value: cls.price!.toFixed(2),
-        },
-        description: `Séance chez ${cls.organizations.name}: ${cls.title}`,
-        redirectUrl: `${siteUrl}/${cls.organizations.slug}/book/${classId}?success=true`,
-        webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie?orgId=${cls.organizations.id}`,
-        profileId: cls.organizations.mollie_account_id,
-        metadata: {
-          classId: classId,
-          memberId: member.id,
-          organizationId: organizationId,
-        }
-      });
-
-      return { url: session.getCheckoutUrl() };
     }
 
     if (isPaid && cls.organizations.payment_link) {
@@ -567,30 +565,39 @@ export async function confirmBookingPaymentAction(bookingId: string) {
 export async function verifyMollieSessionAction(sessionId: string, accountId?: string | null) {
   try {
     const { createMollieClient } = await import('@mollie/api-client');
-    let mollieClient;
+    const { withMollieClient } = await import('@/lib/mollie-oauth');
+    
+    let session: any;
     
     if (accountId) {
       const org = await prisma.organizations.findFirst({ where: { mollie_account_id: accountId } });
       if (org?.mollie_access_token) {
-        mollieClient = createMollieClient({ accessToken: org.mollie_access_token });
+        session = await withMollieClient(org.id, async (mollieClient) => {
+          try {
+            return await mollieClient.payments.get(sessionId);
+          } catch (e: any) {
+            if (e.message?.includes('No payment exists') || e.message?.includes('wrong mode')) {
+              return await mollieClient.payments.get(sessionId, { testmode: true });
+            }
+            throw e;
+          }
+        });
       }
     }
     
-    if (!mollieClient) {
+    if (!session) {
       if (!process.env.MOLLIE_API_KEY) {
         return { success: false, message: 'Missing MOLLIE_API_KEY' };
       }
-      mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
-    }
-
-    let session;
-    try {
-      session = await mollieClient.payments.get(sessionId);
-    } catch (e: any) {
-      if (e.message?.includes('No payment exists') || e.message?.includes('wrong mode')) {
-        session = await mollieClient.payments.get(sessionId, { testmode: true });
-      } else {
-        throw e;
+      const fallbackClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
+      try {
+        session = await fallbackClient.payments.get(sessionId);
+      } catch (e: any) {
+        if (e.message?.includes('No payment exists') || e.message?.includes('wrong mode')) {
+          session = await fallbackClient.payments.get(sessionId, { testmode: true });
+        } else {
+          throw e;
+        }
       }
     }
 

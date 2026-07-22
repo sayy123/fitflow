@@ -15,32 +15,41 @@ export async function POST(req: Request) {
       return new NextResponse('Missing ID', { status: 400 });
     }
 
-    let mollieClient;
+    let payment: any;
+    const { withMollieClient } = await import('@/lib/mollie-oauth');
+
     if (orgId) {
       const org = await prisma.organizations.findUnique({ where: { id: orgId } });
       if (org?.mollie_access_token) {
-        mollieClient = createMollieClient({ accessToken: org.mollie_access_token });
+        payment = await withMollieClient(org.id, async (mollieClient) => {
+          try {
+            return await mollieClient.payments.get(id);
+          } catch (error: any) {
+            if (error.message?.includes('No payment exists') || error.message?.includes('wrong mode')) {
+              return await mollieClient.payments.get(id, { testmode: true });
+            }
+            throw error;
+          }
+        });
       } else {
         console.error(`[Mollie Webhook] Organization ${orgId} missing access token`);
       }
     }
     
-    if (!mollieClient) {
+    if (!payment) {
       if (process.env.MOLLIE_API_KEY) {
-        mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
+        const fallbackClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
+        try {
+          payment = await fallbackClient.payments.get(id);
+        } catch (error: any) {
+          if (error.message?.includes('No payment exists') || error.message?.includes('wrong mode')) {
+            payment = await fallbackClient.payments.get(id, { testmode: true });
+          } else {
+            throw error;
+          }
+        }
       } else {
         return new NextResponse('Configuration Error: Missing access token and API Key', { status: 500 });
-      }
-    }
-
-    let payment;
-    try {
-      payment = await mollieClient.payments.get(id);
-    } catch (error: any) {
-      if (error.message?.includes('No payment exists') || error.message?.includes('wrong mode')) {
-        payment = await mollieClient.payments.get(id, { testmode: true });
-      } else {
-        throw error;
       }
     }
     const metadata = payment.metadata as any;

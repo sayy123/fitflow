@@ -53,32 +53,27 @@ export async function createSubscriptionSessionAction(orgId: string, type: 'mont
     : `${domain}/dashboard`;
 
   try {
-    let mollieClient;
-    const { createMollieClient } = await import('@mollie/api-client');
+    const { withMollieClient } = await import('@/lib/mollie-oauth');
     
-    if (org.mollie_access_token) {
-       mollieClient = createMollieClient({ accessToken: org.mollie_access_token as string });
-    } else {
-       return { error: 'Erreur de configuration : le compte Mollie de ce studio est mal configuré (token manquant).' };
-    }
-    
-    const session = await mollieClient.payments.create({
-      amount: { currency: "EUR", value: price.toFixed(2) },
-      description: `Pass Illimité ${type === 'monthly' ? '1 Mois' : '1 An'} - ${org.name}`,
-      redirectUrl: successUrl,
-      webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie?orgId=${org.id}`,
-      profileId: org.mollie_account_id,
-      metadata: {
-        type: 'studio_pass',
-        passType: type,
-        orgId: org.id,
-        memberId: memberId!
-      },
-      testmode: process.env.NEXT_PUBLIC_APP_URL?.includes('localhost') || process.env.NEXT_PUBLIC_APP_URL?.includes('vercel.app') || process.env.NEXT_PUBLIC_MOLLIE_TESTMODE === 'true' ? true : undefined
+    const sessionUrl = await withMollieClient(org.id, async (mollieClient) => {
+      const session = await mollieClient.payments.create({
+        amount: { currency: "EUR", value: price.toFixed(2) },
+        description: `Pass Illimité ${type === 'monthly' ? '1 Mois' : '1 An'} - ${org.name}`,
+        redirectUrl: successUrl,
+        webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mollie?orgId=${org.id}`,
+        profileId: org.mollie_account_id,
+        metadata: {
+          type: 'studio_pass',
+          passType: type,
+          orgId: org.id,
+          memberId: memberId!
+        },
+        testmode: process.env.NEXT_PUBLIC_APP_URL?.includes('localhost') || process.env.NEXT_PUBLIC_APP_URL?.includes('vercel.app') || process.env.NEXT_PUBLIC_MOLLIE_TESTMODE === 'true' ? true : undefined
+      });
+      return session.getCheckoutUrl();
     });
 
-
-    return { url: session.getCheckoutUrl() }
+    return { url: sessionUrl }
   } catch (err: any) {
     console.error(err);
     return { error: err.message || 'Erreur lors de la création de la session Mollie.' }
