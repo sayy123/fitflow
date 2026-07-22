@@ -6,6 +6,8 @@ import { CheckCircle2, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { BillingButton } from "./billing-button";
 import { cookies } from "next/headers";
+import { BillingPoller } from "./billing-poller";
+import { Suspense } from "react";
 
 export default async function BillingPage() {
   const supabase = await createClient();
@@ -65,6 +67,10 @@ export default async function BillingPage() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20 text-foreground">
+      <Suspense fallback={null}>
+        <BillingPoller isBlocked={isBlocked} />
+      </Suspense>
+
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted text-foreground text-[10px] font-bold uppercase tracking-widest mb-4 ring-1 ring-border/50">
           Gestion de l'abonnement
