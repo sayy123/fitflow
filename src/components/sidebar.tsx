@@ -150,7 +150,7 @@ export function Sidebar({
               <Activity className="size-5 text-primary-foreground" />
             </div>
           )}
-          <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-4 w-auto mt-4 opacity-80" />
+          <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-10 w-auto mt-4" />
         </div>
 
         {/* Trial Countdown for Owners */}
