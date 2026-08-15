@@ -121,6 +121,9 @@ export function Sidebar({
         </button>
 
         <div className="p-8 pb-4">
+          <div className="mb-6">
+            <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-10 w-auto" />
+          </div>
           {showOrgName ? (
             <div className="space-y-3">
               <h1 className="text-lg font-semibold text-foreground tracking-tight leading-none">
@@ -145,12 +148,7 @@ export function Sidebar({
                 </Link>
               )}
             </div>
-          ) : (
-            <div className="size-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/10 mb-2">
-              <Activity className="size-5 text-primary-foreground" />
-            </div>
-          )}
-          <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-10 w-auto mt-4" />
+          ) : null}
         </div>
 
         {/* Trial Countdown for Owners */}
