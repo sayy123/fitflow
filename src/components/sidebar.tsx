@@ -122,7 +122,7 @@ export function Sidebar({
 
         <div className="p-8 pb-4">
           <div className="mb-6">
-            <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-10 w-auto" />
+            <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-10 w-10" />
           </div>
           {showOrgName ? (
             <div className="space-y-3">

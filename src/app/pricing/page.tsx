@@ -10,7 +10,7 @@ export default function PricingPage() {
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/">
             <div className="font-bold text-lg tracking-tight flex items-center gap-2.5">
-              <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-10 w-auto" />
+              <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-10 w-10" />
             </div>
           </Link>
           <div className="flex items-center gap-6">
@@ -166,7 +166,7 @@ export default function PricingPage() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex flex-col items-center md:items-start gap-3">
             <div className="flex items-center gap-2.5 font-bold text-xl text-foreground tracking-tight">
-              <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-9 w-auto" />
+              <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-9 w-9" />
             </div>
             <p className="text-muted-foreground text-sm font-medium">L'outil de gestion ultime pour les studios de fitness.</p>
           </div>
