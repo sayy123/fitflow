@@ -87,12 +87,7 @@ export default function LandingPage() {
       >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="font-bold text-xl tracking-tight flex items-center gap-2.5">
-            <div className="size-8 bg-primary rounded-lg flex items-center justify-center shadow-sm">
-              <Activity className="size-5 text-white" />
-            </div>
-            <span className="text-slate-900">
-              Fitloww
-            </span>
+            <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-7 w-auto" />
           </div>
           
           <div className="hidden md:flex items-center gap-8">
@@ -414,10 +409,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex flex-col items-center md:items-start gap-2">
             <div className="flex items-center gap-2 font-bold text-xl text-slate-900 tracking-tight">
-              <div className="size-6 bg-primary rounded-md flex items-center justify-center">
-                <Activity className="size-3 text-white" />
-              </div>
-              Fitloww
+              <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-6 w-auto" />
             </div>
             <p className="text-slate-500 text-sm">
               L'outil de gestion pensé pour le bien-être.

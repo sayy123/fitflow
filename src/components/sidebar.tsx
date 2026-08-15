@@ -150,9 +150,7 @@ export function Sidebar({
               <Activity className="size-5 text-primary-foreground" />
             </div>
           )}
-          <p className="text-[11px] font-medium text-muted-foreground mt-1.5 uppercase tracking-wider">
-            Fitloww
-          </p>
+          <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-4 w-auto mt-4 opacity-80" />
         </div>
 
         {/* Trial Countdown for Owners */}

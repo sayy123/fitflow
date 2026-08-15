@@ -10,10 +10,7 @@ export default function PricingPage() {
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/">
             <div className="font-bold text-lg tracking-tight flex items-center gap-2.5">
-              <div className="size-7 bg-gradient-to-tr from-zinc-900 to-zinc-800 rounded-lg flex items-center justify-center shadow-sm shadow-black/50 ring-1 ring-border/50">
-                <Activity className="size-4 text-primary-foreground" />
-              </div>
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground to-muted-foreground">Fitloww</span>
+              <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-7 w-auto" />
             </div>
           </Link>
           <div className="flex items-center gap-6">
@@ -169,10 +166,7 @@ export default function PricingPage() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex flex-col items-center md:items-start gap-3">
             <div className="flex items-center gap-2.5 font-bold text-xl text-foreground tracking-tight">
-              <div className="size-6 bg-primary text-primary-foreground rounded-md flex items-center justify-center">
-                  <Activity className="size-3 text-primary-foreground" />
-              </div>
-              Fitloww
+              <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-6 w-auto" />
             </div>
             <p className="text-muted-foreground text-sm font-medium">L'outil de gestion ultime pour les studios de fitness.</p>
           </div>

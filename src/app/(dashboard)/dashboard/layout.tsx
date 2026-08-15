@@ -74,7 +74,9 @@ export default async function DashboardLayout({
   
   const now = new Date();
   const trialEnd = userProfile?.trial_ends_at ? new Date(userProfile.trial_ends_at) : null;
-  const isTrialExpired = trialEnd ? now > trialEnd : false;
+  // If trialEnd is missing but user is in trialing state, we consider the trial expired
+  // to prevent infinite trial access.
+  const isTrialExpired = trialEnd ? now > trialEnd : (userProfile?.subscription_status === "trialing" ? true : false);
   const isTrialing = userProfile?.subscription_status === "trialing";
   const isSubscriptionInactive = !isTrialing && userProfile?.subscription_status !== "active";
 
