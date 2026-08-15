@@ -17,10 +17,10 @@ export const metadata: Metadata = {
   description: "La solution moderne pour gérer votre studio de fitness. Planning, réservations, membres et paiements centralisés.",
   icons: {
     icon: [
-      { url: '/icon.png?v=2', type: 'image/png' },
+      { url: '/icon.png?v=3', type: 'image/png' },
     ],
     apple: [
-      { url: '/apple-icon.png?v=2', type: 'image/png' },
+      { url: '/apple-icon.png?v=3', type: 'image/png' },
     ],
   },
 };
