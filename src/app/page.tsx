@@ -157,7 +157,7 @@ export default function LandingPage() {
               <img
                 src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?q=80&w=2500&auto=format&fit=crop"
                 alt="Interface Fitloww"
-                className="w-full h-[600px] object-cover"
+                className="w-full h-[300px] sm:h-[450px] md:h-[600px] object-cover"
               />
             </div>
           </div>
@@ -260,7 +260,7 @@ export default function LandingPage() {
               })}
             </div>
 
-            <div className="w-full lg:w-7/12 h-[400px] lg:h-auto relative bg-secondary">
+            <div className="w-full lg:w-7/12 h-[250px] sm:h-[400px] lg:h-auto relative bg-secondary">
               {interactiveFeatures.map((feat, index) => (
                 <div
                   key={feat.id}

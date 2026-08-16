@@ -8,6 +8,7 @@ import { sendWelcomeEmail } from "@/lib/emails/send";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { loginRateLimit } from "@/lib/ratelimit";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Le nom est trop court"),
@@ -36,12 +37,13 @@ export async function registerAction(prevState: unknown, formData: FormData) {
   try {
     const adminSupabase = createAdminClient();
 
-    // 0. Vérifier manuellement si l'utilisateur existe déjà pour un message d'erreur plus propre
+    // 0. Vérifier manuellement si l'utilisateur existe déjà
     const { data: { users } } = await adminSupabase.auth.admin.listUsers();
     const existingUser = users.find(u => u.email?.toLowerCase() === email.toLowerCase());
     
     if (existingUser) {
-      return { error: "Cette adresse email est déjà enregistrée. Veuillez vous connecter." };
+      // Anti-enumeration: on redirige vers le login avec un message ambigu
+      return { redirect: "/login?message=" + encodeURIComponent("Vérifiez vos identifiants ou connectez-vous si vous avez déjà un compte.") };
     }
 
     // 1. Créer le compte Supabase (AUTO-CONFIRMÉ via Admin API)
@@ -56,11 +58,8 @@ export async function registerAction(prevState: unknown, formData: FormData) {
 
     if (authError) {
       console.error("Registration auth error:", authError);
-      if (authError.message.includes("already registered")) {
-        return { error: "Cet email est déjà utilisé." };
-      }
       return {
-        error: "Erreur lors de la création du compte : " + authError.message,
+        error: "Une erreur est survenue lors de l'inscription. Veuillez réessayer.",
       };
     }
 
@@ -208,6 +207,17 @@ export async function loginAction(prevState: unknown, formData: FormData) {
   const password = formData.get("password") as string;
 
   try {
+    const ip = (await headers()).get("x-forwarded-for") ?? "127.0.0.1";
+    
+    // Fallback if Redis is not configured, we ignore the error
+    try {
+      const { success } = await loginRateLimit.limit(ip);
+      if (!success) {
+        return { error: "Trop de tentatives. Veuillez réessayer plus tard." };
+      }
+    } catch (e) {
+      console.warn("Ratelimit failed (Redis maybe not configured):", e);
+    }
     const supabase = await createClient();
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -360,4 +370,76 @@ export async function deleteAccountAction() {
   }
 
   redirect("/register?message=account_deleted");
+}
+
+export async function forgotPasswordAction(prevState: unknown, formData: FormData) {
+  const email = formData.get("email") as string;
+  if (!email) return { error: "Veuillez entrer une adresse email." };
+
+  try {
+    const ip = (await headers()).get("x-forwarded-for") ?? "127.0.0.1";
+    try {
+      const { success } = await loginRateLimit.limit(ip);
+      if (!success) {
+        return { error: "Trop de tentatives. Veuillez réessayer plus tard." };
+      }
+    } catch (e) {}
+
+    const supabase = await createClient();
+    const host = (await headers()).get("host");
+    const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
+    const redirectUrl = `${siteUrl.replace(/\/$/, "")}/api/auth/callback?next=/update-password`;
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: redirectUrl,
+    });
+
+    if (error) {
+      console.error("Forgot password error:", error.message);
+      return { error: "Une erreur est survenue lors de l'envoi de l'email." };
+    }
+
+    return { success: true, message: "Si un compte existe avec cet email, un lien de réinitialisation a été envoyé." };
+  } catch (error: unknown) {
+    console.error("Forgot password system error:", error);
+    return { error: "Une erreur interne est survenue." };
+  }
+}
+
+export async function magicLinkAction(prevState: unknown, formData: FormData) {
+  const email = formData.get("email") as string;
+  if (!email) return { error: "Veuillez entrer une adresse email." };
+
+  try {
+    const ip = (await headers()).get("x-forwarded-for") ?? "127.0.0.1";
+    try {
+      const { success } = await loginRateLimit.limit(ip);
+      if (!success) {
+        return { error: "Trop de tentatives. Veuillez réessayer plus tard." };
+      }
+    } catch (e) {}
+
+    const supabase = await createClient();
+    const host = (await headers()).get("host");
+    const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
+    const redirectUrl = `${siteUrl.replace(/\/$/, "")}/api/auth/callback`;
+
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: redirectUrl,
+        shouldCreateUser: false, // On veut un email existant uniquement
+      },
+    });
+
+    if (error) {
+      console.error("Magic link error:", error.message);
+      return { error: "Erreur lors de l'envoi du lien." };
+    }
+
+    return { success: true, message: "Lien de connexion envoyé ! Vérifiez vos emails." };
+  } catch (error: unknown) {
+    console.error("Magic link system error:", error);
+    return { error: "Une erreur interne est survenue." };
+  }
 }

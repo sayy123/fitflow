@@ -8,6 +8,18 @@ export async function uploadAvatarAction(formData: FormData) {
   const file = formData.get('file') as File
   if (!file) return { error: 'Aucun fichier fourni' }
 
+  // 1. Point 16: File upload restriction (Size & Type)
+  const MAX_SIZE = 5 * 1024 * 1024 // 5 MB
+  const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+  
+  if (file.size > MAX_SIZE) {
+    return { error: 'Le fichier est trop volumineux (max 5 Mo)' }
+  }
+  
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    return { error: 'Seules les images JPEG, PNG et WEBP sont autorisées' }
+  }
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Non authentifié' }
