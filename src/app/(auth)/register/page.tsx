@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserPlus } from "lucide-react";
+import { UserPlusIcon } from "@heroicons/react/24/outline";
 import { useSearchParams } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
@@ -35,15 +35,15 @@ function RegisterContent() {
   const defaultName = searchParams.get("name") || "";
 
   return (
-    <Card className="w-full max-w-[400px] border border-border/60 bg-card rounded-3xl shadow-xl shadow-primary/5 overflow-hidden">
+    <Card className="w-full max-w-[400px] border border-border bg-background rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.04)] overflow-hidden">
       <CardHeader className="pt-10 pb-6 px-10 text-center">
-        <div className="size-12 rounded-2xl bg-background border border-border/50 flex items-center justify-center text-foreground mx-auto mb-4">
-          <UserPlus className="size-5" />
+        <div className="size-12 rounded-lg bg-secondary border border-border flex items-center justify-center text-foreground mx-auto mb-6">
+          <UserPlusIcon className="size-5" />
         </div>
-        <CardTitle className="text-2xl font-bold tracking-tight text-foreground">
+        <CardTitle className="text-2xl font-heading font-medium tracking-tight text-foreground">
           Rejoignez Fitloww
         </CardTitle>
-        <CardDescription className="text-muted-foreground font-medium mt-1">
+        <CardDescription className="text-muted-foreground mt-2 font-light">
           {role === "manager"
             ? "Lancez votre studio de fitness."
             : "Accédez aux plannings de vos coachs."}
@@ -52,19 +52,19 @@ function RegisterContent() {
       <CardContent className="px-10 pb-10">
         <Tabs
           value={role}
-          className="mb-6"
+          className="mb-8"
           onValueChange={(v) => setRole(v as "member" | "manager")}
         >
-          <TabsList className="grid w-full grid-cols-2 p-1 bg-background/80 rounded-xl h-10">
+          <TabsList className="grid w-full grid-cols-2 p-1 bg-secondary rounded-lg h-10 border border-border">
             <TabsTrigger
               value="manager"
-              className="rounded-lg font-semibold text-xs data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-foreground text-muted-foreground"
+              className="rounded-md font-medium text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground text-muted-foreground transition-all"
             >
               Gérant
             </TabsTrigger>
             <TabsTrigger
               value="member"
-              className="rounded-lg font-semibold text-xs data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-foreground text-muted-foreground"
+              className="rounded-md font-medium text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground text-muted-foreground transition-all"
             >
               Membre
             </TabsTrigger>
@@ -75,10 +75,10 @@ function RegisterContent() {
           <input type="hidden" name="role" value={role} />
           <input type="hidden" name="plan" value={plan} />
 
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <Label
               htmlFor="name"
-              className="text-xs font-semibold text-foreground/90"
+              className="text-xs font-medium text-foreground/80 uppercase tracking-wider"
             >
               Votre nom complet
             </Label>
@@ -88,15 +88,15 @@ function RegisterContent() {
               required
               defaultValue={defaultName}
               placeholder="ex: Jean Dupont"
-              className="h-11 rounded-xl border-border focus:ring-primary/5 focus:border-primary transition-all bg-background/50 hover:bg-background"
+              className="h-11 rounded-lg border-border focus:ring-1 focus:ring-foreground focus:border-foreground transition-colors bg-background"
             />
           </div>
 
           {role === "manager" && (
-            <div className="space-y-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
+            <div className="space-y-2">
               <Label
                 htmlFor="studioName"
-                className="text-xs font-semibold text-foreground/90"
+                className="text-xs font-medium text-foreground/80 uppercase tracking-wider"
               >
                 Nom de votre studio
               </Label>
@@ -105,15 +105,15 @@ function RegisterContent() {
                 name="studioName"
                 required={role === "manager"}
                 placeholder="ex: Fit Studio"
-                className="h-11 rounded-xl border-border focus:ring-primary/5 focus:border-primary transition-all bg-background/50 hover:bg-background"
+                className="h-11 rounded-lg border-border focus:ring-1 focus:ring-foreground focus:border-foreground transition-colors bg-background"
               />
             </div>
           )}
 
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <Label
               htmlFor="email"
-              className="text-xs font-semibold text-foreground/90"
+              className="text-xs font-medium text-foreground/80 uppercase tracking-wider"
             >
               Adresse email
             </Label>
@@ -124,15 +124,15 @@ function RegisterContent() {
               required
               defaultValue={defaultEmail}
               placeholder="ex: jean@email.com"
-              className="h-11 rounded-xl border-border focus:ring-primary/5 focus:border-primary transition-all bg-background/50 hover:bg-background"
+              className="h-11 rounded-lg border-border focus:ring-1 focus:ring-foreground focus:border-foreground transition-colors bg-background"
             />
           </div>
 
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <Label
               htmlFor="password"
               title="Mot de passe"
-              className="text-xs font-semibold text-foreground/90"
+              className="text-xs font-medium text-foreground/80 uppercase tracking-wider"
             >
               Mot de passe
             </Label>
@@ -142,33 +142,36 @@ function RegisterContent() {
               type="password"
               required
               placeholder="••••••••"
-              className="h-11 rounded-xl border-border focus:ring-primary/5 focus:border-primary transition-all bg-background/50 hover:bg-background"
+              className="h-11 rounded-lg border-border focus:ring-1 focus:ring-foreground focus:border-foreground transition-colors bg-background"
             />
           </div>
 
           {state?.error && (
-            <div className="p-3 rounded-xl bg-red-50/80 border border-red-100 text-sm font-medium text-red-600 animate-in fade-in slide-in-from-top-1 mt-2">
-              ⚠️ {state.error}
+            <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-sm font-medium text-destructive mt-2">
+              {state.error}
             </div>
           )}
 
-          <div className="flex items-start space-x-2 pt-2">
-            <Checkbox id="terms" name="terms" required className="mt-1" />
+          <div className="flex items-start space-x-3 pt-2">
+            <Checkbox id="terms" name="terms" required className="mt-0.5 rounded-[4px]" />
             <label
               htmlFor="terms"
-              className="text-xs font-medium leading-relaxed text-foreground/80"
+              className="text-xs font-light leading-relaxed text-muted-foreground"
             >
               J'accepte les{" "}
-              <Link href="/legal" className="text-foreground underline hover:text-foreground/90">
-                Mentions Légales
+              <Link href="/terms" className="text-foreground underline hover:text-foreground/80">
+                Conditions d'utilisation
               </Link>{" "}
-              et la politique de confidentialité.
+              et la{" "}
+              <Link href="/privacy" className="text-foreground underline hover:text-foreground/80">
+                Politique de confidentialité
+              </Link>.
             </label>
           </div>
 
           <Button
             type="submit"
-            className="w-full h-11 rounded-xl font-semibold text-sm bg-primary text-primary-foreground hover:bg-primary/90 transition-colors mt-6"
+            className="w-full h-11 rounded-lg font-medium text-sm bg-foreground text-background hover:bg-foreground/90 transition-colors mt-6 shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
             disabled={isPending}
           >
             {isPending
@@ -181,19 +184,19 @@ function RegisterContent() {
 
         <div className="relative my-8">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-border/50" />
+            <span className="w-full border-t border-border" />
           </div>
-          <div className="relative flex justify-center text-xs font-medium text-muted-foreground">
-            <span className="bg-card px-4">Ou s'inscrire avec</span>
+          <div className="relative flex justify-center text-xs font-medium text-muted-foreground uppercase tracking-widest">
+            <span className="bg-background px-4">Ou s'inscrire avec</span>
           </div>
         </div>
 
         <Button
           variant="outline"
-          className="w-full h-11 rounded-xl font-semibold text-sm border-border text-foreground/90 hover:bg-background hover:text-foreground transition-colors flex items-center justify-center gap-3"
+          className="w-full h-11 rounded-lg font-medium text-sm border-border text-foreground hover:bg-secondary hover:text-foreground transition-colors flex items-center justify-center gap-3"
           onClick={() => signInWithGoogleAction()}
         >
-          <svg className="size-5" viewBox="0 0 24 24">
+          <svg className="size-4" viewBox="0 0 24 24">
             <path
               d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
               fill="#4285F4"
@@ -214,11 +217,11 @@ function RegisterContent() {
           Google
         </Button>
 
-        <div className="mt-8 text-center text-sm text-muted-foreground">
+        <div className="mt-8 text-center text-sm text-muted-foreground font-light">
           Déjà inscrit ?{" "}
           <Link
             href="/login"
-            className="text-foreground font-semibold hover:underline ml-1"
+            className="text-foreground font-medium hover:underline ml-1"
           >
             Se connecter
           </Link>
@@ -232,7 +235,7 @@ export default function RegisterPage() {
   return (
     <Suspense
       fallback={
-        <div className="w-full max-w-md h-[600px] animate-pulse bg-card/50 rounded-[2rem] card-shadow" />
+        <div className="w-full max-w-[400px] h-[600px] animate-pulse bg-secondary rounded-xl" />
       }
     >
       <RegisterContent />
