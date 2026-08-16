@@ -117,7 +117,7 @@ export function Sidebar({
 
         <div className="p-6 pb-2">
           <div className="mb-8 flex items-center gap-3">
-            <img src="/logo_pulse_outline_favicon.png" alt="Fitloww" className="h-8 w-8" />
+            <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-8 w-8" />
             <span className="font-heading font-semibold text-xl tracking-tight text-foreground">Fitloww</span>
           </div>
           {showOrgName ? (

@@ -85,7 +85,7 @@ export default function LandingPage() {
       >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="font-heading font-semibold text-2xl tracking-tight flex items-center gap-3">
-            <img src="/logo_pulse_outline_favicon.png" alt="Fitloww" className="h-8 w-8" />
+            <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-8 w-8" />
             Fitloww
           </div>
           
@@ -390,7 +390,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start justify-between gap-12">
           <div className="flex flex-col items-start gap-4 max-w-xs">
             <div className="flex items-center gap-3 font-heading font-semibold text-2xl text-foreground tracking-tight">
-              <img src="/logo_pulse_outline_favicon.png" alt="Fitloww" className="h-8 w-8" />
+              <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-8 w-8" />
               Fitloww
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
