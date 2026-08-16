@@ -7,8 +7,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-dm-sans);
+  --font-heading: var(--font-outfit);
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -26,68 +26,66 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-xl: calc(var(--radius) * 1.5);
 }
 
 :root {
-  /* Ultra Clean Light Theme - Inspired by Eversports / Boutique Fitness */
-  --background: oklch(1 0 0); /* Pure White */
-  --foreground: oklch(0.2 0.01 250); /* Very Dark Slate */
+  /* Premium, non-vibecoded light theme */
+  --background: oklch(0.99 0.005 250); /* Subtle off-white, not pure white */
+  --foreground: oklch(0.15 0.01 250); 
   
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0.01 250);
+  --card: oklch(0.99 0.005 250);
+  --card-foreground: oklch(0.15 0.01 250);
   
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0.01 250);
+  --popover: oklch(0.99 0.005 250);
+  --popover-foreground: oklch(0.15 0.01 250);
   
-  /* Primary Green/Teal (Eversports style) */
-  --primary: oklch(0.65 0.15 160); 
+  --primary: oklch(0.60 0.12 160); /* Deeper, more sophisticated teal/green */
   --primary-foreground: oklch(0.98 0 0);
   
-  --secondary: oklch(0.96 0.01 250); /* Light Slate Gray */
+  --secondary: oklch(0.95 0.01 250); 
   --secondary-foreground: oklch(0.2 0.01 250);
   
-  --muted: oklch(0.96 0.01 250);
-  --muted-foreground: oklch(0.5 0.02 250);
+  --muted: oklch(0.95 0.01 250);
+  --muted-foreground: oklch(0.45 0.02 250);
   
-  --accent: oklch(0.96 0.01 250);
+  --accent: oklch(0.95 0.01 250);
   --accent-foreground: oklch(0.2 0.01 250);
   
-  --destructive: oklch(0.6 0.2 25);
+  --destructive: oklch(0.5 0.15 25);
   --destructive-foreground: oklch(0.98 0 0);
   
-  --border: oklch(0.9 0.02 250); /* Soft Gray Border */
-  --input: oklch(0.9 0.02 250);
-  --ring: oklch(0.65 0.15 160);
+  --border: oklch(0.88 0.01 250); 
+  --input: oklch(0.88 0.01 250);
+  --ring: oklch(0.60 0.12 160);
   
-  --radius: 0.75rem; /* Softer, friendlier corners */
+  --radius: 0.5rem; /* Elegant, small radius, no pill shapes */
 }
 
 /* Force light mode style to avoid user system preference forcing dark mode and ruining the clean white vibe */
 .dark {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.2 0.01 250);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0.01 250);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0.01 250);
-  --primary: oklch(0.65 0.15 160);
+  --background: oklch(0.99 0.005 250);
+  --foreground: oklch(0.15 0.01 250);
+  --card: oklch(0.99 0.005 250);
+  --card-foreground: oklch(0.15 0.01 250);
+  --popover: oklch(0.99 0.005 250);
+  --popover-foreground: oklch(0.15 0.01 250);
+  --primary: oklch(0.60 0.12 160);
   --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.96 0.01 250);
+  --secondary: oklch(0.95 0.01 250);
   --secondary-foreground: oklch(0.2 0.01 250);
-  --muted: oklch(0.96 0.01 250);
-  --muted-foreground: oklch(0.5 0.02 250);
-  --accent: oklch(0.96 0.01 250);
+  --muted: oklch(0.95 0.01 250);
+  --muted-foreground: oklch(0.45 0.02 250);
+  --accent: oklch(0.95 0.01 250);
   --accent-foreground: oklch(0.2 0.01 250);
-  --destructive: oklch(0.6 0.2 25);
+  --destructive: oklch(0.5 0.15 25);
   --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.9 0.02 250);
-  --input: oklch(0.9 0.02 250);
-  --ring: oklch(0.65 0.15 160);
+  --border: oklch(0.88 0.01 250);
+  --input: oklch(0.88 0.01 250);
+  --ring: oklch(0.60 0.12 160);
 }
 
 @layer base {
@@ -96,6 +94,9 @@
   }
   body {
     @apply bg-background text-foreground antialiased selection:bg-primary/10 selection:text-primary overflow-x-hidden;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight;
   }
   html {
     @apply font-sans overflow-x-hidden;

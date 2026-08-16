@@ -4,18 +4,17 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
-  ArrowRight,
-  Activity,
-  Calendar,
-  Users,
-  ChevronDown,
-  CreditCard,
-  Smartphone,
-  ShieldCheck,
-  CheckCircle2,
-  Menu,
-  X
-} from "lucide-react";
+  ArrowRightIcon,
+  ChartBarIcon,
+  CalendarIcon,
+  ChevronDownIcon,
+  CreditCardIcon,
+  DevicePhoneMobileIcon,
+  ShieldCheckIcon,
+  CheckCircleIcon,
+  Bars3Icon,
+  XMarkIcon
+} from "@heroicons/react/24/outline";
 import { cn } from "@/lib/utils";
 
 export default function LandingPage() {
@@ -24,7 +23,6 @@ export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Handle navbar shadow on scroll
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -36,181 +34,177 @@ export default function LandingPage() {
   const interactiveFeatures = [
     {
       id: 0,
-      title: "Planning intelligent",
-      desc: "Gérez vos séances en toute simplicité. Vos coachs et membres sont notifiés en temps réel.",
-      icon: Calendar,
+      title: "Planning synchronisé",
+      desc: "Supervisez toutes vos séances sur une interface fluide. Vos équipes et membres sont toujours à jour.",
+      icon: CalendarIcon,
       image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=1200&auto=format&fit=crop",
     },
     {
       id: 1,
-      title: "Paiements automatisés",
-      desc: "Abonnements, carnets de séances ou à la carte. Encaissez vos clients sans friction.",
-      icon: CreditCard,
+      title: "Transactions invisibles",
+      desc: "Abonnements récurrents et paiements à l'acte intégrés directement dans le parcours client.",
+      icon: CreditCardIcon,
       image: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=1200&auto=format&fit=crop",
     },
     {
       id: 2,
-      title: "Expérience premium",
-      desc: "Offrez à vos clients une réservation fluide sur mobile. Fini les messages WhatsApp.",
-      icon: Smartphone,
+      title: "Expérience mobile native",
+      desc: "Une réservation instantanée depuis n'importe quel appareil. Fini les allers-retours par message.",
+      icon: DevicePhoneMobileIcon,
       image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=1200&auto=format&fit=crop",
     },
   ];
 
   const faqs = [
     {
-      q: "Combien de temps faut-il pour configurer Fitloww ?",
-      a: "Moins de 5 minutes. Notre assistant d'intégration vous guide pas à pas. Vous pouvez créer votre studio, ajouter vos coachs et publier votre premier cours immédiatement.",
+      q: "Combien de temps faut-il pour configurer la plateforme ?",
+      a: "Quelques minutes suffisent. Vous pouvez structurer votre studio, ajouter vos collaborateurs et ouvrir les réservations le jour même.",
     },
     {
       q: "Mes clients doivent-ils télécharger une application ?",
-      a: "Non, Fitloww est une Web App progressive (PWA). Vos membres y accèdent via un simple lien, avec une interface parfaitement optimisée pour mobile.",
+      a: "Non. Vos membres accèdent à une interface web hautement optimisée pour mobile via un simple lien, sans friction d'installation.",
     },
     {
-      q: "Puis-je gérer plusieurs studios avec un seul compte ?",
-      a: "Absolument. Vous pouvez basculer d'un studio à l'autre en un clic depuis votre espace administrateur.",
+      q: "Puis-je gérer plusieurs établissements ?",
+      a: "Oui. Notre architecture permet la gestion multi-salles depuis un compte administrateur unique.",
     },
     {
-      q: "Fitloww prend-il une commission sur les réservations ?",
-      a: "Non, nous ne prenons aucune commission sur vos ventes. Vous gardez 100% de vos revenus (hors frais standards Mollie).",
+      q: "Prenez-vous une commission sur les réservations ?",
+      a: "Non. Vous conservez l'intégralité de votre chiffre d'affaires, hors frais inhérents aux prestataires de paiement (ex: Stripe/Mollie).",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/20">
       {/* Navigation */}
       <nav
         className={cn(
-          "fixed top-0 inset-x-0 z-50 transition-all duration-300 bg-white",
-          scrolled ? "shadow-sm border-b border-slate-100 py-3" : "py-5"
+          "fixed top-0 inset-x-0 z-50 transition-all duration-200 bg-background/95 backdrop-blur-sm",
+          scrolled ? "border-b border-border py-4 shadow-[0_4px_24px_rgba(0,0,0,0.02)]" : "py-6"
         )}
       >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          <div className="font-bold text-xl tracking-tight flex items-center gap-2.5">
-            <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-10 w-10" />
+          <div className="font-heading font-semibold text-2xl tracking-tight flex items-center gap-3">
+            <img src="/logo_pulse_outline_favicon.png" alt="Fitloww" className="h-8 w-8" />
+            Fitloww
           </div>
           
           <div className="hidden md:flex items-center gap-8">
-            <Link href="#features" className="text-[15px] font-medium text-slate-600 hover:text-primary transition-colors">
+            <Link href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Fonctionnalités
             </Link>
-            <Link href="/pricing" className="text-[15px] font-medium text-slate-600 hover:text-primary transition-colors">
+            <Link href="/pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Tarifs
             </Link>
-            <Link href="/contact" className="text-[15px] font-medium text-slate-600 hover:text-primary transition-colors">
+            <Link href="/contact" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Contact
             </Link>
           </div>
 
-          <div className="hidden md:flex items-center gap-4">
-            <Link href="/login" className="text-[15px] font-medium text-slate-600 hover:text-slate-900 transition-colors">
+          <div className="hidden md:flex items-center gap-5">
+            <Link href="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Connexion
             </Link>
             <Link href="/register">
-              <Button className="bg-primary text-white rounded-full px-6 h-10 text-[15px] font-medium hover:bg-primary/90 hover:scale-105 transition-all shadow-sm">
-                Essayer gratuitement
+              <Button className="bg-foreground text-background rounded-lg px-6 h-10 text-sm font-medium hover:bg-foreground/90 transition-colors shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+                Démarrer
               </Button>
             </Link>
           </div>
           
           {/* Mobile Nav Toggle */}
           <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X className="size-6 text-slate-900" /> : <Menu className="size-6 text-slate-900" />}
+            {mobileMenuOpen ? <XMarkIcon className="size-6 text-foreground" /> : <Bars3Icon className="size-6 text-foreground" />}
           </button>
         </div>
       </nav>
 
       <main>
         {/* Hero Section */}
-        <section className="relative pt-32 pb-20 px-6 max-w-7xl mx-auto lg:pt-48 lg:pb-32">
-          <div className="text-center max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 text-slate-700 text-sm font-medium mb-8 border border-slate-200">
-              <span className="flex size-2 rounded-full bg-primary animate-pulse" />
-              La nouvelle norme pour les studios boutique
+        <section className="relative pt-40 pb-24 px-6 max-w-7xl mx-auto lg:pt-52 lg:pb-32">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-secondary text-secondary-foreground text-xs font-semibold uppercase tracking-wider mb-8">
+              Système de gestion de studio
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-8 leading-[1.1]">
-              Gérez votre studio avec <br className="hidden md:block" />
-              <span className="text-primary">une élégance absolue.</span>
+            <h1 className="text-5xl md:text-7xl font-heading font-medium tracking-tight text-foreground mb-8 leading-[1.1]">
+              L'infrastructure moderne <br className="hidden md:block" />
+              pour votre studio.
             </h1>
 
-            <p className="text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-              Le logiciel de réservation conçu pour le Yoga, Pilates et fitness. Centralisez plannings, paiements et clients dans une interface lumineuse et incroyablement simple.
+            <p className="text-lg md:text-xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
+              Une solution de réservation unifiée pour le fitness, yoga et pilates. Centralisez vos plannings et paiements dans une interface épurée.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/register?role=manager">
-                <Button className="w-full sm:w-auto bg-primary text-white rounded-full px-8 h-14 text-lg font-medium hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md flex items-center gap-2 group">
-                  Créer mon studio{" "}
-                  <ArrowRight className="size-5 group-hover:translate-x-1 transition-transform" />
+                <Button className="w-full sm:w-auto bg-primary text-primary-foreground rounded-lg px-8 h-12 text-base font-medium hover:bg-primary/90 transition-colors shadow-[0_4px_14px_rgba(0,0,0,0.1)] flex items-center gap-2 group">
+                  Ouvrir mon espace
+                  <ArrowRightIcon className="size-4 opacity-70 group-hover:opacity-100 transition-opacity" />
                 </Button>
               </Link>
               <Link href="/register?role=member">
-                <Button variant="outline" className="w-full sm:w-auto rounded-full px-8 h-14 text-lg font-medium border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
-                  Espace membre
+                <Button variant="outline" className="w-full sm:w-auto rounded-lg px-8 h-12 text-base font-medium border-border text-foreground hover:bg-secondary transition-colors">
+                  Accès client
                 </Button>
               </Link>
             </div>
-            <p className="mt-4 text-sm text-slate-500">Aucune carte bancaire requise. Configuration en 5 minutes.</p>
           </div>
 
           {/* Hero Image Showcase */}
-          <div className="mt-20 relative mx-auto max-w-5xl animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300 fill-mode-both">
-            <div className="rounded-[24px] p-3 bg-white border border-slate-100 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)]">
-              <div className="rounded-[16px] overflow-hidden relative aspect-[16/9] bg-slate-100">
-                <img
-                  src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?q=80&w=2500&auto=format&fit=crop"
-                  alt="Studio de fitness moderne"
-                  className="w-full h-full object-cover"
-                />
-              </div>
+          <div className="mt-24 relative mx-auto max-w-5xl">
+            <div className="rounded-xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.06)] border border-border/50 bg-background">
+              <img
+                src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?q=80&w=2500&auto=format&fit=crop"
+                alt="Interface Fitloww"
+                className="w-full h-[600px] object-cover"
+              />
             </div>
           </div>
         </section>
 
-        {/* How it works */}
-        <section className="py-24 bg-slate-50 border-y border-slate-100">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-16 max-w-3xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 mb-4">
-                Démarrez en 3 étapes simples.
+        {/* How it works (Replaced 3 cards with alternating layout) */}
+        <section className="py-24 bg-secondary/50 border-y border-border/50">
+          <div className="max-w-5xl mx-auto px-6">
+            <div className="mb-20">
+              <h2 className="text-3xl md:text-4xl font-heading font-medium tracking-tight text-foreground mb-4">
+                Une mise en place sans friction.
               </h2>
-              <p className="text-slate-600 text-lg">
-                Fini les logiciels complexes et surchargés. Fitloww va à l'essentiel.
+              <p className="text-muted-foreground text-lg max-w-2xl">
+                Oubliez les logiciels complexes. Nous avons réduit le processus à l'essentiel.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-12 relative max-w-5xl mx-auto">
-              {/* Connecting line for desktop */}
-              <div className="hidden md:block absolute top-8 left-[20%] right-[20%] h-[2px] bg-slate-200" />
-
+            <div className="space-y-16">
               {[
                 {
-                  step: "1",
-                  title: "Créez votre espace",
-                  desc: "Configurez votre studio et vos tarifs instantanément.",
+                  step: "01",
+                  title: "Configuration de l'espace",
+                  desc: "Définissez les paramètres de votre studio, vos offres tarifaires et connectez votre compte bancaire en quelques clics.",
                 },
                 {
-                  step: "2",
-                  title: "Générez votre planning",
-                  desc: "Ajoutez vos cours et assignez vos professeurs.",
+                  step: "02",
+                  title: "Structuration du planning",
+                  desc: "Programmez vos séances, assignez vos intervenants et gérez les capacités d'accueil de vos salles.",
                 },
                 {
-                  step: "3",
-                  title: "Invitez vos membres",
-                  desc: "Partagez votre lien. Vos clients réservent en un clic.",
+                  step: "03",
+                  title: "Ouverture des réservations",
+                  desc: "Partagez votre portail dédié. Vos clients s'inscrivent et règlent leurs séances en toute autonomie.",
                 },
               ].map((item, i) => (
-                <div key={i} className="relative flex flex-col items-center text-center group">
-                  <div className="size-16 rounded-full bg-white border-2 border-slate-100 shadow-sm flex items-center justify-center text-xl font-bold text-slate-900 mb-6 relative z-10 group-hover:border-primary group-hover:text-primary transition-all duration-300">
+                <div key={i} className="flex flex-col md:flex-row gap-6 md:gap-12 items-start">
+                  <div className="text-4xl font-heading text-muted-foreground/30 font-light shrink-0 w-16">
                     {item.step}
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">
-                    {item.title}
-                  </h3>
-                  <p className="text-slate-600 leading-relaxed max-w-sm">
-                    {item.desc}
-                  </p>
+                  <div>
+                    <h3 className="text-2xl font-heading font-medium text-foreground mb-3">
+                      {item.title}
+                    </h3>
+                    <p className="text-muted-foreground text-lg leading-relaxed max-w-2xl">
+                      {item.desc}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -219,18 +213,17 @@ export default function LandingPage() {
 
         {/* Interactive Features Showcase */}
         <section id="features" className="py-24 px-6 max-w-7xl mx-auto">
-          <div className="text-center mb-16 max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-slate-900 mb-6">
-              Pensé pour vous faire gagner du temps.
+          <div className="mb-16 max-w-3xl">
+            <h2 className="text-3xl md:text-5xl font-heading font-medium tracking-tight text-foreground mb-6">
+              L'outil qui s'efface devant votre activité.
             </h2>
-            <p className="text-slate-600 text-xl">
-              Automatisez vos réservations et encaissements pour vous concentrer sur vos cours.
+            <p className="text-muted-foreground text-xl">
+              L'automatisation des tâches administratives vous permet de vous concentrer exclusivement sur votre enseignement.
             </p>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-12 items-center bg-white rounded-[24px] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
-            {/* Left: Interactive List */}
-            <div className="w-full lg:w-5/12 flex flex-col p-6 md:p-10">
+          <div className="flex flex-col lg:flex-row gap-0 rounded-xl border border-border shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden bg-background">
+            <div className="w-full lg:w-5/12 flex flex-col border-b lg:border-b-0 lg:border-r border-border">
               {interactiveFeatures.map((feat, index) => {
                 const isActive = activeFeature === index;
                 const Icon = feat.icon;
@@ -239,27 +232,25 @@ export default function LandingPage() {
                     key={feat.id}
                     onClick={() => setActiveFeature(index)}
                     className={cn(
-                      "text-left p-6 rounded-2xl transition-all duration-300 relative group",
-                      isActive ? "bg-slate-50" : "hover:bg-slate-50/50"
+                      "text-left p-8 transition-colors relative",
+                      isActive ? "bg-secondary" : "hover:bg-secondary/50"
                     )}
                   >
                     {isActive && (
-                      <div className="absolute left-0 top-1/4 bottom-1/4 w-1.5 bg-primary rounded-r-full" />
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
                     )}
-                    <div className="flex items-start gap-4">
-                      <div
-                        className={cn(
-                          "size-12 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300",
-                          isActive ? "bg-primary text-white shadow-sm" : "bg-slate-100 text-slate-500"
-                        )}
-                      >
-                        <Icon className="size-5" />
+                    <div className="flex items-start gap-5">
+                      <div className={cn(
+                        "mt-1",
+                        isActive ? "text-primary" : "text-muted-foreground"
+                      )}>
+                        <Icon className="size-6" />
                       </div>
                       <div>
-                        <h3 className={cn("text-lg font-bold mb-1", isActive ? "text-slate-900" : "text-slate-700")}>
+                        <h3 className={cn("text-lg font-heading font-medium mb-2", isActive ? "text-foreground" : "text-foreground/80")}>
                           {feat.title}
                         </h3>
-                        <p className={cn("text-sm leading-relaxed", isActive ? "text-slate-600" : "text-slate-500")}>
+                        <p className="text-sm leading-relaxed text-muted-foreground">
                           {feat.desc}
                         </p>
                       </div>
@@ -269,13 +260,12 @@ export default function LandingPage() {
               })}
             </div>
 
-            {/* Right: Dynamic Image */}
-            <div className="w-full lg:w-7/12 h-[400px] lg:h-[600px] relative">
+            <div className="w-full lg:w-7/12 h-[400px] lg:h-auto relative bg-secondary">
               {interactiveFeatures.map((feat, index) => (
                 <div
                   key={feat.id}
                   className={cn(
-                    "absolute inset-0 transition-all duration-700 ease-in-out",
+                    "absolute inset-0 transition-opacity duration-500",
                     activeFeature === index ? "opacity-100" : "opacity-0 pointer-events-none"
                   )}
                 >
@@ -290,49 +280,43 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Benefits */}
-        <section className="py-24 bg-primary text-white px-6">
+        {/* Benefits (Premium approach) */}
+        <section className="py-24 bg-foreground text-background px-6">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16 max-w-3xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-                Reprenez le contrôle de votre activité.
+            <div className="mb-20 max-w-3xl">
+              <h2 className="text-3xl md:text-5xl font-heading font-medium tracking-tight mb-6">
+                Propriété exclusive de vos données.
               </h2>
-              <p className="text-white/80 text-lg">
-                Fitloww n'est pas une marketplace. Vos clients vous appartiennent.
+              <p className="text-background/70 text-xl font-light">
+                Conservez 100% du contrôle sur votre clientèle. Nous fournissons l'infrastructure, vous gardez l'indépendance.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-16">
               {[
                 {
                   title: "Marque Blanche",
-                  desc: "L'interface met en avant votre nom de studio et vos couleurs.",
-                  icon: Activity,
+                  desc: "Votre portail client reflète votre identité visuelle et votre marque.",
                 },
                 {
-                  title: "0 Commission",
-                  desc: "Nous ne prenons aucun pourcentage sur vos ventes.",
-                  icon: CreditCard,
+                  title: "Zéro Commission",
+                  desc: "La plateforme ne prélève aucun pourcentage sur le montant de vos réservations.",
                 },
                 {
-                  title: "Données privées",
-                  desc: "Vous êtes l'unique propriétaire de votre base clients.",
-                  icon: ShieldCheck,
+                  title: "Données Souveraines",
+                  desc: "Accès exclusif et exportabilité totale de votre base de données clients.",
                 },
                 {
-                  title: "Sécurisé",
-                  desc: "Infrastructure robuste garantissant performance et fiabilité.",
-                  icon: CheckCircle2,
+                  title: "Fiabilité Technique",
+                  desc: "Une infrastructure cloud moderne garantissant une disponibilité maximale.",
                 },
               ].map((item, i) => (
-                <div key={i} className="bg-white/10 p-8 rounded-[20px] backdrop-blur-sm border border-white/10 hover:bg-white/15 transition-colors">
-                  <div className="size-12 rounded-xl bg-white/20 flex items-center justify-center mb-6">
-                    <item.icon className="size-6 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-3 text-white">
+                <div key={i} className="flex flex-col">
+                  <div className="h-px w-12 bg-primary/50 mb-6" />
+                  <h3 className="text-xl font-heading font-medium mb-3 text-background">
                     {item.title}
                   </h3>
-                  <p className="text-white/80 leading-relaxed text-sm">
+                  <p className="text-background/60 leading-relaxed text-sm">
                     {item.desc}
                   </p>
                 </div>
@@ -342,38 +326,35 @@ export default function LandingPage() {
         </section>
 
         {/* FAQ Section */}
-        <section className="py-24 px-6 max-w-3xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-4">
+        <section className="py-32 px-6 max-w-4xl mx-auto border-b border-border/50">
+          <div className="mb-16">
+            <h2 className="text-3xl md:text-4xl font-heading font-medium tracking-tight text-foreground">
               Questions fréquentes
             </h2>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-2">
             {faqs.map((faq, index) => {
               const isOpen = openFaq === index;
               return (
                 <div
                   key={index}
-                  className={cn(
-                    "border border-slate-200 rounded-xl overflow-hidden transition-all duration-300",
-                    isOpen ? "bg-white shadow-sm" : "bg-slate-50 hover:bg-slate-100"
-                  )}
+                  className="border-b border-border last:border-0"
                 >
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : index)}
-                    className="w-full text-left p-6 flex justify-between items-center focus:outline-none"
+                    className="w-full text-left py-6 flex justify-between items-center focus:outline-none group"
                   >
-                    <span className="font-semibold text-slate-900">
+                    <span className="text-lg font-heading font-medium text-foreground group-hover:text-primary transition-colors">
                       {faq.q}
                     </span>
-                    <div className={cn("transition-transform duration-300", isOpen ? "rotate-180" : "")}>
-                      <ChevronDown className="size-5 text-slate-500" />
+                    <div className={cn("transition-transform duration-300 ml-4", isOpen ? "rotate-180" : "")}>
+                      <ChevronDownIcon className="size-5 text-muted-foreground" />
                     </div>
                   </button>
                   <div className={cn("grid transition-all duration-300 ease-in-out", isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
                     <div className="overflow-hidden">
-                      <p className="p-6 pt-0 text-slate-600 leading-relaxed text-sm">
+                      <p className="pb-6 text-muted-foreground text-base leading-relaxed">
                         {faq.a}
                       </p>
                     </div>
@@ -385,18 +366,18 @@ export default function LandingPage() {
         </section>
 
         {/* Call to Action */}
-        <section className="pb-24 px-6">
-          <div className="max-w-5xl mx-auto bg-slate-900 rounded-[24px] p-12 md:p-20 text-center relative shadow-xl overflow-hidden">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6 text-white leading-tight">
-              Prêt à moderniser votre studio ?
+        <section className="py-32 px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-4xl md:text-6xl font-heading font-medium tracking-tight text-foreground mb-8">
+              Démarrez votre transition.
             </h2>
-            <p className="text-slate-300 text-lg mb-10 max-w-2xl mx-auto">
-              Créez votre compte gratuitement. Configuration en 5 minutes. Aucune carte de crédit requise.
+            <p className="text-muted-foreground text-xl mb-12 max-w-2xl mx-auto">
+              Testez l'intégralité des fonctionnalités gratuitement pendant 14 jours.
             </p>
             <div className="flex justify-center">
               <Link href="/register?role=manager">
-                <Button className="bg-primary text-white rounded-full px-10 h-14 text-lg font-medium hover:bg-primary/90 hover:scale-[1.02] transition-all shadow-lg">
-                  Essayer gratuitement
+                <Button className="bg-foreground text-background rounded-lg px-10 h-14 text-lg font-medium hover:bg-foreground/90 transition-colors shadow-[0_4px_14px_rgba(0,0,0,0.1)]">
+                  Ouvrir mon compte
                 </Button>
               </Link>
             </div>
@@ -405,22 +386,37 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 py-12 px-6 bg-white">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex flex-col items-center md:items-start gap-2">
-            <div className="flex items-center gap-2 font-bold text-xl text-slate-900 tracking-tight">
-              <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-9 w-9" />
+      <footer className="border-t border-border py-16 px-6 bg-background">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start justify-between gap-12">
+          <div className="flex flex-col items-start gap-4 max-w-xs">
+            <div className="flex items-center gap-3 font-heading font-semibold text-2xl text-foreground tracking-tight">
+              <img src="/logo_pulse_outline_favicon.png" alt="Fitloww" className="h-8 w-8" />
+              Fitloww
             </div>
-            <p className="text-slate-500 text-sm">
-              L'outil de gestion pensé pour le bien-être.
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              Le système d'exploitation des studios de fitness, yoga et pilates modernes.
             </p>
           </div>
-          <div className="flex gap-8 text-sm font-medium text-slate-500">
-            <Link href="#features" className="hover:text-slate-900 transition-colors">Fonctionnalités</Link>
-            <Link href="/pricing" className="hover:text-slate-900 transition-colors">Tarifs</Link>
-            <Link href="/contact" className="hover:text-slate-900 transition-colors">Contact</Link>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-12 text-sm">
+            <div className="flex flex-col gap-4">
+              <p className="font-heading font-medium text-foreground">Produit</p>
+              <Link href="#features" className="text-muted-foreground hover:text-foreground transition-colors">Fonctionnalités</Link>
+              <Link href="/pricing" className="text-muted-foreground hover:text-foreground transition-colors">Tarifs</Link>
+            </div>
+            <div className="flex flex-col gap-4">
+              <p className="font-heading font-medium text-foreground">Société</p>
+              <Link href="/contact" className="text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
+            </div>
+            <div className="flex flex-col gap-4">
+              <p className="font-heading font-medium text-foreground">Légal</p>
+              <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Conditions d'utilisation</Link>
+              <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Confidentialité</Link>
+            </div>
           </div>
-          <p className="text-sm text-slate-400">
+        </div>
+        <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-muted-foreground">
             © 2026 Fitloww. Tous droits réservés.
           </p>
         </div>

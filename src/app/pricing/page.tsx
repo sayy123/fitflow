@@ -1,99 +1,100 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Activity, CheckCircle2, Minus, Star } from "lucide-react";
+import { CheckIcon, MinusIcon } from "@heroicons/react/24/outline";
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary/20 font-sans overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/20">
       {/* Navigation */}
-      <nav className="fixed top-0 inset-x-0 bg-card/70 backdrop-blur-xl z-50 border-b border-border/50 supports-[backdrop-filter]:bg-card/40">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <nav className="fixed top-0 inset-x-0 bg-background/95 backdrop-blur-sm z-50 border-b border-border">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link href="/">
-            <div className="font-bold text-lg tracking-tight flex items-center gap-2.5">
-              <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-10 w-10" />
+            <div className="font-heading font-semibold text-2xl tracking-tight flex items-center gap-3">
+              <img src="/logo_pulse_outline_favicon.png" alt="Fitloww" className="h-8 w-8" />
+              Fitloww
             </div>
           </Link>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-8">
             <Link
               href="/pricing"
-              className="text-sm font-semibold text-foreground transition-colors"
+              className="text-sm font-medium text-foreground transition-colors"
             >
               Tarifs
             </Link>
             <Link
               href="/login"
-              className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hidden sm:block"
             >
               Connexion
             </Link>
             <Link href="/register?role=manager">
-              <Button className="bg-primary text-primary-foreground text-primary-foreground rounded-full px-5 h-9 text-sm font-semibold hover:bg-primary/90 text-primary-foreground transition-all shadow-md shadow-black/50 ring-1 ring-inset ring-border hover:ring-border">
-                Commencer
+              <Button className="bg-foreground text-background rounded-lg px-6 h-10 text-sm font-medium hover:bg-foreground/90 transition-colors shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+                Démarrer
               </Button>
             </Link>
           </div>
         </div>
       </nav>
 
-      <main className="pt-32 pb-24 px-6 max-w-7xl mx-auto">
+      <main className="pt-40 pb-24 px-6 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-20">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted text-foreground text-xs font-semibold mb-6 ring-1 ring-border shadow-sm cursor-default">
-            <span className="text-muted-foreground">Starter : 14 jours d'essai gratuit. Sans carte bancaire.</span>
+        <div className="text-center max-w-3xl mx-auto mb-24">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-secondary text-secondary-foreground text-xs font-semibold uppercase tracking-wider mb-8">
+            14 jours d'essai gratuit
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold tracking-tighter text-foreground mb-6 leading-[1.1]">
+          <h1 className="text-4xl md:text-6xl font-heading font-medium tracking-tight text-foreground mb-6 leading-[1.1]">
             Des tarifs simples.<br />
-            Pour des studios ambitieux.
+            Sans surprise.
           </h1>
-          <p className="text-lg text-muted-foreground font-medium">
-            Testez le plan Starter gratuitement pendant 14 jours. Accédez à tous les outils de base pour lancer votre studio sereinement.
+          <p className="text-lg text-muted-foreground font-light">
+            Testez la plateforme gratuitement. Vous ne payez que si l'outil devient indispensable.
           </p>
         </div>
 
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {/* Starter Plan */}
-          <div className="bg-card rounded-[2.5rem] p-8 md:p-10 shadow-sm border border-border/60 flex flex-col relative">
+          <div className="bg-background rounded-xl p-8 md:p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-border flex flex-col relative">
             <div className="mb-8">
-              <h3 className="text-2xl font-bold text-foreground mb-2">Starter</h3>
-              <p className="text-muted-foreground text-sm font-medium">Pour les coachs indépendants et les petits studios qui se lancent.</p>
+              <h3 className="text-2xl font-heading font-medium text-foreground mb-2">Starter</h3>
+              <p className="text-muted-foreground text-sm font-light">Pour les indépendants et petits espaces qui se structurent.</p>
             </div>
             
             <div className="mb-8 flex items-baseline gap-2">
-              <span className="text-5xl font-bold tracking-tight text-foreground">19€</span>
-              <span className="text-muted-foreground font-medium">/ mois</span>
+              <span className="text-5xl font-heading font-medium tracking-tight text-foreground">19€</span>
+              <span className="text-muted-foreground text-sm">/ mois</span>
             </div>
 
             <Link href="/register?role=manager&plan=starter" className="mb-10 w-full">
-              <Button variant="outline" className="w-full rounded-full h-14 text-base font-semibold border-border bg-card text-foreground/90 hover:bg-background hover:text-foreground transition-colors shadow-sm">
-                Commencer l'essai gratuit
+              <Button variant="outline" className="w-full rounded-lg h-12 text-sm font-medium border-border text-foreground hover:bg-secondary transition-colors">
+                Commencer l'essai
               </Button>
             </Link>
 
-            <div className="space-y-4 flex-1">
-              <p className="text-sm font-bold text-foreground uppercase tracking-widest mb-4">Ce qui est inclus</p>
+            <div className="space-y-4 flex-1 border-t border-border pt-8">
+              <p className="text-xs font-medium text-foreground uppercase tracking-widest mb-6">Inclus :</p>
               {[
                 "1 salle gérée",
                 "Jusqu'à 3 coachs",
                 "Jusqu'à 40 membres actifs",
-                "Planning & réservations illimités",
+                "Réservations illimitées",
                 "Emails automatiques"
               ].map((feature, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <CheckCircle2 className="size-5 text-emerald-500 shrink-0" />
-                  <span className="text-foreground/80 font-medium">{feature}</span>
+                <div key={i} className="flex items-start gap-4">
+                  <CheckIcon className="size-4 text-foreground shrink-0 mt-0.5" />
+                  <span className="text-muted-foreground text-sm leading-relaxed">{feature}</span>
                 </div>
               ))}
               
-              <div className="pt-4 space-y-4 border-t border-zinc-50 mt-4">
+              <div className="pt-4 space-y-4 mt-4 opacity-40">
                 {[
-                  "Plusieurs salles",
+                  "Multi-salles",
                   "Membres illimités",
                   "Rapports avancés"
                 ].map((feature, i) => (
-                  <div key={i} className="flex items-start gap-3 opacity-30">
-                    <Minus className="size-5 text-muted-foreground shrink-0" />
-                    <span className="text-muted-foreground font-medium">{feature}</span>
+                  <div key={i} className="flex items-start gap-4">
+                    <MinusIcon className="size-4 text-muted-foreground shrink-0 mt-0.5" />
+                    <span className="text-muted-foreground text-sm leading-relaxed">{feature}</span>
                   </div>
                 ))}
               </div>
@@ -101,46 +102,41 @@ export default function PricingPage() {
           </div>
 
           {/* Premium Plan */}
-          <div className="bg-primary text-primary-foreground rounded-[2.5rem] p-8 md:p-10 shadow-xl flex flex-col relative overflow-hidden group">
-            {/* Ambient Background Glow */}
-            <div className="absolute top-0 right-0 -mr-20 -mt-20 size-[300px] bg-card/5 rounded-full blur-[60px] pointer-events-none group-hover:bg-card/10 transition-colors duration-700" />
-            
+          <div className="bg-foreground text-background rounded-xl p-8 md:p-12 shadow-[0_8px_32px_rgba(0,0,0,0.08)] flex flex-col relative">
             <div className="absolute top-8 right-8">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-card/10 text-primary-foreground text-[10px] font-bold uppercase tracking-widest backdrop-blur-md border border-primary-foreground/10">
+              <div className="inline-flex items-center px-3 py-1 rounded-md bg-background/10 text-background text-[10px] font-semibold uppercase tracking-widest border border-background/20">
                 Populaire
               </div>
             </div>
 
             <div className="mb-8 relative z-10">
-              <h3 className="text-2xl font-bold text-primary-foreground mb-2">Premium</h3>
-              <p className="text-primary-foreground/80 text-sm font-medium">L'outil complet pour les studios établis en pleine croissance.</p>
+              <h3 className="text-2xl font-heading font-medium text-background mb-2">Premium</h3>
+              <p className="text-background/70 text-sm font-light">L'outil sans limites pour les studios établis en croissance.</p>
             </div>
             
             <div className="mb-8 flex items-baseline gap-2 relative z-10">
-              <span className="text-5xl font-bold tracking-tight text-primary-foreground">39€</span>
-              <span className="text-primary-foreground/80 font-medium">/ mois</span>
+              <span className="text-5xl font-heading font-medium tracking-tight text-background">39€</span>
+              <span className="text-background/70 text-sm">/ mois</span>
             </div>
 
             <Link href="/register?role=manager&plan=premium" className="mb-10 w-full relative z-10">
-              <Button className="w-full bg-card text-foreground rounded-full h-14 text-base font-bold hover:bg-muted hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl ring-1 ring-inset ring-border/50">
-                S'abonner maintenant
+              <Button className="w-full bg-background text-foreground rounded-lg h-12 text-sm font-medium hover:bg-secondary hover:text-foreground transition-colors shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
+                S'abonner
               </Button>
             </Link>
 
-            <div className="space-y-4 flex-1 relative z-10">
-              <p className="text-sm font-bold text-primary-foreground/90 uppercase tracking-widest mb-4">Tout du Starter, plus :</p>
+            <div className="space-y-4 flex-1 relative z-10 border-t border-background/20 pt-8">
+              <p className="text-xs font-medium text-background/90 uppercase tracking-widest mb-6">Tout du Starter, plus :</p>
               {[
                 "Jusqu'à 3 salles gérées",
                 "Membres illimités",
                 "Coachs illimités",
-                "Page de réservation personnalisée",
-                "Rapports mensuels de performance"
+                "Page de réservation sur-mesure",
+                "Rapports mensuels"
               ].map((feature, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <div className="size-5 rounded-full bg-primary-foreground/10 flex items-center justify-center shrink-0 mt-0.5">
-                    <CheckCircle2 className="size-3.5 text-primary-foreground" />
-                  </div>
-                  <span className="text-primary-foreground/80 font-medium">{feature}</span>
+                <div key={i} className="flex items-start gap-4">
+                  <CheckIcon className="size-4 text-background shrink-0 mt-0.5" />
+                  <span className="text-background/80 text-sm leading-relaxed">{feature}</span>
                 </div>
               ))}
             </div>
@@ -148,34 +144,39 @@ export default function PricingPage() {
         </div>
 
         {/* FAQ Section */}
-        <section className="mt-32 max-w-3xl mx-auto text-center border-t border-border/60 pt-20">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground mb-6">
-            Besoin de plus d'informations ?
+        <section className="mt-32 max-w-3xl mx-auto text-center border-t border-border pt-24">
+          <h2 className="text-3xl font-heading font-medium tracking-tight text-foreground mb-6">
+            Besoin d'une offre sur-mesure ?
           </h2>
-          <p className="text-muted-foreground text-lg mb-10 font-medium">
-            Contactez notre équipe de vente pour discuter d'une solution sur-mesure si vous gérez une franchise ou plus de 3 studios.
+          <p className="text-muted-foreground text-lg mb-10 font-light max-w-xl mx-auto">
+            Contactez notre équipe si vous gérez une franchise ou plus de 3 studios pour discuter de vos besoins spécifiques.
           </p>
-          <Button variant="outline" className="rounded-full px-8 h-12 text-sm font-semibold border-border text-foreground/90 hover:bg-background">
-            Nous contacter
-          </Button>
+          <Link href="/contact">
+            <Button variant="outline" className="rounded-lg px-8 h-12 text-sm font-medium border-border text-foreground hover:bg-secondary transition-colors">
+              Nous contacter
+            </Button>
+          </Link>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border/50 py-16 px-6 bg-card mt-10">
+      <footer className="border-t border-border py-16 px-6 bg-background">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex flex-col items-center md:items-start gap-3">
-            <div className="flex items-center gap-2.5 font-bold text-xl text-foreground tracking-tight">
-              <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-9 w-9" />
+            <div className="flex items-center gap-3 font-heading font-semibold text-2xl text-foreground tracking-tight">
+              <img src="/logo_pulse_outline_favicon.png" alt="Fitloww" className="h-8 w-8" />
+              Fitloww
             </div>
-            <p className="text-muted-foreground text-sm font-medium">L'outil de gestion ultime pour les studios de fitness.</p>
+            <p className="text-muted-foreground text-sm font-light">Le système d'exploitation des studios modernes.</p>
           </div>
-          <div className="flex gap-8 text-sm font-semibold text-muted-foreground">
+          <div className="flex gap-8 text-sm font-medium text-muted-foreground">
             <Link href="/" className="hover:text-foreground transition-colors">Accueil</Link>
             <Link href="/pricing" className="hover:text-foreground transition-colors">Tarifs</Link>
-            <Link href="#" className="hover:text-foreground transition-colors">Contact</Link>
+            <Link href="/contact" className="hover:text-foreground transition-colors">Contact</Link>
+            <Link href="/terms" className="hover:text-foreground transition-colors">Conditions (TOS)</Link>
+            <Link href="/privacy" className="hover:text-foreground transition-colors">Confidentialité</Link>
           </div>
-          <p className="text-sm font-medium text-muted-foreground">
+          <p className="text-sm font-light text-muted-foreground">
             © 2026 Fitloww. Tous droits réservés.
           </p>
         </div>
