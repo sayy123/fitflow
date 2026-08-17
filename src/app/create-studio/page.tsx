@@ -38,9 +38,7 @@ export default async function CreateStudioPage() {
           <form action={async (fd) => { 
             "use server"; 
             const res = await createFirstStudioAction(fd); 
-            if (res?.url) {
-              redirect(res.url);
-            } else if (res?.success) {
+            if (res?.success) {
               redirect('/dashboard');
             } else if (res?.error) {
               if (res.error === 'Vous possédez déjà un studio.') {
@@ -64,16 +62,11 @@ export default async function CreateStudioPage() {
               />
             </div>
             
-            <div className="text-xs text-muted-foreground font-medium bg-secondary/50 p-3 rounded-lg border border-border">
-              🎁 <strong>Essai gratuit de 14 jours.</strong> <br/>
-              Vous devrez fournir une carte bancaire pour vérifier votre identité, mais <strong>aucun prélèvement ne sera effectué aujourd'hui (0,00€)</strong>. À la fin de l'essai, l'abonnement Starter (19€/mois) s'activera. Vous pouvez annuler en un clic avant la fin.
-            </div>
-
             <Button
               type="submit"
               className="w-full h-14 rounded-xl bg-primary text-primary-foreground font-black uppercase tracking-widest text-[11px] shadow-lg shadow-primary/10 hover:bg-primary/90 transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
-              Démarrer mon essai gratuit
+              Créer mon espace
             </Button>
           </form>
         </CardContent>
