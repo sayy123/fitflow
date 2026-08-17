@@ -185,14 +185,26 @@ export async function POST(req: Request) {
              let subscriptionId = payment.subscriptionId;
              if (!subscriptionId && metadata?.isSubscription) {
                 // If it's the first payment, we need to create the subscription now
-                const subscription = await activeMollieClient.customerSubscriptions.create({
+                const subOptions: any = {
                    customerId,
-                   amount: payment.amount,
+                   amount: { currency: "EUR", value: plan === 'starter' ? "19.00" : "39.00" }, // The recurring amount! (First payment was 0)
                    interval: "1 months",
                    description: `Subscription ${plan} (${payment.id})`
-                });
+                };
+                
+                if (metadata?.isTrialSetup && metadata?.trialDays) {
+                   const startDate = new Date();
+                   startDate.setDate(startDate.getDate() + Number(metadata.trialDays));
+                   // format YYYY-MM-DD
+                   subOptions.startDate = startDate.toISOString().split('T')[0];
+                }
+
+                const subscription = await activeMollieClient.customerSubscriptions.create(subOptions);
                 subscriptionId = subscription.id;
              }
+             
+             const isTrial = metadata?.isTrialSetup && metadata?.trialDays;
+             const trialEnds = isTrial ? new Date(Date.now() + Number(metadata.trialDays) * 24 * 60 * 60 * 1000) : null;
 
              await prisma.user_profiles.update({
                where: { user_id: userId },
@@ -200,9 +212,9 @@ export async function POST(req: Request) {
                  mollie_subscription_id: subscriptionId,
                  mollie_customer_id: customerId,
                  mollie_price_id: metadata?.priceId || null,
-                 subscription_status: 'active',
-                 plan: plan || 'pro',
-                 trial_ends_at: null,
+                 subscription_status: isTrial ? 'trialing' : 'active',
+                 plan: plan || 'starter',
+                 trial_ends_at: trialEnds,
                },
              });
              console.log(`[Mollie Webhook] Successfully updated user ${userId} to ${plan}`);

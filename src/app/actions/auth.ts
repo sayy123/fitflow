@@ -4,11 +4,12 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
-import { sendWelcomeEmail } from "@/lib/emails/send";
+import { sendWelcomeEmail, sendRegistrationCodeEmail } from "@/lib/emails/send";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { loginRateLimit } from "@/lib/ratelimit";
+import crypto from "crypto";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Le nom est trop court"),
@@ -22,17 +23,66 @@ const registerSchema = z.object({
     .optional()
     .or(z.literal("")),
   role: z.enum(["member", "manager"]),
+  code: z.string().optional(),
+  expectedHash: z.string().optional(),
 });
+
+function generateHash(code: string, email: string): string {
+  const secret = process.env.SUPABASE_SERVICE_ROLE_KEY || "default_secret";
+  return crypto.createHmac("sha256", secret).update(`${code}:${email.toLowerCase()}`).digest("hex");
+}
+
+export async function sendVerificationCodeAction(prevState: unknown, formData: FormData) {
+  const parsed = registerSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0].message };
+  }
+  
+  const { name, email, password, studioName, role } = parsed.data;
+  const plan = formData.get("plan") as string || "starter";
+
+  // Check if user already exists
+  const adminSupabase = createAdminClient();
+  const { data: { users } } = await adminSupabase.auth.admin.listUsers();
+  const existingUser = users.find(u => u.email?.toLowerCase() === email.toLowerCase());
+  
+  if (existingUser) {
+    return { error: "Cet email est déjà utilisé." };
+  }
+
+  // Generate 4 digit code
+  const code = Math.floor(1000 + Math.random() * 9000).toString();
+  const expectedHash = generateHash(code, email);
+
+  await sendRegistrationCodeEmail(email, name, code);
+
+  // Return state for the second step (without actual code!)
+  return {
+    step: 2,
+    expectedHash,
+    // Note: returning sensitive info in state is normally bad practice, but Next.js Action State is encrypted/signed if passed as form state, but actually it's just returned to the client component. 
+    // Wait, form data is held by the client, so we don't even need to return these, the client still has them in the form. We just return expectedHash.
+  };
+}
 
 export async function registerAction(prevState: unknown, formData: FormData) {
   const parsed = registerSchema.safeParse(Object.fromEntries(formData));
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0].message };
+    return { error: parsed.error.issues[0].message, step: 2 };
   }
 
-  const { name, email, password, studioName, role } = parsed.data;
+  const { name, email, password, studioName, role, code, expectedHash } = parsed.data;
   const plan = (formData.get("plan") as string) || "starter";
+
+  if (!code || !expectedHash) {
+    return { error: "Code de vérification manquant.", step: 2 };
+  }
+
+  const actualHash = generateHash(code, email);
+  if (actualHash !== expectedHash) {
+    return { error: "Code de vérification incorrect.", step: 2 };
+  }
 
   try {
     const adminSupabase = createAdminClient();

@@ -16,8 +16,10 @@ async function sendEmailDevOrProd(to: string, subject: string, html: string) {
   const fromEmail = process.env.RESEND_FROM_EMAIL || smtpUser || 'onboarding@resend.dev'
   const sender = `fitflow887 <${fromEmail}>`
 
-  // Resend n'autorise pas l'envoi depuis @gmail.com, on l'ignore dans ce cas
-  const canUseResend = apiKey && !fromEmail.endsWith('@gmail.com');
+  // Resend n'autorise pas l'envoi depuis @gmail.com (il faut un nom de domaine valide)
+  // Si vous voulez utiliser Resend, on force fromEmail à ne pas être un @gmail.com 
+  // en utilisant RESEND_FROM_EMAIL défini dans .env, sinon un email par défaut
+  const canUseResend = Boolean(apiKey);
 
   // Priorité absolue à Resend si la clé est présente et utilisable (même en local)
   if (canUseResend) {
@@ -25,7 +27,7 @@ async function sendEmailDevOrProd(to: string, subject: string, html: string) {
     try {
       console.log(`📧 Envoi d'un email via Resend vers ${to}...`)
       const { data, error } = await resend.emails.send({
-        from: sender,
+        from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
         to,
         subject,
         html,
@@ -37,6 +39,7 @@ async function sendEmailDevOrProd(to: string, subject: string, html: string) {
         console.log(`🔗 CONTENU DE L'EMAIL (Suite à l'erreur Resend) vers ${to}:`)
         console.log(html)
         console.log('=============================================\n')
+        return // On arrête ici pour ne pas envoyer avec SMTP en double
       } else {
         console.log(`✅ Email envoyé via Resend avec succès à ${to} (ID: ${data?.id})`)
         return
@@ -75,6 +78,8 @@ async function sendEmailDevOrProd(to: string, subject: string, html: string) {
       return
     }
   }
+
+
 
   // Fallback 2: Local sur Mailpit si aucune des deux méthodes précédentes n'est configurée
   if (process.env.NODE_ENV !== 'production') {
@@ -313,6 +318,34 @@ export async function sendClassCancelledEmail({
         </div>
         
         <p style="margin-top: 40px; font-size: 14px; color: #9ca3af;">Désolé pour ce contretemps, à très vite !</p>
+      </div>
+    </div>
+  `
+
+  await sendEmailDevOrProd(email, subject, html)
+}
+
+export async function sendRegistrationCodeEmail(email: string, fullName: string, code: string) {
+  const subject = `Votre code de vérification fitflow887 : ${code}`
+  const html = `
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #f0f0f0; border-radius: 16px; overflow: hidden;">
+      <div style="background-color: #6366f1; padding: 40px 20px; text-align: center; color: white;">
+        <h1 style="margin: 0; font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px;">Vérification Email</h1>
+      </div>
+      <div style="padding: 40px 30px; color: #1f2937;">
+        <p style="font-size: 16px; line-height: 1.5;">Bonjour <strong>${fullName}</strong>,</p>
+        <p style="font-size: 16px; line-height: 1.5;">Pour finaliser la création de votre compte, veuillez entrer le code de vérification suivant :</p>
+        
+        <div style="text-align: center; margin: 35px 0;">
+          <div style="display: inline-block; background-color: #f3f4f6; color: #1f2937; padding: 16px 32px; border-radius: 12px; font-weight: 900; font-size: 32px; letter-spacing: 8px;">
+            ${code}
+          </div>
+        </div>
+
+        <p style="font-size: 12px; color: #9ca3af; text-align: center;">Ce code est valable pendant 15 minutes.</p>
+        
+        <p style="margin-top: 40px; font-size: 14px; color: #9ca3af;">L'équipe fitflow887</p>
+
       </div>
     </div>
   `

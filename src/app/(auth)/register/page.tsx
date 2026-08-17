@@ -1,7 +1,7 @@
 "use client";
 
-import { useActionState, useState, useEffect, Suspense } from "react";
-import { registerAction, signInWithGoogleAction } from "@/app/actions/auth";
+import { useActionState, useState, useEffect, Suspense, useRef } from "react";
+import { registerAction, sendVerificationCodeAction, signInWithGoogleAction } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,16 +13,24 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserPlusIcon } from "@heroicons/react/24/outline";
+import { UserPlusIcon, KeyIcon } from "@heroicons/react/24/outline";
 import { useSearchParams } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 
 function RegisterContent() {
   const [state, action, isPending] = useActionState(registerAction, null);
+  const [sendCodeState, sendCodeAction, isSendCodePending] = useActionState(sendVerificationCodeAction, null);
+  
   const [role, setRole] = useState<"member" | "manager">("manager");
   const searchParams = useSearchParams();
   const plan = searchParams.get("plan") || "starter";
+
+  // Retain form values to pass them to step 2
+  const formRef = useRef<HTMLFormElement>(null);
+  const [formValues, setFormValues] = useState<{name: string, email: string, password: string, studioName: string}>({
+    name: "", email: "", password: "", studioName: ""
+  });
 
   useEffect(() => {
     const roleParam = searchParams.get("role");
@@ -34,188 +42,262 @@ function RegisterContent() {
   const defaultEmail = searchParams.get("email") || "";
   const defaultName = searchParams.get("name") || "";
 
+  const step = (state as any)?.step || (sendCodeState as any)?.step || 1;
+  const currentError = (state as any)?.error || (sendCodeState as any)?.error;
+  const expectedHash = (state as any)?.expectedHash || (sendCodeState as any)?.expectedHash;
+
+  const handleFormChange = () => {
+    if (formRef.current) {
+      const formData = new FormData(formRef.current);
+      setFormValues({
+        name: formData.get("name") as string || "",
+        email: formData.get("email") as string || "",
+        password: formData.get("password") as string || "",
+        studioName: formData.get("studioName") as string || "",
+      });
+    }
+  };
+
   return (
     <Card className="w-full max-w-[400px] border border-border bg-background rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.04)] overflow-hidden">
       <CardHeader className="pt-10 pb-6 px-10 text-center">
         <div className="size-12 rounded-lg bg-secondary border border-border flex items-center justify-center text-foreground mx-auto mb-6">
-          <UserPlusIcon className="size-5" />
+          {step === 1 ? <UserPlusIcon className="size-5" /> : <KeyIcon className="size-5" />}
         </div>
         <CardTitle className="text-2xl font-heading font-medium tracking-tight text-foreground">
-          Rejoignez Fitloww
+          {step === 1 ? "Rejoignez Fitloww" : "Vérifiez votre email"}
         </CardTitle>
         <CardDescription className="text-muted-foreground mt-2 font-light">
-          {role === "manager"
-            ? "Lancez votre studio de fitness."
-            : "Accédez aux plannings de vos coachs."}
+          {step === 1 ? (
+            role === "manager"
+              ? "Lancez votre studio de fitness."
+              : "Accédez aux plannings de vos coachs."
+          ) : (
+            `Un code à 4 chiffres a été envoyé à ${formValues.email}`
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent className="px-10 pb-10">
-        <Tabs
-          value={role}
-          className="mb-8"
-          onValueChange={(v) => setRole(v as "member" | "manager")}
-        >
-          <TabsList className="grid w-full grid-cols-2 p-1 bg-secondary rounded-lg h-10 border border-border">
-            <TabsTrigger
-              value="manager"
-              className="rounded-md font-medium text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground text-muted-foreground transition-all"
-            >
-              Gérant
-            </TabsTrigger>
-            <TabsTrigger
-              value="member"
-              className="rounded-md font-medium text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground text-muted-foreground transition-all"
-            >
-              Membre
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+        
+        {step === 1 && (
+          <Tabs
+            value={role}
+            className="mb-8"
+            onValueChange={(v) => setRole(v as "member" | "manager")}
+          >
+            <TabsList className="grid w-full grid-cols-2 p-1 bg-secondary rounded-lg h-10 border border-border">
+              <TabsTrigger
+                value="manager"
+                className="rounded-md font-medium text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground text-muted-foreground transition-all"
+              >
+                Gérant
+              </TabsTrigger>
+              <TabsTrigger
+                value="member"
+                className="rounded-md font-medium text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground text-muted-foreground transition-all"
+              >
+                Membre
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        )}
 
-        <form action={action} className="space-y-4">
-          <input type="hidden" name="role" value={role} />
-          <input type="hidden" name="plan" value={plan} />
+        {step === 1 ? (
+          <form ref={formRef} action={sendCodeAction} onChange={handleFormChange} className="space-y-4">
+            <input type="hidden" name="role" value={role} />
+            <input type="hidden" name="plan" value={plan} />
 
-          <div className="space-y-2">
-            <Label
-              htmlFor="name"
-              className="text-xs font-medium text-foreground/80 uppercase tracking-wider"
-            >
-              Votre nom complet
-            </Label>
-            <Input
-              id="name"
-              name="name"
-              required
-              defaultValue={defaultName}
-              placeholder="ex: Jean Dupont"
-              className="h-11 rounded-lg border-border focus:ring-1 focus:ring-foreground focus:border-foreground transition-colors bg-background"
-            />
-          </div>
-
-          {role === "manager" && (
             <div className="space-y-2">
               <Label
-                htmlFor="studioName"
+                htmlFor="name"
                 className="text-xs font-medium text-foreground/80 uppercase tracking-wider"
               >
-                Nom de votre studio
+                Votre nom complet
               </Label>
               <Input
-                id="studioName"
-                name="studioName"
-                required={role === "manager"}
-                placeholder="ex: Fit Studio"
+                id="name"
+                name="name"
+                required
+                defaultValue={defaultName}
+                placeholder="ex: Jean Dupont"
                 className="h-11 rounded-lg border-border focus:ring-1 focus:ring-foreground focus:border-foreground transition-colors bg-background"
               />
             </div>
-          )}
 
-          <div className="space-y-2">
-            <Label
-              htmlFor="email"
-              className="text-xs font-medium text-foreground/80 uppercase tracking-wider"
-            >
-              Adresse email
-            </Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              required
-              defaultValue={defaultEmail}
-              placeholder="ex: jean@email.com"
-              className="h-11 rounded-lg border-border focus:ring-1 focus:ring-foreground focus:border-foreground transition-colors bg-background"
-            />
-          </div>
+            {role === "manager" && (
+              <div className="space-y-2">
+                <Label
+                  htmlFor="studioName"
+                  className="text-xs font-medium text-foreground/80 uppercase tracking-wider"
+                >
+                  Nom de votre studio
+                </Label>
+                <Input
+                  id="studioName"
+                  name="studioName"
+                  required={role === "manager"}
+                  placeholder="ex: Fit Studio"
+                  className="h-11 rounded-lg border-border focus:ring-1 focus:ring-foreground focus:border-foreground transition-colors bg-background"
+                />
+              </div>
+            )}
 
-          <div className="space-y-2">
-            <Label
-              htmlFor="password"
-              title="Mot de passe"
-              className="text-xs font-medium text-foreground/80 uppercase tracking-wider"
-            >
-              Mot de passe
-            </Label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              required
-              placeholder="••••••••"
-              className="h-11 rounded-lg border-border focus:ring-1 focus:ring-foreground focus:border-foreground transition-colors bg-background"
-            />
-          </div>
-
-          {state?.error && (
-            <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-sm font-medium text-destructive mt-2">
-              {state.error}
+            <div className="space-y-2">
+              <Label
+                htmlFor="email"
+                className="text-xs font-medium text-foreground/80 uppercase tracking-wider"
+              >
+                Adresse email
+              </Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                required
+                defaultValue={defaultEmail}
+                placeholder="ex: jean@email.com"
+                className="h-11 rounded-lg border-border focus:ring-1 focus:ring-foreground focus:border-foreground transition-colors bg-background"
+              />
             </div>
-          )}
 
-          <div className="flex items-start space-x-3 pt-2">
-            <Checkbox id="terms" name="terms" required className="mt-0.5 rounded-[4px]" />
-            <label
-              htmlFor="terms"
-              className="text-xs font-light leading-relaxed text-muted-foreground"
+            <div className="space-y-2">
+              <Label
+                htmlFor="password"
+                title="Mot de passe"
+                className="text-xs font-medium text-foreground/80 uppercase tracking-wider"
+              >
+                Mot de passe
+              </Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                required
+                placeholder="••••••••"
+                className="h-11 rounded-lg border-border focus:ring-1 focus:ring-foreground focus:border-foreground transition-colors bg-background"
+              />
+            </div>
+
+            {currentError && (
+              <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-sm font-medium text-destructive mt-2">
+                {currentError}
+              </div>
+            )}
+
+            <div className="flex items-start space-x-3 pt-2">
+              <Checkbox id="terms" name="terms" required className="mt-0.5 rounded-[4px]" />
+              <label
+                htmlFor="terms"
+                className="text-xs font-light leading-relaxed text-muted-foreground"
+              >
+                J'accepte les{" "}
+                <Link href="/terms" className="text-foreground underline hover:text-foreground/80">
+                  Conditions d'utilisation
+                </Link>{" "}
+                et la{" "}
+                <Link href="/privacy" className="text-foreground underline hover:text-foreground/80">
+                  Politique de confidentialité
+                </Link>.
+              </label>
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full h-11 rounded-lg font-medium text-sm bg-foreground text-background hover:bg-foreground/90 transition-colors mt-6 shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
+              disabled={isSendCodePending}
             >
-              J'accepte les{" "}
-              <Link href="/terms" className="text-foreground underline hover:text-foreground/80">
-                Conditions d'utilisation
-              </Link>{" "}
-              et la{" "}
-              <Link href="/privacy" className="text-foreground underline hover:text-foreground/80">
-                Politique de confidentialité
-              </Link>.
-            </label>
-          </div>
+              {isSendCodePending
+                ? "Envoi en cours..."
+                : "Suivant"}
+            </Button>
+          </form>
+        ) : (
+          <form action={action} className="space-y-4">
+            <input type="hidden" name="role" value={role} />
+            <input type="hidden" name="plan" value={plan} />
+            <input type="hidden" name="name" value={formValues.name} />
+            <input type="hidden" name="email" value={formValues.email} />
+            <input type="hidden" name="password" value={formValues.password} />
+            <input type="hidden" name="studioName" value={formValues.studioName} />
+            <input type="hidden" name="expectedHash" value={expectedHash} />
 
-          <Button
-            type="submit"
-            className="w-full h-11 rounded-lg font-medium text-sm bg-foreground text-background hover:bg-foreground/90 transition-colors mt-6 shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
-            disabled={isPending}
-          >
-            {isPending
-              ? "Création en cours..."
-              : role === "manager"
-                ? "Créer mon studio"
-                : "S'inscrire"}
-          </Button>
-        </form>
+            <div className="space-y-2">
+              <Label
+                htmlFor="code"
+                className="text-xs font-medium text-foreground/80 uppercase tracking-wider"
+              >
+                Code à 4 chiffres
+              </Label>
+              <Input
+                id="code"
+                name="code"
+                type="text"
+                maxLength={4}
+                required
+                autoFocus
+                placeholder="1234"
+                className="h-14 text-center text-2xl tracking-[0.5em] font-mono rounded-lg border-border focus:ring-2 focus:ring-foreground focus:border-foreground transition-colors bg-background"
+              />
+            </div>
 
-        <div className="relative my-8">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-border" />
-          </div>
-          <div className="relative flex justify-center text-xs font-medium text-muted-foreground uppercase tracking-widest">
-            <span className="bg-background px-4">Ou s'inscrire avec</span>
-          </div>
-        </div>
+            {currentError && (
+              <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-sm font-medium text-destructive mt-2">
+                {currentError}
+              </div>
+            )}
 
-        <Button
-          variant="outline"
-          className="w-full h-11 rounded-lg font-medium text-sm border-border text-foreground hover:bg-secondary hover:text-foreground transition-colors flex items-center justify-center gap-3"
-          onClick={() => signInWithGoogleAction()}
-        >
-          <svg className="size-4" viewBox="0 0 24 24">
-            <path
-              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-              fill="#4285F4"
-            />
-            <path
-              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-              fill="#34A853"
-            />
-            <path
-              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.16H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.84l3.66-2.75z"
-              fill="#FBBC05"
-            />
-            <path
-              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.16l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-              fill="#EA4335"
-            />
-          </svg>
-          Google
-        </Button>
+            <Button
+              type="submit"
+              className="w-full h-11 rounded-lg font-medium text-sm bg-foreground text-background hover:bg-foreground/90 transition-colors mt-6 shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
+              disabled={isPending}
+            >
+              {isPending
+                ? "Création en cours..."
+                : role === "manager"
+                  ? "Créer mon studio"
+                  : "S'inscrire"}
+            </Button>
+          </form>
+        )}
+
+        {step === 1 && (
+          <>
+            <div className="relative my-8">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-border" />
+              </div>
+              <div className="relative flex justify-center text-xs font-medium text-muted-foreground uppercase tracking-widest">
+                <span className="bg-background px-4">Ou s'inscrire avec</span>
+              </div>
+            </div>
+
+            <Button
+              variant="outline"
+              className="w-full h-11 rounded-lg font-medium text-sm border-border text-foreground hover:bg-secondary hover:text-foreground transition-colors flex items-center justify-center gap-3"
+              onClick={() => signInWithGoogleAction()}
+            >
+              <svg className="size-4" viewBox="0 0 24 24">
+                <path
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  fill="#4285F4"
+                />
+                <path
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  fill="#34A853"
+                />
+                <path
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.16H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.84l3.66-2.75z"
+                  fill="#FBBC05"
+                />
+                <path
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.16l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                  fill="#EA4335"
+                />
+              </svg>
+              Google
+            </Button>
+          </>
+        )}
 
         <div className="mt-8 text-center text-sm text-muted-foreground font-light">
           Déjà inscrit ?{" "}
