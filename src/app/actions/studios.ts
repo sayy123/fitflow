@@ -53,8 +53,7 @@ export async function createFirstStudioAction(formData: FormData) {
         create: {
           user_id: user.id,
           plan: 'starter',
-          subscription_status: isBetaBypass ? 'active' : 'trialing',
-          trial_ends_at: isBetaBypass ? null : new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)
+          subscription_status: isBetaBypass ? 'active' : 'pending_payment',
         }
       });
 
@@ -81,11 +80,56 @@ export async function createFirstStudioAction(formData: FormData) {
     const cookieStore = await cookies()
     cookieStore.set('active_org_id', newOrg.id, { path: '/' })
     revalidatePath('/', 'layout')
+    
+    // If BETA bypass, no need for Mollie
+    if (isBetaBypass) {
+      return { success: true };
+    }
+
+    // Create Mollie customer and checkout session for Mandate (Trial)
+    const { mollie } = await import('@/lib/mollie');
+    const { headers } = await import('next/headers');
+    
+    const userProfile = await prisma.user_profiles.findUnique({ where: { user_id: user.id } });
+    let customerId = userProfile?.mollie_customer_id;
+    
+    if (!customerId) {
+      const customer = await mollie.customers.create({ name: user.user_metadata?.full_name || "Owner", email: user.email });
+      customerId = customer.id;
+      await prisma.user_profiles.update({
+        where: { user_id: user.id },
+        data: { mollie_customer_id: customerId }
+      });
+    }
+
+    const host = (await headers()).get("host");
+    const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
+
+    const session = await mollie.payments.create({
+      amount: { currency: "EUR", value: "0.00" }, // 0€ for trial mandate setup
+      description: `Essai gratuit de 14 jours Fitflow`,
+      redirectUrl: `${siteUrl}/dashboard?success=true`,
+      webhookUrl: `${siteUrl}/api/webhooks/mollie`,
+      sequenceType: "first",
+      customerId: customerId,
+      metadata: { 
+        userId: user.id, 
+        isSubscription: true,
+        isTrialSetup: true, 
+        plan: 'starter',
+        trialDays: 14
+      }
+    });
+
+    const checkoutUrl = session.getCheckoutUrl();
+    if (checkoutUrl) {
+      return { url: checkoutUrl }; // We will redirect from the client wrapper
+    }
 
     return { success: true }
   } catch (error) {
     console.error('Create first studio error:', error)
-    return { error: 'Erreur lors de la création du studio' }
+    return { error: 'Erreur lors de la création du studio ou de la session de paiement' }
   }
 }
 
