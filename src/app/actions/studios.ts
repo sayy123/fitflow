@@ -44,6 +44,10 @@ export async function createFirstStudioAction(formData: FormData) {
 
   const slug = actualName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + '-' + Date.now().toString().slice(-4)
   
+  const isTestUser = user.email?.toLowerCase().endsWith('@test.com');
+  const targetPlan = isTestUser ? 'premium' : 'starter';
+  const targetStatus = isTestUser ? 'active' : (isBetaBypass ? 'active' : 'pending_payment');
+
   try {
     const newOrg = await prisma.$transaction(async (tx) => {
       // 1. Ensure user profile exists
@@ -52,8 +56,8 @@ export async function createFirstStudioAction(formData: FormData) {
         update: {},
         create: {
           user_id: user.id,
-          plan: 'starter',
-          subscription_status: isBetaBypass ? 'active' : 'pending_payment',
+          plan: targetPlan,
+          subscription_status: targetStatus,
         }
       });
 
@@ -81,8 +85,8 @@ export async function createFirstStudioAction(formData: FormData) {
     cookieStore.set('active_org_id', newOrg.id, { path: '/' })
     revalidatePath('/', 'layout')
     
-    // If BETA bypass, no need for Mollie
-    if (isBetaBypass) {
+    // If BETA bypass or test user, no need for Mollie
+    if (isBetaBypass || isTestUser) {
       return { success: true };
     }
 

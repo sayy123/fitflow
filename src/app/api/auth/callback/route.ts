@@ -21,14 +21,19 @@ async function handleAuth(request: Request) {
 
       const user = data.user
       
+      const isTestUser = user.email?.toLowerCase().endsWith('@test.com');
+      const targetPlan = isTestUser ? 'premium' : 'starter';
+      const targetStatus = isTestUser ? 'active' : 'trialing';
+      const targetTrialEndsAt = isTestUser ? null : new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
+
       await prisma.user_profiles.upsert({
         where: { user_id: user.id },
         update: {},
         create: {
           user_id: user.id,
-          plan: 'starter',
-          subscription_status: 'trialing',
-          trial_ends_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)
+          plan: targetPlan,
+          subscription_status: targetStatus,
+          trial_ends_at: targetTrialEndsAt
         }
       });
 

@@ -468,7 +468,7 @@ export function SettingsClient({
                       <Input
                         value={orgAddress}
                         onChange={(e) => setOrgAddress(e.target.value)}
-                        placeholder="Ex: 12 rue du Sport, Bruxelles"
+                        placeholder="Ex: 12 rue des Fleurs, Bruxelles"
                         className="rounded-lg border-border h-10 pl-10 text-sm"
                       />
                     </div>

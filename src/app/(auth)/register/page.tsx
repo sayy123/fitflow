@@ -70,8 +70,8 @@ function RegisterContent() {
         <CardDescription className="text-muted-foreground mt-2 font-light">
           {step === 1 ? (
             role === "manager"
-              ? "Lancez votre studio de fitness."
-              : "Accédez aux plannings de vos coachs."
+              ? "Lancez votre activité."
+              : "Accédez aux plannings de vos coachs/intervenants."
           ) : (
             `Un code à 4 chiffres a été envoyé à ${formValues.email}`
           )}
@@ -130,13 +130,13 @@ function RegisterContent() {
                   htmlFor="studioName"
                   className="text-xs font-medium text-foreground/80 uppercase tracking-wider"
                 >
-                  Nom de votre studio
+                  Nom de votre espace
                 </Label>
                 <Input
                   id="studioName"
                   name="studioName"
                   required={role === "manager"}
-                  placeholder="ex: Fit Studio"
+                  placeholder="ex: Mon espace"
                   className="h-11 rounded-lg border-border focus:ring-1 focus:ring-foreground focus:border-foreground transition-colors bg-background"
                 />
               </div>
@@ -254,7 +254,7 @@ function RegisterContent() {
               {isPending
                 ? "Création en cours..."
                 : role === "manager"
-                  ? "Créer mon studio"
+                  ? "Créer mon espace"
                   : "S'inscrire"}
             </Button>
           </form>

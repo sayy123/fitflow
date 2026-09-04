@@ -13,8 +13,8 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Fitloww | Gestion de studio de fitness et réservations",
-  description: "La solution moderne pour gérer votre studio de fitness. Planning, réservations, membres et paiements centralisés.",
+  title: "Fitloww | Gestion de réservations et activités",
+  description: "La solution moderne pour gérer votre activité. Planning, réservations, clients et paiements centralisés.",
 };
 
 import { Toaster } from "@/components/ui/sonner"

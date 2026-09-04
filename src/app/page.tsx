@@ -37,28 +37,28 @@ export default function LandingPage() {
       title: "Planning synchronisé",
       desc: "Supervisez toutes vos séances sur une interface fluide. Vos équipes et membres sont toujours à jour.",
       icon: CalendarIcon,
-      image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=1200&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1506784365847-bbad939e9335?q=80&w=1200&auto=format&fit=crop",
     },
     {
       id: 1,
       title: "Transactions invisibles",
       desc: "Abonnements récurrents et paiements à l'acte intégrés directement dans le parcours client.",
       icon: CreditCardIcon,
-      image: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=1200&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1200&auto=format&fit=crop",
     },
     {
       id: 2,
       title: "Expérience mobile native",
       desc: "Une réservation instantanée depuis n'importe quel appareil. Fini les allers-retours par message.",
       icon: DevicePhoneMobileIcon,
-      image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=1200&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=1200&auto=format&fit=crop",
     },
   ];
 
   const faqs = [
     {
       q: "Combien de temps faut-il pour configurer la plateforme ?",
-      a: "Quelques minutes suffisent. Vous pouvez structurer votre studio, ajouter vos collaborateurs et ouvrir les réservations le jour même.",
+      a: "Quelques minutes suffisent. Vous pouvez structurer votre espace, ajouter vos collaborateurs et ouvrir les réservations le jour même.",
     },
     {
       q: "Mes clients doivent-ils télécharger une application ?",
@@ -124,16 +124,16 @@ export default function LandingPage() {
         <section className="relative pt-40 pb-24 px-6 max-w-7xl mx-auto lg:pt-52 lg:pb-32">
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-secondary text-secondary-foreground text-xs font-semibold uppercase tracking-wider mb-8">
-              Système de gestion de studio
+              Système de gestion d'activités
             </div>
 
             <h1 className="text-5xl md:text-7xl font-heading font-medium tracking-tight text-foreground mb-8 leading-[1.1]">
               L'infrastructure moderne <br className="hidden md:block" />
-              pour votre studio.
+              pour votre activité.
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
-              Une solution de réservation unifiée pour le fitness, yoga et pilates. Centralisez vos plannings et paiements dans une interface épurée.
+              Une solution de réservation unifiée pour toutes vos activités (fitness, yoga, cours de musique, art, randonnée, etc.). Centralisez vos plannings et paiements dans une interface épurée.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -180,7 +180,7 @@ export default function LandingPage() {
                 {
                   step: "01",
                   title: "Configuration de l'espace",
-                  desc: "Définissez les paramètres de votre studio, vos offres tarifaires et connectez votre compte bancaire en quelques clics.",
+                  desc: "Définissez les paramètres de votre espace, vos offres tarifaires et connectez votre compte bancaire en quelques clics.",
                 },
                 {
                   step: "02",
@@ -394,7 +394,7 @@ export default function LandingPage() {
               Fitloww
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Le système d'exploitation des studios de fitness, yoga et pilates modernes.
+              Le système d'exploitation de vos réservations, quel que soit votre domaine.
             </p>
           </div>
           

@@ -194,7 +194,7 @@ export default function ClassDetailClient({
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="location" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Adresse / Lieu</Label>
-                      <Input id="location" name="location" defaultValue={cls.location || ''} placeholder="ex: 12 rue du sport, Paris" className="rounded-xl h-11" />
+                      <Input id="location" name="location" defaultValue={cls.location || ''} placeholder="ex: 12 rue des Fleurs, Paris" className="rounded-xl h-11" />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">

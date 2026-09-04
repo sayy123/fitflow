@@ -106,7 +106,7 @@ async function sendEmailDevOrProd(to: string, subject: string, html: string) {
 
 export async function sendWelcomeEmail(name: string, studioName: string, email: string, baseUrl?: string) {
   const siteUrl = (baseUrl || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(/\/$/, "");
-  const html = `<p>Bonjour ${name}, bienvenue sur fitflow887 !</p><p>Votre studio <strong>${studioName}</strong> est prêt à être configuré.</p><p><a href="${siteUrl}/login">Connectez-vous ici</a></p>`
+  const html = `<p>Bonjour ${name}, bienvenue sur fitflow887 !</p><p>Votre espace <strong>${studioName}</strong> est prêt à être configuré.</p><p><a href="${siteUrl}/login">Connectez-vous ici</a></p>`
   await sendEmailDevOrProd(email, `Bienvenue sur fitflow887, ${name} !`, html)
 }
 

@@ -41,7 +41,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-heading font-medium text-foreground mb-4">2. Description du service</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Fitloww fournit une solution logicielle en tant que service (SaaS) permettant aux gérants de studios de fitness, yoga et pilates de gérer leurs plannings, réservations et paiements.
+              Fitloww fournit une solution logicielle en tant que service (SaaS) permettant aux professionnels (coachs, professeurs, guides, etc.) de gérer leurs plannings, réservations et paiements.
             </p>
           </section>
 

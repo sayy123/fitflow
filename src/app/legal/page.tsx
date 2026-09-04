@@ -19,7 +19,7 @@ export default function LegalPage() {
           <section>
             <h2 className="text-xl font-bold text-foreground mb-4">1. Présentation du site</h2>
             <p>
-              Le site <strong>Fitloww</strong> est une plateforme de gestion pour studios de fitness.
+              Le site <strong>Fitloww</strong> est une plateforme de gestion des réservations et d'activités en ligne.
             </p>
           </section>
 

@@ -115,7 +115,7 @@ export default async function PublicStudioPage(props: { params: Promise<{ studio
           <div className="w-64">
             <Select>
               <SelectTrigger className="bg-white border-slate-200 shadow-none rounded-[4px] h-10">
-                <SelectValue placeholder="Sport" />
+                <SelectValue placeholder="Activité" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tous</SelectItem>

@@ -57,7 +57,7 @@ export default function PricingPage() {
           <div className="bg-background rounded-xl p-8 md:p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-border flex flex-col relative">
             <div className="mb-8">
               <h3 className="text-2xl font-heading font-medium text-foreground mb-2">Starter</h3>
-              <p className="text-muted-foreground text-sm font-light">Pour les indépendants et petits espaces qui se structurent.</p>
+              <p className="text-muted-foreground text-sm font-light">Pour les indépendants et petites structures.</p>
             </div>
             
             <div className="mb-8 flex items-baseline gap-2">
@@ -74,8 +74,8 @@ export default function PricingPage() {
             <div className="space-y-4 flex-1 border-t border-border pt-8">
               <p className="text-xs font-medium text-foreground uppercase tracking-widest mb-6">Inclus :</p>
               {[
-                "1 salle gérée",
-                "Jusqu'à 3 coachs",
+                "1 salle/espace géré",
+                "Jusqu'à 3 intervenants",
                 "Jusqu'à 40 membres actifs",
                 "Réservations illimitées",
                 "Emails automatiques"
@@ -111,7 +111,7 @@ export default function PricingPage() {
 
             <div className="mb-8 relative z-10">
               <h3 className="text-2xl font-heading font-medium text-background mb-2">Premium</h3>
-              <p className="text-background/70 text-sm font-light">L'outil sans limites pour les studios établis en croissance.</p>
+              <p className="text-background/70 text-sm font-light">L'outil sans limites pour les structures établies.</p>
             </div>
             
             <div className="mb-8 flex items-baseline gap-2 relative z-10">
@@ -128,10 +128,9 @@ export default function PricingPage() {
             <div className="space-y-4 flex-1 relative z-10 border-t border-background/20 pt-8">
               <p className="text-xs font-medium text-background/90 uppercase tracking-widest mb-6">Tout du Starter, plus :</p>
               {[
-                "Jusqu'à 3 salles gérées",
+                "Jusqu'à 3 salles/espaces gérés",
                 "Membres illimités",
-                "Coachs illimités",
-                "Page de réservation sur-mesure",
+                "Intervenants illimités",
                 "Rapports mensuels"
               ].map((feature, i) => (
                 <div key={i} className="flex items-start gap-4">
@@ -149,7 +148,7 @@ export default function PricingPage() {
             Besoin d'une offre sur-mesure ?
           </h2>
           <p className="text-muted-foreground text-lg mb-10 font-light max-w-xl mx-auto">
-            Contactez notre équipe si vous gérez une franchise ou plus de 3 studios pour discuter de vos besoins spécifiques.
+            Contactez notre équipe si vous gérez une franchise ou plus de 3 espaces pour discuter de vos besoins spécifiques.
           </p>
           <Link href="/contact">
             <Button variant="outline" className="rounded-lg px-8 h-12 text-sm font-medium border-border text-foreground hover:bg-secondary transition-colors">
@@ -167,7 +166,7 @@ export default function PricingPage() {
               <img src="/logo_redesign_v2.png" alt="Fitloww" className="h-8 w-8" />
               Fitloww
             </div>
-            <p className="text-muted-foreground text-sm font-light">Le système d'exploitation des studios modernes.</p>
+            <p className="text-muted-foreground text-sm font-light">Le système d'exploitation de vos réservations.</p>
           </div>
           <div className="flex gap-8 text-sm font-medium text-muted-foreground">
             <Link href="/" className="hover:text-foreground transition-colors">Accueil</Link>
