@@ -96,13 +96,13 @@ export async function subscribeAction(plan: "starter" | "premium") {
       description: `Abonnement Fitflow ${plan === "starter" ? "Starter" : "Premium"}`,
       redirectUrl: `${siteUrl}/dashboard/billing?success=true`,
       webhookUrl: `${siteUrl}/api/webhooks/mollie`,
-      sequenceType: "first",
+      sequenceType: "first" as any,
       customerId: customerId,
       metadata: { userId: user.id, plan: plan, priceId: priceId || plan, isSubscription: true }
     });
 
 
-    const checkoutUrl = session.getCheckoutUrl();
+    const checkoutUrl = (session as any).getCheckoutUrl();
 
     if (!checkoutUrl) {
       console.error("Mollie Session URL is missing", session);
@@ -164,7 +164,7 @@ export async function createMollieConnectAccountAction(orgId: string) {
     // Verify the account still exists in Mollie if we have an ID
     if (accountId) {
       try {
-        const existingAccount = { id: accountId, details_submitted: true };
+        const existingAccount: any = { id: accountId, details_submitted: true };
         if (existingAccount.deleted) {
           accountId = null;
         }
@@ -219,7 +219,7 @@ export async function createMollieConnectLoginLinkAction(orgId: string) {
   if (!member || !member.organizations.mollie_account_id) return { error: "Compte Mollie introuvable" };
 
   try {
-    const account = { id: member.organizations.mollie_account_id };
+    const account: any = { id: member.organizations.mollie_account_id };
     if (account.type === 'standard') {
       return { url: 'https://my.mollie.com/dashboard/' };
     }

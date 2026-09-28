@@ -161,7 +161,7 @@ export function Sidebar({
               </p>
               <Link href="/dashboard/billing">
                 <button className="w-full h-8 rounded-lg bg-background text-foreground text-xs font-medium hover:bg-secondary transition-colors">
-                  S'abonner
+                  S&apos;abonner
                 </button>
               </Link>
             </div>

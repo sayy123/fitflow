@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
+import Link from 'next/link'
 import { Button } from './button'
 
 describe('Button', () => {
@@ -26,7 +27,7 @@ describe('Button', () => {
   it('handles asChild prop correctly', () => {
     render(
       <Button asChild>
-        <a href="/test">Link Button</a>
+        <Link href="/test">Link Button</Link>
       </Button>
     )
     const link = screen.getByRole('link', { name: /link button/i })

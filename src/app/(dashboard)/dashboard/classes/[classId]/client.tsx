@@ -39,6 +39,7 @@ type ClassWithDetails = {
   location: string | null;
   capacity: number;
   duration_min: number;
+  price: number | null;
   coach_id: string | null;
   bookings: Booking[];
   org_members?: {

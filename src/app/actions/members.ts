@@ -122,7 +122,7 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
                     memberId: member.id,
                     organizationId: organizationId,
                   },
-                  testmode: process.env.NEXT_PUBLIC_APP_URL?.includes('localhost') || process.env.NEXT_PUBLIC_APP_URL?.includes('vercel.app') || process.env.NEXT_PUBLIC_MOLLIE_TESTMODE === 'true' ? true : undefined
+                  testmode: process.env.NEXT_PUBLIC_MOLLIE_TESTMODE === 'true' ? true : undefined
                 });
                 return session.getCheckoutUrl();
               });
@@ -193,7 +193,7 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
                     memberId: member.id,
                     organizationId: organizationId,
                   },
-                  testmode: process.env.NEXT_PUBLIC_APP_URL?.includes('localhost') || process.env.NEXT_PUBLIC_APP_URL?.includes('vercel.app') || process.env.NEXT_PUBLIC_MOLLIE_TESTMODE === 'true' ? true : undefined
+                  testmode: process.env.NEXT_PUBLIC_MOLLIE_TESTMODE === 'true' ? true : undefined
                 });
                 return session.getCheckoutUrl();
               });

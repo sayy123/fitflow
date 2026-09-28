@@ -114,7 +114,7 @@ export async function createFirstStudioAction(formData: FormData) {
       description: `Essai gratuit de 14 jours Fitflow`,
       redirectUrl: `${siteUrl}/dashboard?success=true`,
       webhookUrl: `${siteUrl}/api/webhooks/mollie`,
-      sequenceType: "first",
+      sequenceType: "first" as any,
       customerId: customerId,
       metadata: { 
         userId: user.id, 
@@ -125,7 +125,7 @@ export async function createFirstStudioAction(formData: FormData) {
       }
     });
 
-    const checkoutUrl = session.getCheckoutUrl();
+    const checkoutUrl = (session as any).getCheckoutUrl();
     if (checkoutUrl) {
       return { url: checkoutUrl }; // We will redirect from the client wrapper
     }

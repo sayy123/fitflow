@@ -37,12 +37,12 @@ export function MemberSubscriptionToggle({ memberId, hasSubscription }: { member
       {hasSubscription ? (
         <>
             <Ban className="size-3" />
-            Retirer l'abonnement
+            Retirer l&apos;abonnement
         </>
       ) : (
         <>
             <Crown className="size-3" />
-            Activer l'abonnement (Gratuit)
+            Activer l&apos;abonnement (Gratuit)
         </>
       )}
     </Button>

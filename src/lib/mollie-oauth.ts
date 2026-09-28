@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma';
-import { createMollieClient } from '@mollie/api-client';
+import { createMollieClient, MollieClient } from '@mollie/api-client';
 
-export async function withMollieClient<T>(orgId: string, action: (client: any) => Promise<T>): Promise<T> {
+export async function withMollieClient<T>(orgId: string, action: (client: MollieClient) => Promise<T>): Promise<T> {
   const org = await prisma.organizations.findUnique({ where: { id: orgId } });
   if (!org || !org.mollie_access_token) {
     throw new Error('Mollie not configured or missing access token');
@@ -11,8 +11,9 @@ export async function withMollieClient<T>(orgId: string, action: (client: any) =
   
   try {
     return await action(client);
-  } catch (error: any) {
-    if ((error.statusCode === 401 || error.message?.includes('Missing authentication')) && org.mollie_refresh_token) {
+  } catch (error: unknown) {
+    const err = error as any;
+    if ((err.statusCode === 401 || err.message?.includes('Missing authentication')) && org.mollie_refresh_token) {
       // Refresh token
       const tokenResponse = await fetch('https://api.mollie.com/oauth2/tokens', {
         method: 'POST',
