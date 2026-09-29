@@ -122,7 +122,7 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
                     memberId: member.id,
                     organizationId: organizationId,
                   },
-                  testmode: process.env.NEXT_PUBLIC_MOLLIE_TESTMODE === 'true' ? true : undefined
+                  testmode: ['true', 'on', '1'].includes(process.env.NEXT_PUBLIC_MOLLIE_TESTMODE?.toLowerCase() || '') ? true : undefined
                 });
                 return session.getCheckoutUrl();
               });
@@ -193,7 +193,7 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
                     memberId: member.id,
                     organizationId: organizationId,
                   },
-                  testmode: process.env.NEXT_PUBLIC_MOLLIE_TESTMODE === 'true' ? true : undefined
+                  testmode: ['true', 'on', '1'].includes(process.env.NEXT_PUBLIC_MOLLIE_TESTMODE?.toLowerCase() || '') ? true : undefined
                 });
                 return session.getCheckoutUrl();
               });
