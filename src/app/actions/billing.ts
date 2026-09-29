@@ -58,8 +58,8 @@ export async function subscribeAction(plan: "starter" | "premium") {
           customerId = null;
         }
       } catch (e: any) {
-        // Si Mollie renvoie une erreur "No such customer", on reset le customerId
-        if (e.code === 'resource_missing') {
+        // Si Mollie renvoie une erreur "No such customer" (404), on reset le customerId
+        if (e.statusCode === 404 || e.title === 'Not Found') {
           customerId = null;
           // On nettoie la DB pour ne plus avoir cet ID invalide
           await prisma.user_profiles.update({
@@ -86,6 +86,10 @@ export async function subscribeAction(plan: "starter" | "premium") {
     const host = (await headers()).get("host");
     const siteUrl = process.env.NEXT_PUBLIC_APP_URL || (host ? `https://${host}` : "http://localhost:3000");
     const baseUrl = siteUrl.replace(/\/$/, "");
+    
+    // Mollie refuse les webhooks en "localhost". On met une URL bidon pour le développement local.
+    const isLocal = siteUrl.includes("localhost");
+    const webhookUrl = isLocal ? "https://example.com/webhook" : `${siteUrl}/api/webhooks/mollie`;
 
     // Créer la session de checkout
     
@@ -95,7 +99,7 @@ export async function subscribeAction(plan: "starter" | "premium") {
       amount: { currency: "EUR", value: amountValue },
       description: `Abonnement Fitflow ${plan === "starter" ? "Starter" : "Premium"}`,
       redirectUrl: `${siteUrl}/dashboard/billing?success=true`,
-      webhookUrl: `${siteUrl}/api/webhooks/mollie`,
+      webhookUrl: webhookUrl,
       sequenceType: "first" as any,
       customerId: customerId,
       metadata: { userId: user.id, plan: plan, priceId: priceId || plan, isSubscription: true }
