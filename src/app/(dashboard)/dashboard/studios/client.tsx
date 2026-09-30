@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, Plus, ArrowRight, Zap } from "lucide-react";
-import { createStudioAction, setActiveStudioAction } from "@/app/actions/studios";
+import { Building2, Plus, ArrowRight, Zap, Trash2 } from "lucide-react";
+import { createStudioAction, setActiveStudioAction, deleteStudioAction } from "@/app/actions/studios";
 import { toast } from "sonner";
 import Link from "next/link";
 
@@ -42,6 +42,23 @@ export default function StudiosClient({
     setLoading(false);
   };
 
+  const handleDelete = async (id: string, name: string) => {
+    if (confirm(`Êtes-vous sûr de vouloir supprimer définitivement la salle "${name}" ? Cette action est irréversible et supprimera tous les membres, réservations et données associées.`)) {
+      setLoading(true);
+      const result = await deleteStudioAction(id);
+      if (result.error) {
+        toast.error(result.error);
+      } else {
+        toast.success("Salle supprimée !");
+        if (id === activeStudioId) {
+          // Trigger a full reload to let the server assign a new active org
+          window.location.reload();
+        }
+      }
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -68,9 +85,9 @@ export default function StudiosClient({
               <Building2 className="size-5 text-amber-600" />
             </div>
             <div>
-              <h3 className="text-amber-900 font-bold">Vous avez besoin d'une autre salle ?</h3>
+              <h3 className="text-amber-900 font-bold">Vous avez besoin d&apos;une autre salle ?</h3>
               <p className="text-amber-700/80 font-medium text-sm mt-1 max-w-md">
-                Le plan Starter vous limite à 1 seule salle. Passez au plan Premium pour gérer jusqu'à 3 salles indépendantes avec des plannings et coachs distincts.
+                Le plan Starter vous limite à 1 seule salle. Passez au plan Premium pour gérer jusqu&apos;à 3 salles indépendantes avec des plannings et coachs distincts.
               </p>
             </div>
           </div>
@@ -127,8 +144,21 @@ export default function StudiosClient({
               </div>
             )}
             <CardHeader className="pb-4">
-              <div className="size-12 rounded-xl bg-muted border border-border flex items-center justify-center mb-4">
-                <Building2 className="size-6 text-muted-foreground" />
+              <div className="flex justify-between items-start mb-4">
+                <div className="size-12 rounded-xl bg-muted border border-border flex items-center justify-center">
+                  <Building2 className="size-6 text-muted-foreground" />
+                </div>
+                {studios.length > 1 && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50 -mr-2 -mt-2"
+                    onClick={() => handleDelete(studio.id, studio.name)}
+                    disabled={loading}
+                  >
+                    <Trash2 className="size-4" />
+                  </Button>
+                )}
               </div>
               <CardTitle className="text-lg font-bold text-foreground line-clamp-1">
                 {studio.name}

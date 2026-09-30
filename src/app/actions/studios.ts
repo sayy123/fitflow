@@ -150,7 +150,7 @@ export async function createStudioAction(formData: FormData) {
     where: { user_id: user.id }
   })
 
-  const hasPremium = userProfile?.plan === 'premium' && ["active", "canceling"].includes(userProfile?.subscription_status ?? "")
+  const hasPremium = userProfile?.plan === 'premium' && ["active", "canceling", "trialing"].includes(userProfile?.subscription_status ?? "")
   
   if (!hasPremium) {
     return { error: 'Vous devez avoir un abonnement Premium actif pour créer des studios supplémentaires.' }
@@ -208,5 +208,46 @@ export async function createStudioAction(formData: FormData) {
   } catch (error) {
     console.error('Create studio error:', error)
     return { error: 'Erreur lors de la création du studio' }
+  }
+}
+
+export async function deleteStudioAction(orgId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Non authentifié' }
+
+  // Check if owner
+  const membership = await prisma.org_members.findUnique({
+    where: {
+      organization_id_user_id: {
+        organization_id: orgId,
+        user_id: user.id
+      }
+    }
+  })
+
+  if (membership?.role !== 'owner') {
+    return { error: 'Seul le propriétaire peut supprimer le studio' }
+  }
+
+  // Count remaining studios
+  const ownedMemberships = await prisma.org_members.findMany({
+    where: { user_id: user.id, role: 'owner' }
+  })
+
+  if (ownedMemberships.length <= 1) {
+    return { error: 'Impossible de supprimer votre dernière salle. Vous devez en avoir au moins une.' }
+  }
+
+  try {
+    await prisma.organizations.delete({
+      where: { id: orgId }
+    })
+    
+    revalidatePath('/dashboard', 'layout')
+    return { success: true }
+  } catch (error) {
+    console.error('Delete studio error:', error)
+    return { error: 'Erreur lors de la suppression' }
   }
 }
