@@ -51,6 +51,8 @@ export async function GET(req: Request) {
     }
 
     let sentCount = 0
+    const remindedClassIds = new Set<string>()
+    const { sendManagerReminderEmail } = await import('@/lib/emails/send');
 
     // 3. Envoyer les emails et mettre à jour le statut "reminder_sent"
     for (const booking of bookingsToRemind) {
@@ -74,6 +76,43 @@ export async function GET(req: Request) {
         sentCount++
       } catch (error) {
         console.error(`Erreur lors de l'envoi du rappel pour la réservation ${booking.id}:`, error)
+      }
+
+      // Envoi du rappel gérant une seule fois par cours
+      if (!remindedClassIds.has(booking.class_id)) {
+        remindedClassIds.add(booking.class_id);
+        
+        try {
+          // Compter le nombre total de participants confirmés pour ce cours
+          const participantCount = await prisma.bookings.count({
+            where: {
+              class_id: booking.class_id,
+              status: 'confirmed'
+            }
+          });
+
+          // Trouver les gérants
+          const managers = await prisma.org_members.findMany({
+            where: {
+              organization_id: booking.organization_id,
+              role: { in: ['owner', 'admin'] }
+            },
+            include: { users: true }
+          });
+
+          for (const m of managers) {
+            if (m.users?.email) {
+              await sendManagerReminderEmail({
+                managerEmail: m.users.email,
+                className: booking.classes.title,
+                startsAt: booking.classes.starts_at,
+                participantCount
+              });
+            }
+          }
+        } catch (error) {
+          console.error(`Erreur lors du rappel gérant pour le cours ${booking.class_id}:`, error);
+        }
       }
     }
 

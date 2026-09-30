@@ -353,55 +353,110 @@ export async function sendRegistrationCodeEmail(email: string, fullName: string,
   await sendEmailDevOrProd(email, subject, html)
 }
 
-export async function sendMonthlyReportEmail({
-  email,
-  fullName,
-  monthName,
-  stats,
-  baseUrl
+export async function sendMemberCancelledEmailToManager({
+  managerEmail,
+  memberName,
+  className,
+  startsAt,
 }: {
-  email: string;
-  fullName: string;
-  monthName: string;
-  stats: {
-    revenue: number;
-    bookings: number;
-    newMembers: number;
-    activeSubscriptions: number;
-  };
-  baseUrl?: string;
+  managerEmail: string;
+  memberName: string;
+  className: string;
+  startsAt: Date;
 }) {
-  const siteUrl = (baseUrl || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(/\/$/, "");
-  const dashboardLink = `${siteUrl}/dashboard/reports`;
+  const dateStr = startsAt.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
+  const timeStr = startsAt.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
   
-  const subject = `Votre rapport mensuel Premium - ${monthName}`;
+  const subject = `Annulation : ${memberName} s'est désinscrit de ${className}`
   const html = `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #f0f0f0; border-radius: 16px; overflow: hidden;">
-      <div style="background-color: #f59e0b; padding: 40px 20px; text-align: center; color: white;">
-        <h1 style="margin: 0; font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px;">Rapport Mensuel Premium</h1>
+      <div style="background-color: #ef4444; padding: 40px 20px; text-align: center; color: white;">
+        <h1 style="margin: 0; font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px;">Désinscription</h1>
       </div>
       <div style="padding: 40px 30px; color: #1f2937;">
-        <p style="font-size: 16px; line-height: 1.5;">Bonjour <strong>${fullName}</strong>,</p>
-        <p style="font-size: 16px; line-height: 1.5;">Voici un résumé des performances de votre studio pour le mois de <strong>${monthName}</strong>.</p>
+        <p style="font-size: 16px; line-height: 1.5;">Bonjour,</p>
+        <p style="font-size: 16px; line-height: 1.5;">Nous t'informons que <strong>${memberName}</strong> a annulé sa réservation pour la séance de <strong>${className}</strong>.</p>
         
         <div style="background-color: #f9fafb; padding: 20px; border-radius: 12px; margin: 30px 0;">
-          <div style="margin-bottom: 15px; font-size: 16px;">💰 Revenus : <strong>${stats.revenue} €</strong></div>
-          <div style="margin-bottom: 15px; font-size: 16px;">📅 Réservations : <strong>${stats.bookings}</strong></div>
-          <div style="margin-bottom: 15px; font-size: 16px;">👥 Nouveaux membres : <strong>+${stats.newMembers}</strong></div>
-          <div style="font-size: 16px;">⭐ Abonnements actifs : <strong>${stats.activeSubscriptions}</strong></div>
+          <div style="margin-bottom: 10px;">📅 <strong>${dateStr}</strong></div>
+          <div>⏰ <strong>${timeStr}</strong></div>
         </div>
-
-        <div style="text-align: center; margin: 35px 0;">
-          <a href="${dashboardLink}" style="display: inline-block; background-color: #f59e0b; color: white; padding: 16px 32px; text-decoration: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; font-size: 14px; letter-spacing: 1px;">
-            Voir le rapport détaillé
-          </a>
-        </div>
-        
-        <p style="margin-top: 40px; font-size: 14px; color: #9ca3af;">Merci pour votre confiance, et à très vite sur fitflow887 !</p>
       </div>
     </div>
-  `;
+  `
 
-  await sendEmailDevOrProd(email, subject, html);
+  await sendEmailDevOrProd(managerEmail, subject, html)
 }
 
+export async function sendBookingNotificationToManager({
+  managerEmail,
+  memberName,
+  className,
+  startsAt,
+}: {
+  managerEmail: string;
+  memberName: string;
+  className: string;
+  startsAt: Date;
+}) {
+  const dateStr = startsAt.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
+  const timeStr = startsAt.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+  
+  const subject = `Nouvelle réservation : ${memberName} pour ${className}`
+  const html = `
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #f0f0f0; border-radius: 16px; overflow: hidden;">
+      <div style="background-color: #10b981; padding: 40px 20px; text-align: center; color: white;">
+        <h1 style="margin: 0; font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px;">Nouvelle Réservation</h1>
+      </div>
+      <div style="padding: 40px 30px; color: #1f2937;">
+        <p style="font-size: 16px; line-height: 1.5;">Bonjour,</p>
+        <p style="font-size: 16px; line-height: 1.5;">Excellente nouvelle ! <strong>${memberName}</strong> vient de s'inscrire à la séance de <strong>${className}</strong>.</p>
+        
+        <div style="background-color: #f9fafb; padding: 20px; border-radius: 12px; margin: 30px 0;">
+          <div style="margin-bottom: 10px;">📅 <strong>${dateStr}</strong></div>
+          <div>⏰ <strong>${timeStr}</strong></div>
+        </div>
+      </div>
+    </div>
+  `
+
+  await sendEmailDevOrProd(managerEmail, subject, html)
+}
+
+export async function sendManagerReminderEmail({
+  managerEmail,
+  className,
+  startsAt,
+  participantCount,
+}: {
+  managerEmail: string;
+  className: string;
+  startsAt: Date;
+  participantCount: number;
+}) {
+  const dateStr = startsAt.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
+  const timeStr = startsAt.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+  
+  const subject = `Rappel gérant : ${className} c'est demain ! (${participantCount} inscrits)`
+  const html = `
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #f0f0f0; border-radius: 16px; overflow: hidden;">
+      <div style="background-color: #6366f1; padding: 40px 20px; text-align: center; color: white;">
+        <h1 style="margin: 0; font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px;">Rappel Cours</h1>
+      </div>
+      <div style="padding: 40px 30px; color: #1f2937;">
+        <p style="font-size: 16px; line-height: 1.5;">Bonjour,</p>
+        <p style="font-size: 16px; line-height: 1.5;">Ceci est un rappel automatique pour votre séance de <strong>${className}</strong> prévue demain.</p>
+        
+        <div style="background-color: #f9fafb; padding: 20px; border-radius: 12px; margin: 30px 0;">
+          <div style="margin-bottom: 10px;">📅 <strong>${dateStr}</strong></div>
+          <div style="margin-bottom: 10px;">⏰ <strong>${timeStr}</strong></div>
+          <div>👥 Inscrits : <strong>${participantCount}</strong></div>
+        </div>
+        
+        <p style="margin-top: 40px; font-size: 14px; color: #9ca3af;">À bientôt !</p>
+      </div>
+    </div>
+  `
+
+  await sendEmailDevOrProd(managerEmail, subject, html)
+}

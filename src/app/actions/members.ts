@@ -139,15 +139,19 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
 
           // Envoyer email de confirmation uniquement si gratuit
           const { sendBookingConfirmationEmail } = await import('@/lib/emails/send');
+          const fullName = user.user_metadata?.full_name || user.email.split('@')[0];
           await sendBookingConfirmationEmail({
             email: user.email,
-            fullName: user.user_metadata?.full_name || user.email.split('@')[0],
+            fullName,
             className: cls.title,
             startsAt: cls.starts_at,
             studioName: org.name,
             isNewUser: false,
             baseUrl: siteUrl
           });
+
+          const { notifyManagersOfBooking } = await import('@/lib/emails/notify');
+          await notifyManagersOfBooking(organizationId, fullName, cls.title, cls.starts_at);
         }
       } else if (existing.status === 'cancelled') {
         if (existing.cancel_reason === 'removed_by_owner') {

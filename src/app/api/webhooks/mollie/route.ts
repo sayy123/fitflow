@@ -127,6 +127,14 @@ export async function POST(req: Request) {
               isNewUser: false,
               baseUrl: host
             });
+
+            const { notifyManagersOfBooking } = await import('@/lib/emails/notify');
+            await notifyManagersOfBooking(
+              booking.organization_id, 
+              booking.studio_members.full_name, 
+              booking.classes.title, 
+              booking.classes.starts_at
+            );
           }
         } catch (e) {
           console.error('Error processing payment metadata:', e);

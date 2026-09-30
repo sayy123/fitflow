@@ -432,6 +432,9 @@ export async function createBookingAction(formData: FormData) {
       baseUrl: siteUrl
     })
 
+    const { notifyManagersOfBooking } = await import('@/lib/emails/notify');
+    await notifyManagersOfBooking(organizationId, fullName, cls.title, cls.starts_at);
+
     revalidatePath(`/${cls.organizations.slug}/book/${classId}`, 'page')
     return { success: true, status: 'confirmed' }
 
@@ -520,6 +523,14 @@ export async function memberSelfCancelBookingAction(bookingId: string) {
         cancelled_at: new Date()
       }
     })
+
+    const { notifyManagersOfCancellation } = await import('@/lib/emails/notify');
+    await notifyManagersOfCancellation(
+      booking.organization_id, 
+      booking.studio_members.full_name, 
+      booking.classes.title, 
+      booking.classes.starts_at
+    );
 
     revalidatePath('/dashboard')
     return { success: true }
