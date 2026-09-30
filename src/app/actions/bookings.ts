@@ -6,6 +6,8 @@ import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import { sendBookingConfirmationEmail } from '@/lib/emails/send'
 import { headers } from 'next/headers'
+import crypto from 'crypto'
+import { sendRegistrationCodeEmail } from '@/lib/emails/send'
 
 const bookingSchema = z.object({
   classId: z.preprocess((val) => val ?? undefined, z.string().uuid()),
@@ -23,6 +25,9 @@ export async function createBookingAction(formData: FormData) {
     email: formData.get('email'),
     password: formData.get('password'),
   })
+
+  const code = formData.get('code') as string;
+  const expectedHash = formData.get('expectedHash') as string;
 
   if (!parsed.success) {
     const issue = parsed.error.issues[0]
@@ -224,6 +229,16 @@ export async function createBookingAction(formData: FormData) {
     }
 
     // Si l'utilisateur n'est pas connecté, on crée le membre et la réservation DIRECTEMENT
+
+    // VÉRIFICATION DU CODE OTP
+    if (!code || !expectedHash) {
+      return { error: "Veuillez entrer le code de vérification." }
+    }
+    const actualHash = generateHash(code, email);
+    if (actualHash !== expectedHash) {
+      return { error: "Le code est incorrect ou a expiré." }
+    }
+
     const cls = await prisma.classes.findUnique({
       where: { id: classId },
       include: { organizations: true }
@@ -719,4 +734,28 @@ export async function verifyMollieSessionAction(sessionId: string, accountId?: s
     console.error('Session verify error:', e);
   }
   return { success: false };
+}
+
+function generateHash(code: string, email: string): string {
+  const secret = process.env.SUPABASE_SERVICE_ROLE_KEY || "fallback_secret";
+  return crypto.createHash("sha256").update(`${code}:${email}:${secret}`).digest("hex");
+}
+
+export async function sendBookingVerificationCodeAction(formData: FormData) {
+  const email = formData.get('email') as string;
+  const fullName = formData.get('fullName') as string;
+  
+  
+  if (!email || !fullName) return { error: "L'email et le nom complet sont requis." };
+
+  // Generate 4 digit code
+  const code = Math.floor(1000 + Math.random() * 9000).toString();
+  const expectedHash = generateHash(code, email);
+
+  await sendRegistrationCodeEmail(email, fullName, code);
+
+  return {
+    step: 2,
+    expectedHash,
+  };
 }

@@ -69,6 +69,9 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
   const userBooking = isUserBooked ? cls.bookings.find((b) => b.studio_members.email === currentUser.email) : null
 
   const [isPending, setIsPending] = useState(false)
+  const [step, setStep] = useState(1)
+  const [expectedHash, setExpectedHash] = useState('')
+  const [formDataCache, setFormDataCache] = useState<FormData | null>(null)
   const [createAccount, setCreateAccount] = useState(isInvite && !currentUser)
   const [isAutoJoining, setIsAutoJoining] = useState(false)
   const [isVerifyingSession, setIsVerifyingSession] = useState(!!searchParams.get('session_id') || (searchParams.get('success') === 'true' && !isUserBooked))
@@ -135,7 +138,32 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
 
   async function handleSubmit(formData: FormData) {
     setIsPending(true)
-    const res = await createBookingAction(formData)
+    
+    // Step 1: Send verification code for non-connected users
+    if (!currentUser && step === 1) {
+      const { sendBookingVerificationCodeAction } = await import('@/app/actions/bookings')
+      const res = await sendBookingVerificationCodeAction(formData)
+      setIsPending(false)
+      
+      if (res.error) {
+        toast.error(res.error)
+      } else if (res.step === 2) {
+        setExpectedHash(res.expectedHash)
+        setFormDataCache(formData)
+        setStep(2)
+      }
+      return
+    }
+
+    // Step 2: Final booking creation
+    let dataToSubmit = formData;
+    if (step === 2 && formDataCache) {
+      dataToSubmit = formDataCache;
+      dataToSubmit.set('code', formData.get('code') as string);
+      dataToSubmit.set('expectedHash', expectedHash);
+    }
+
+    const res = await createBookingAction(dataToSubmit)
     setIsPending(false)
 
     if (res.error) {
@@ -347,81 +375,113 @@ export default function BookingClient({ org, cls, currentUser, hasSubscription, 
                 <input type="hidden" name="classId" value={cls.id} />
                 <input type="hidden" name="organizationId" value={org.id} />
                 
-                <div className="grid sm:grid-cols-2 gap-5">
-                  <div className="space-y-2">
-                    <Label htmlFor="fullName" className="text-sm font-bold text-slate-700">Nom complet</Label>
-                    <Input 
-                      id="fullName" 
-                      name="fullName" 
-                      required 
-                      placeholder="Jean Dupont" 
-                      className="h-12 rounded-xl border-slate-200 bg-slate-50 focus:bg-white"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-sm font-bold text-slate-700">Email</Label>
-                    <Input 
-                      id="email" 
-                      name="email" 
-                      type="email" 
-                      required 
-                      placeholder="jean@email.com" 
-                      className="h-12 rounded-xl border-slate-200 bg-slate-50 focus:bg-white"
-                    />
-                  </div>
-                </div>
-
-                <div className="pt-2">
-                  <div className="flex items-start space-x-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                    <Checkbox 
-                      id="createAccount" 
-                      checked={createAccount} 
-                      onCheckedChange={(checked) => setCreateAccount(checked === true)} 
-                      className="mt-0.5 border-slate-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                      style={{ backgroundColor: createAccount ? buttonColor : '', borderColor: createAccount ? buttonColor : '' }}
-                    />
-                    <div className="grid gap-1.5 leading-none">
-                      <Label htmlFor="createAccount" className="text-sm font-bold text-slate-700 cursor-pointer">
-                        Créer un compte Fitloww
-                      </Label>
-                      <p className="text-sm text-slate-500">Pour retrouver facilement vos réservations et annuler si besoin.</p>
+                {step === 1 ? (
+                  <>
+                    <div className="grid sm:grid-cols-2 gap-5">
+                      <div className="space-y-2">
+                        <Label htmlFor="fullName" className="text-sm font-bold text-slate-700">Nom complet</Label>
+                        <Input 
+                          id="fullName" 
+                          name="fullName" 
+                          required 
+                          placeholder="Jean Dupont" 
+                          className="h-12 rounded-xl border-slate-200 bg-slate-50 focus:bg-white"
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="email" className="text-sm font-bold text-slate-700">Email</Label>
+                        <Input 
+                          id="email" 
+                          name="email" 
+                          type="email" 
+                          required 
+                          placeholder="jean@email.com" 
+                          className="h-12 rounded-xl border-slate-200 bg-slate-50 focus:bg-white"
+                        />
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-                {createAccount && (
-                  <div className="space-y-2 pt-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                    <Label htmlFor="password" className="text-sm font-bold text-slate-700">Mot de passe</Label>
-                    <Input id="password" name="password" type="password" required={createAccount} placeholder="••••••••" className="h-12 rounded-xl border-slate-200 bg-slate-50 focus:bg-white" />
+                    <div className="pt-2">
+                      <div className="flex items-start space-x-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <Checkbox 
+                          id="createAccount" 
+                          checked={createAccount} 
+                          onCheckedChange={(checked) => setCreateAccount(checked === true)} 
+                          className="mt-0.5 border-slate-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                          style={{ backgroundColor: createAccount ? buttonColor : '', borderColor: createAccount ? buttonColor : '' }}
+                        />
+                        <div className="grid gap-1.5 leading-none">
+                          <Label htmlFor="createAccount" className="text-sm font-bold text-slate-700 cursor-pointer">
+                            Créer un compte Fitloww
+                          </Label>
+                          <p className="text-sm text-slate-500">Pour retrouver facilement vos réservations et annuler si besoin.</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {createAccount && (
+                      <div className="space-y-2 pt-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <Label htmlFor="password" className="text-sm font-bold text-slate-700">Mot de passe</Label>
+                        <Input id="password" name="password" type="password" required={createAccount} placeholder="••••••••" className="h-12 rounded-xl border-slate-200 bg-slate-50 focus:bg-white" />
+                      </div>
+                    )}
+
+                    <div className="pt-4 border-t border-slate-100">
+                      <div className="flex items-start space-x-3">
+                        <Checkbox id="terms" name="terms" required className="mt-1 border-slate-300" />
+                        <label htmlFor="terms" className="text-sm text-slate-600 leading-relaxed">
+                          J'accepte les <Link href="/legal" target="_blank" className="text-slate-900 underline hover:text-primary transition-colors">Mentions Légales</Link> et la politique de confidentialité de Fitloww.
+                        </label>
+                      </div>
+                    </div>
+                    
+                    <div className="pt-4">
+                      <Button 
+                        type="submit" 
+                        className="w-full h-14 rounded-xl text-white font-bold text-base shadow-md hover:shadow-lg transition-all" 
+                        disabled={isPending}
+                        style={{ backgroundColor: buttonColor }}
+                      >
+                        {isPending ? 'Envoi en cours...' : 'Suivant'}
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+                    <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center">
+                      <h3 className="text-lg font-bold text-slate-900 mb-2">Vérification de l'email</h3>
+                      <p className="text-sm text-slate-500">
+                        Un code à 4 chiffres a été envoyé à votre adresse email.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="code" className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                        Code à 4 chiffres
+                      </Label>
+                      <Input
+                        id="code"
+                        name="code"
+                        type="text"
+                        maxLength={4}
+                        required
+                        autoFocus
+                        placeholder="1234"
+                        className="h-16 text-center text-3xl tracking-[0.5em] font-mono rounded-xl border-slate-200 bg-slate-50 focus:bg-white"
+                      />
+                    </div>
+
+                    <Button 
+                      type="submit" 
+                      className="w-full h-14 rounded-xl text-white font-bold text-base shadow-md hover:shadow-lg transition-all" 
+                      disabled={isPending}
+                      style={{ backgroundColor: buttonColor }}
+                    >
+                      {isPending ? 'Vérification...' : (isFull ? 'Vérifier et rejoindre' : (isPaid ? `Vérifier et payer ${cls.price}€` : 'Vérifier et réserver'))}
+                    </Button>
                   </div>
                 )}
-
-                <div className="pt-4 border-t border-slate-100">
-                  <div className="flex items-start space-x-3">
-                    <Checkbox id="terms" name="terms" required className="mt-1 border-slate-300" />
-                    <label htmlFor="terms" className="text-sm text-slate-600 leading-relaxed">
-                      J'accepte les <Link href="/legal" target="_blank" className="text-slate-900 underline hover:text-primary transition-colors">Mentions Légales</Link> et la politique de confidentialité de Fitloww.
-                    </label>
-                  </div>
-                </div>
-                
-                <div className="pt-4">
-                  <Button 
-                    type="submit" 
-                    className="w-full h-14 rounded-xl text-white font-bold text-base shadow-md hover:shadow-lg transition-all" 
-                    disabled={isPending}
-                    style={{ backgroundColor: buttonColor }}
-                  >
-                    {isPending ? 'Réservation en cours...' : (isFull ? 'Rejoindre la liste d\'attente' : (isPaid ? `Réserver et payer ${cls.price}€` : 'Confirmer la réservation'))}
-                  </Button>
-                  
-                  {isPaid && (
-                    <p className="text-xs text-slate-500 text-center mt-3">
-                      Vous serez redirigé vers {isMollieActive ? 'notre page de paiement sécurisée' : 'une plateforme de paiement'}.
-                    </p>
-                  )}
-                </div>
               </form>
 
               <div className="relative my-8">
