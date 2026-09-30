@@ -326,8 +326,8 @@ export async function signInWithGoogleAction() {
     return { error: error.message };
   }
 
-  if (data.url) {
-    redirect(data.url);
+  if (data?.url) {
+    return { url: data.url };
   }
 }
 

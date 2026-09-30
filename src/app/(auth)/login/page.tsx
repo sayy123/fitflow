@@ -138,7 +138,11 @@ export default function LoginPage() {
         <Button
           variant="outline"
           className="w-full h-11 rounded-lg font-medium text-sm border-border text-foreground hover:bg-secondary hover:text-foreground transition-colors flex items-center justify-center gap-3"
-          onClick={() => signInWithGoogleAction()}
+          onClick={async () => {
+            const res = await signInWithGoogleAction();
+            if (res?.url) window.location.href = res.url;
+            else if (res?.error) toast.error(res.error);
+          }}
         >
           <svg className="size-4" viewBox="0 0 24 24">
             <path
