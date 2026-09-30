@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -69,6 +69,21 @@ export function SettingsClient({
   const [activeTab, setActiveTab] = useState<
     "profile" | "studio" | "security" | "billing"
   >("profile");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("mollie_connect_success") === "true") {
+        setActiveTab("studio");
+        toast.success("Compte Mollie connecté avec succès !");
+        window.history.replaceState(null, "", "/dashboard/settings");
+      } else if (params.get("mollie_connect_error") === "true") {
+        setActiveTab("studio");
+        toast.error("Erreur lors de la connexion au compte Mollie.");
+        window.history.replaceState(null, "", "/dashboard/settings");
+      }
+    }
+  }, []);
 
   // Avatar State
   const [avatarUrl, setAvatarUrl] = useState(
