@@ -36,7 +36,7 @@ export default async function StudiosPage() {
     where: { user_id: user.id }
   });
 
-  const hasPremium = userProfile?.plan === "premium" && userProfile?.subscription_status === "active";
+  const hasPremium = userProfile?.plan === "premium" && ["active", "canceling"].includes(userProfile?.subscription_status ?? "");
 
   const studios = ownedMemberships.map((m) => ({
     id: m.organizations.id,

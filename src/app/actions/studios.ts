@@ -150,7 +150,7 @@ export async function createStudioAction(formData: FormData) {
     where: { user_id: user.id }
   })
 
-  const hasPremium = userProfile?.plan === 'premium' && userProfile?.subscription_status === 'active'
+  const hasPremium = userProfile?.plan === 'premium' && ["active", "canceling"].includes(userProfile?.subscription_status ?? "")
   
   if (!hasPremium) {
     return { error: 'Vous devez avoir un abonnement Premium actif pour créer des studios supplémentaires.' }

@@ -53,6 +53,12 @@ export default async function BillingPage() {
 
   const plan = userProfile?.plan || "starter";
   const subscription_status = userProfile?.subscription_status || "trialing";
+  
+  let daysLeft = 0;
+  if (subscription_status === "canceling" && userProfile?.subscription_expires_at) {
+    const diff = new Date(userProfile.subscription_expires_at).getTime() - new Date().getTime();
+    daysLeft = Math.max(0, Math.ceil(diff / (1000 * 3600 * 24)));
+  }
 
   const isTrialExpired =
     userProfile?.subscription_status === "trialing" && 
@@ -61,6 +67,7 @@ export default async function BillingPage() {
   
   const isSubscriptionInactive = 
     userProfile?.subscription_status !== "active" && 
+    userProfile?.subscription_status !== "canceling" && 
     userProfile?.subscription_status !== "trialing";
 
   const isBlocked = isTrialExpired || isSubscriptionInactive;
@@ -100,7 +107,7 @@ export default async function BillingPage() {
                 Starter
               </CardTitle>
               {plan === "starter" &&
-                subscription_status === "active" && (
+                ["active", "canceling"].includes(subscription_status) && (
                   <span className="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-md border border-emerald-100">
                     Actuel
                   </span>
@@ -131,16 +138,18 @@ export default async function BillingPage() {
               plan="starter"
               className="w-full h-12 rounded-xl font-semibold bg-primary text-primary-foreground hover:bg-primary/90"
               isCurrentPlan={plan === "starter" && subscription_status === "active"}
-              disabled={plan === "premium" && subscription_status === "active"}
+              disabled={plan === "premium" && ["active", "canceling"].includes(subscription_status) || (plan === "starter" && subscription_status === "canceling")}
             >
               {plan === "starter" && subscription_status === "active"
                 ? "Annuler l'abonnement"
-                : plan === "premium" && subscription_status === "active"
+                : plan === "starter" && subscription_status === "canceling"
+                  ? daysLeft > 0 ? `Se termine dans ${daysLeft} j` : "Se termine aujourd'hui"
+                : plan === "premium" && ["active", "canceling"].includes(subscription_status)
                   ? "Indisponible en Premium"
                   : "Activer Starter"}
             </BillingButton>
 
-            {plan === "premium" && subscription_status === "active" && (
+            {plan === "premium" && ["active", "canceling"].includes(subscription_status) && (
               <p className="text-[10px] text-muted-foreground text-center font-medium">
                 Pour passer au plan Starter, annulez d'abord votre abonnement actuel depuis le bouton "Annuler l'abonnement" Premium.
               </p>
@@ -161,7 +170,7 @@ export default async function BillingPage() {
                 Premium
               </CardTitle>
               {plan === "premium" &&
-                subscription_status === "active" && (
+                ["active", "canceling"].includes(subscription_status) && (
                   <span className="bg-primary-foreground/10 text-primary-foreground text-[10px] font-bold px-2 py-1 rounded-md border border-primary-foreground/10">
                     Actuel
                   </span>
@@ -194,9 +203,12 @@ export default async function BillingPage() {
               plan="premium"
               className="w-full h-12 rounded-xl font-bold bg-card text-foreground hover:bg-muted"
               isCurrentPlan={plan === "premium" && subscription_status === "active"}
+              disabled={plan === "premium" && subscription_status === "canceling"}
             >
               {plan === "premium" && subscription_status === "active"
                 ? "Annuler l'abonnement"
+                : plan === "premium" && subscription_status === "canceling"
+                  ? daysLeft > 0 ? `Se termine dans ${daysLeft} j` : "Se termine aujourd'hui"
                 : "Activer Premium"}
             </BillingButton>
           </CardContent>

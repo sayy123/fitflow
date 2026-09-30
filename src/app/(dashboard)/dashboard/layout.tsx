@@ -73,12 +73,28 @@ export default async function DashboardLayout({
   const isOwner = member.role === "owner";
   
   const now = new Date();
+  
+  let currentStatus = userProfile?.subscription_status;
+  if (currentStatus === "canceling" && userProfile?.subscription_expires_at) {
+    if (now > new Date(userProfile.subscription_expires_at)) {
+      currentStatus = "canceled";
+      await prisma.user_profiles.update({
+        where: { user_id: user.id },
+        data: { subscription_status: "canceled", plan: "none" }
+      });
+      if (userProfile) {
+        userProfile.subscription_status = "canceled";
+        userProfile.plan = "none";
+      }
+    }
+  }
+
   const trialEnd = userProfile?.trial_ends_at ? new Date(userProfile.trial_ends_at) : null;
   // If trialEnd is missing but user is in trialing state, we consider the trial expired
   // to prevent infinite trial access.
-  const isTrialExpired = trialEnd ? now > trialEnd : (userProfile?.subscription_status === "trialing" ? true : false);
-  const isTrialing = userProfile?.subscription_status === "trialing";
-  const isSubscriptionInactive = !isTrialing && userProfile?.subscription_status !== "active";
+  const isTrialExpired = trialEnd ? now > trialEnd : (currentStatus === "trialing" ? true : false);
+  const isTrialing = currentStatus === "trialing";
+  const isSubscriptionInactive = !isTrialing && currentStatus !== "active" && currentStatus !== "canceling";
 
   return (
     <div className="flex min-h-screen bg-background/30 text-foreground font-sans selection:bg-primary/20">
@@ -88,7 +104,7 @@ export default async function DashboardLayout({
         user={user}
         avatarUrl={member.avatar_url}
         trialEndsAt={userProfile?.trial_ends_at}
-        subscriptionStatus={userProfile?.subscription_status}
+        subscriptionStatus={currentStatus}
         plan={userProfile?.plan}
       />
       <div className="flex-1 flex flex-col min-w-0">

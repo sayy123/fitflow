@@ -26,7 +26,7 @@ export function BillingButton({
 
   const handleAction = async () => {
     if (isCurrentPlan) {
-      if (!window.confirm("Voulez-vous vraiment annuler votre abonnement ? Cette action est immédiate.")) return;
+      if (!window.confirm("Voulez-vous vraiment annuler votre abonnement ? Il restera actif jusqu'à la fin de la période en cours.")) return;
       
       setLoading(true);
       const toastId = toast.loading("Annulation en cours...");

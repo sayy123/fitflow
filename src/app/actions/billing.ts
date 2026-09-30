@@ -33,7 +33,10 @@ export async function subscribeAction(plan: "starter" | "premium") {
   if (!userProfile) return { error: "Profil utilisateur non trouvé" };
 
   // Bloquer le downgrade de Premium vers Starter seulement si l'abonnement est actif
-  if (userProfile.plan === "premium" && plan === "starter" && userProfile.subscription_status === "active") {
+  if (userProfile.plan === "premium" && plan === "starter" && ["active", "canceling"].includes(userProfile.subscription_status || "")) {
+    if (userProfile.subscription_status === "canceling") {
+      return { error: "Vous devez attendre la fin de votre abonnement Premium actuel pour passer au plan Starter." };
+    }
     return { error: "Vous avez déjà un abonnement Premium actif. Pour repasser au plan Starter, veuillez d'abord annuler votre abonnement actuel depuis le portail de facturation." };
   }
 
@@ -136,12 +139,26 @@ export async function cancelSubscriptionAction() {
   }
 
   try {
+    const subscription = await mollie.customerSubscriptions.get(userProfile.mollie_subscription_id, {
+      customerId: userProfile.mollie_customer_id
+    });
+    
     await mollie.customerSubscriptions.cancel(userProfile.mollie_subscription_id, { customerId: userProfile.mollie_customer_id });
 
-    await prisma.user_profiles.update({
-      where: { user_id: user.id },
-      data: { subscription_status: "canceled", plan: "none" }
-    });
+    if (subscription.nextPaymentDate) {
+      await prisma.user_profiles.update({
+        where: { user_id: user.id },
+        data: { 
+          subscription_status: "canceling",
+          subscription_expires_at: new Date(subscription.nextPaymentDate)
+        }
+      });
+    } else {
+      await prisma.user_profiles.update({
+        where: { user_id: user.id },
+        data: { subscription_status: "canceled", plan: "none" }
+      });
+    }
 
     return { success: true };
   } catch (error: unknown) {
