@@ -16,7 +16,7 @@ export async function middleware(request: NextRequest) {
 
   // Si Supabase redirige vers la page d'accueil avec un "code" au lieu du callback
   // (arrive souvent quand l'URL de callback n'est pas dans la whitelist Supabase)
-  if (request.nextUrl.searchParams.has('code') && pathname !== '/api/auth/callback') {
+  if (request.nextUrl.searchParams.has('code') && pathname === '/') {
     const code = request.nextUrl.searchParams.get('code');
     // On déduit l'intention : si c'est un reset, on veut aller vers update-password
     // Comme on n'a pas le paramètre exact, on le devine ou on va vers le callback classique
