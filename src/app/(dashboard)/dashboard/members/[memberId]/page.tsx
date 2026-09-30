@@ -20,6 +20,37 @@ export default async function MemberDetailPage(props: { params: Promise<{ member
   })
   if (!staffMember || staffMember.role === 'member') redirect('/dashboard')
 
+  // Sync expired subscriptions for this member
+  const expiredMemberSubs = await prisma.member_subscriptions.findMany({
+    where: {
+      studio_member_id: memberId,
+      is_active: true,
+      expires_at: { lte: new Date() }
+    }
+  });
+
+  if (expiredMemberSubs.length > 0) {
+    await prisma.member_subscriptions.updateMany({
+      where: { id: { in: expiredMemberSubs.map(sub => sub.id) } },
+      data: { is_active: false }
+    });
+
+    const activeSub = await prisma.member_subscriptions.findFirst({
+      where: {
+        studio_member_id: memberId,
+        is_active: true,
+        expires_at: { gt: new Date() }
+      }
+    });
+
+    if (!activeSub) {
+      await prisma.studio_members.update({
+        where: { id: memberId },
+        data: { has_active_subscription: false }
+      });
+    }
+  }
+
   const member = await prisma.studio_members.findUnique({
     where: { id: memberId, organization_id: staffMember.organization_id },
     include: {

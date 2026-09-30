@@ -58,6 +58,44 @@ export default async function MembersPage() {
   const isPremium = userProfile?.plan === "premium";
   const memberLimit = isPremium ? Infinity : 40;
 
+  // Sync expired subscriptions
+  const expiredSubs = await prisma.member_subscriptions.findMany({
+    where: {
+      organization_id: currentMember.organization_id,
+      is_active: true,
+      expires_at: { lte: new Date() }
+    }
+  });
+
+  if (expiredSubs.length > 0) {
+    const memberIds = [...new Set(expiredSubs.map(sub => sub.studio_member_id))];
+    
+    // Mark subscriptions as inactive
+    await prisma.member_subscriptions.updateMany({
+      where: {
+        id: { in: expiredSubs.map(sub => sub.id) }
+      },
+      data: { is_active: false }
+    });
+
+    // Update studio_members if they no longer have any active subscriptions
+    for (const mId of memberIds) {
+      const activeSub = await prisma.member_subscriptions.findFirst({
+        where: {
+          studio_member_id: mId,
+          is_active: true,
+          expires_at: { gt: new Date() }
+        }
+      });
+      if (!activeSub) {
+        await prisma.studio_members.update({
+          where: { id: mId },
+          data: { has_active_subscription: false }
+        });
+      }
+    }
+  }
+
   const studioMembers = await prisma.studio_members.findMany({
     where: { organization_id: currentMember.organization_id },
     orderBy: { created_at: "desc" },
