@@ -548,7 +548,7 @@ model organizations {
   mollie_price_id        String?
   subscription_status    String?                 @default("trialing")
   trial_ends_at          DateTime?               @default(dbgenerated("(now() + '14 days'::interval)")) @db.Timestamptz(6)
-  mollie_account_id      String?                 @unique
+  mollie_account_id      String?
   mollie_charges_enabled Boolean?                @default(false)
   mollie_account_status  String?                 @default("pending")
   mollie_access_token    String?

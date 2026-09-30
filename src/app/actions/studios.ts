@@ -157,12 +157,16 @@ export async function createStudioAction(formData: FormData) {
   }
 
   const ownedMemberships = await prisma.org_members.findMany({
-    where: { user_id: user.id, role: 'owner' }
+    where: { user_id: user.id, role: 'owner' },
+    include: { organizations: true }
   })
 
   if (ownedMemberships.length >= 3) {
     return { error: 'Limite atteinte. Le plan Premium permet de gérer un maximum de 3 studios.' }
   }
+
+  // Trouver un studio existant avec Mollie configuré pour copier les identifiants
+  const orgWithMollie = ownedMemberships.find(m => m.organizations?.mollie_account_id !== null)?.organizations;
 
   // 2. Create the new studio
   const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + '-' + Date.now().toString().slice(-4)
@@ -173,7 +177,14 @@ export async function createStudioAction(formData: FormData) {
         data: {
           name,
           slug,
-          onboarding_completed: true
+          onboarding_completed: true,
+          ...(orgWithMollie ? {
+            mollie_account_id: orgWithMollie.mollie_account_id,
+            mollie_access_token: orgWithMollie.mollie_access_token,
+            mollie_refresh_token: orgWithMollie.mollie_refresh_token,
+            mollie_charges_enabled: orgWithMollie.mollie_charges_enabled,
+            mollie_account_status: orgWithMollie.mollie_account_status,
+          } : {})
         }
       })
 

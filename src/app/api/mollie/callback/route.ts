@@ -43,17 +43,42 @@ export async function GET(request: Request) {
     }
     const profile = profiles[0];
 
-    // Update organization with Mollie Profile ID and Tokens
-    await prisma.organizations.update({
-      where: { id: orgId },
-      data: {
-        mollie_account_id: profile.id, // Using Profile ID instead of Account ID
-        mollie_access_token: tokenData.access_token,
-        mollie_refresh_token: tokenData.refresh_token,
-        mollie_charges_enabled: true,
-        mollie_account_status: 'active'
-      }
+    // Find the owners of this org
+    const orgMembers = await prisma.org_members.findMany({
+      where: { organization_id: orgId, role: 'owner' }
     });
+    const ownerIds = orgMembers.map((m: any) => m.user_id);
+
+    if (ownerIds.length > 0) {
+      // Find all organizations owned by these owners
+      const otherOrgs = await prisma.org_members.findMany({
+        where: { user_id: { in: ownerIds }, role: 'owner' }
+      });
+      const orgIdsToUpdate = Array.from(new Set(otherOrgs.map((m: any) => m.organization_id)));
+
+      // Update all organizations with Mollie Profile ID and Tokens
+      await prisma.organizations.updateMany({
+        where: { id: { in: orgIdsToUpdate } },
+        data: {
+          mollie_account_id: profile.id, // Using Profile ID instead of Account ID
+          mollie_access_token: tokenData.access_token,
+          mollie_refresh_token: tokenData.refresh_token,
+          mollie_charges_enabled: true,
+          mollie_account_status: 'active'
+        }
+      });
+    } else {
+      await prisma.organizations.update({
+        where: { id: orgId },
+        data: {
+          mollie_account_id: profile.id, // Using Profile ID instead of Account ID
+          mollie_access_token: tokenData.access_token,
+          mollie_refresh_token: tokenData.refresh_token,
+          mollie_charges_enabled: true,
+          mollie_account_status: 'active'
+        }
+      });
+    }
 
     return NextResponse.redirect(`${host}/dashboard/settings?mollie_connect_success=true`);
   } catch (error) {
