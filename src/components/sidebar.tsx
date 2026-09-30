@@ -17,6 +17,7 @@ import {
   QuestionMarkCircleIcon as HelpCircle,
   Bars3Icon as Menu,
   XMarkIcon as X,
+  ChartBarIcon as ChartBar,
 } from "@heroicons/react/24/outline";
 import { signOutAction } from "@/app/actions/auth";
 
@@ -74,6 +75,7 @@ export function Sidebar({
 
   if (isOwner && plan === 'premium') {
     staffItems.push({ name: "Mes Salles", href: "/dashboard/studios", icon: Building2 });
+    staffItems.push({ name: "Rapports", href: "/dashboard/reports", icon: ChartBar });
   }
 
   if (isStaff) {
