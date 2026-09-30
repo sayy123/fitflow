@@ -539,6 +539,47 @@ export function SettingsClient({
                       )}
                     </div>
                   </div>
+
+                  <div className="pt-4 mt-6 border-t border-border/50">
+                    <h4 className="text-[15px] font-bold text-gray-900 mb-3">Abonnements (Pass illimités)</h4>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Proposez des abonnements à vos membres pour leur permettre de réserver vos cours gratuitement en illimité. Laissez vide pour ne pas proposer d'abonnement.
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <Label className="text-sm font-medium text-gray-700">
+                          Prix Mensuel (€)
+                        </Label>
+                        <div className="relative">
+                          <Input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            placeholder="Ex: 50"
+                            value={memberMonthlyPrice}
+                            onChange={(e) => setMemberMonthlyPrice(e.target.value)}
+                            className="rounded-lg border-border h-10 text-sm"
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-sm font-medium text-gray-700">
+                          Prix Annuel (€)
+                        </Label>
+                        <div className="relative">
+                          <Input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            placeholder="Ex: 500"
+                            value={memberYearlyPrice}
+                            onChange={(e) => setMemberYearlyPrice(e.target.value)}
+                            className="rounded-lg border-border h-10 text-sm"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <Button
                     onClick={handleUpdateOrg}
                     disabled={orgLoading}
