@@ -352,3 +352,56 @@ export async function sendRegistrationCodeEmail(email: string, fullName: string,
 
   await sendEmailDevOrProd(email, subject, html)
 }
+
+export async function sendMonthlyReportEmail({
+  email,
+  fullName,
+  monthName,
+  stats,
+  baseUrl
+}: {
+  email: string;
+  fullName: string;
+  monthName: string;
+  stats: {
+    revenue: number;
+    bookings: number;
+    newMembers: number;
+    activeSubscriptions: number;
+  };
+  baseUrl?: string;
+}) {
+  const siteUrl = (baseUrl || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').replace(/\/$/, "");
+  const dashboardLink = `${siteUrl}/dashboard/reports`;
+  
+  const subject = `Votre rapport mensuel Premium - ${monthName}`;
+  const html = `
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #f0f0f0; border-radius: 16px; overflow: hidden;">
+      <div style="background-color: #f59e0b; padding: 40px 20px; text-align: center; color: white;">
+        <h1 style="margin: 0; font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px;">Rapport Mensuel Premium</h1>
+      </div>
+      <div style="padding: 40px 30px; color: #1f2937;">
+        <p style="font-size: 16px; line-height: 1.5;">Bonjour <strong>${fullName}</strong>,</p>
+        <p style="font-size: 16px; line-height: 1.5;">Voici un résumé des performances de votre studio pour le mois de <strong>${monthName}</strong>.</p>
+        
+        <div style="background-color: #f9fafb; padding: 20px; border-radius: 12px; margin: 30px 0;">
+          <div style="margin-bottom: 15px; font-size: 16px;">💰 Revenus : <strong>${stats.revenue} €</strong></div>
+          <div style="margin-bottom: 15px; font-size: 16px;">📅 Réservations : <strong>${stats.bookings}</strong></div>
+          <div style="margin-bottom: 15px; font-size: 16px;">👥 Nouveaux membres : <strong>+${stats.newMembers}</strong></div>
+          <div style="font-size: 16px;">⭐ Abonnements actifs : <strong>${stats.activeSubscriptions}</strong></div>
+        </div>
+
+        <div style="text-align: center; margin: 35px 0;">
+          <a href="${dashboardLink}" style="display: inline-block; background-color: #f59e0b; color: white; padding: 16px 32px; text-decoration: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; font-size: 14px; letter-spacing: 1px;">
+            Voir le rapport détaillé
+          </a>
+        </div>
+        
+        <p style="margin-top: 40px; font-size: 14px; color: #9ca3af;">Merci pour votre confiance, et à très vite sur fitflow887 !</p>
+      </div>
+    </div>
+  `;
+
+  await sendEmailDevOrProd(email, subject, html);
+}
+

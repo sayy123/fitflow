@@ -87,10 +87,11 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
         
         if (cls) {
           const isMollieActive = org.mollie_account_id && org.mollie_charges_enabled;
-          const isPaid = cls.price && cls.price > 0 && (org.payment_link || isMollieActive) && !member.has_active_subscription;
+          const canPayOnline = org.payment_link || isMollieActive;
+          const isPaid = cls.price && cls.price > 0 && !member.has_active_subscription;
 
           let booking;
-          if (!(isPaid && isMollieActive)) {
+          if (!(isPaid && canPayOnline)) {
             booking = await prisma.bookings.create({
               data: {
                 class_id: classId,
@@ -159,10 +160,11 @@ export async function joinStudioAutomaticallyAction(organizationId: string, clas
 
         if (cls) {
           const isMollieActive = org.mollie_account_id && org.mollie_charges_enabled;
-          const isPaid = cls.price && cls.price > 0 && (org.payment_link || isMollieActive) && !member.has_active_subscription;
+          const canPayOnline = org.payment_link || isMollieActive;
+          const isPaid = cls.price && cls.price > 0 && !member.has_active_subscription;
 
           let booking;
-          if (!(isPaid && isMollieActive)) {
+          if (!(isPaid && canPayOnline)) {
             booking = await prisma.bookings.update({
               where: { id: existing.id },
               data: {
